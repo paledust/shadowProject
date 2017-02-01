@@ -18,7 +18,7 @@ public struct PlayerState
 
 public class Recorder : MonoBehaviour {
 	[SerializeField] TestTimeController timeController;
-	[SerializeField] CarMoving carMoving;
+	
 	Animator _animator;
 	Dictionary<int, PlayerState> state = new Dictionary<int, PlayerState>();
 	// Use this for initialization
@@ -30,7 +30,6 @@ public class Recorder : MonoBehaviour {
 		if(Input.GetKeyDown(KeyCode.K))
 		{
 			isRecording = false;
-			carMoving.SetRecording(state);
 			timeController.time = 0;
 		}
 	}
