@@ -11,5 +11,16 @@ public class TestTimeController : MonoBehaviour {
 		{
 			time ++;
 		}
+
+		if(!isForward)
+		{
+			if(time > 0)
+				time --;
+		}
+	}
+
+	public void SetRewind(bool m_isforward)
+	{
+		isForward = m_isforward;
 	}
 }

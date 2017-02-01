@@ -30,17 +30,53 @@ public class Recorder : MonoBehaviour {
 		if(Input.GetKeyDown(KeyCode.K))
 		{
 			isRecording = false;
-			timeController.time = 0;
+			isPlaying = true;
+			timeController.SetRewind(false);
+			//timeController.time = 0;
+		}
+
+		if(Input.GetKeyUp(KeyCode.K))
+		{
+			isRecording = true;
+			isPlaying = false;
+			timeController.SetRewind(true);
 		}
 	}
 	bool isRecording = true;
+	bool isPlaying = false;
 	// Update is called once per frame
 	void FixedUpdate () {
 		if(isRecording)
 		{
-			state.Add(timeController.time, new PlayerState(transform.position, 
+			if(!state.ContainsKey(timeController.time))
+				state.Add(timeController.time, new PlayerState(transform.position, 
 															_animator.GetCurrentAnimatorStateInfo(0).shortNameHash,
 															transform.localScale.x > 0));
+			else
+				state[timeController.time] = new PlayerState(transform.position, 
+															_animator.GetCurrentAnimatorStateInfo(0).shortNameHash,
+															transform.localScale.x > 0);
+			// state.Add(timeController.time, new PlayerState(transform.position, 
+			// 												_animator.GetCurrentAnimatorStateInfo(0).shortNameHash,
+			// 												transform.localScale.x > 0));
 		}
+
+		if(isPlaying)
+		{
+			if(state.ContainsKey(timeController.time))
+			{
+				PlayState(state[timeController.time]);
+			}
+		}
+	}
+
+	void PlayState(PlayerState playerState)
+	{
+		transform.position = playerState.position;
+		_animator.Play(playerState.animState);
+		Vector3 localScale = transform.localScale;
+		localScale.x = playerState.direction ? Mathf.Abs(localScale.x) : -Mathf.Abs(localScale.x);
+		transform.localScale = localScale;
+		state.Remove(timeController.time);
 	}
 }
