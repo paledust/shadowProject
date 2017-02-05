@@ -1,30 +1,50 @@
-﻿Shader "Instanced/ShadowWithoutObject" {
-       Properties {
-            _MainTex ("Texture", 2D) = "white" {}
+﻿Shader "Custom/TransparentShadowCollector"
+{
+    Properties
+    {
+        _ShadowIntensity ("Shadow Intensity", Range (0, 1)) = 00
+    }
+
+
+    SubShader
+    {
+        Tags {"Queue"="AlphaTest" }
+
+        Pass
+        {
+            Tags {"LightMode" = "ForwardBase" }
+            ZWrite Off
+            Cull Back
+            Blend SrcAlpha OneMinusSrcAlpha
+            CGPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+            #pragma multi_compile_fwdbase
+
+            #include "UnityCG.cginc"
+            #include "AutoLight.cginc"
+            uniform float _ShadowIntensity;
+
+            struct v2f
+            {
+                float4 pos : SV_POSITION;
+                LIGHTING_COORDS(0,1)
+            };
+            v2f vert(appdata_base v)
+            {
+                v2f o;
+                o.pos = mul (UNITY_MATRIX_MVP, v.vertex);
+                //TRANSFER_VERTEX_TO_FRAGMENT(o);
+                
+                return o;
+            }
+            fixed4 frag(v2f i) : COLOR
+            {
+                float attenuation = LIGHT_ATTENUATION(i);
+                return fixed4(0,0,0,0);
+            }
+            ENDCG
         }
-        SubShader {
-        Tags { "RenderType" = "Opaque" }
-        CGPROGRAM
-          #pragma surface surf SimpleLambert
-  
-          half4 LightingSimpleLambert (SurfaceOutput s, half3 lightDir, half atten) {
-              half NdotL = dot (s.Normal, lightDir);
-              half4 c;
-              c.rgb = s.Albedo * _LightColor0.rgb * (NdotL * atten);
-              c.a = s.Alpha;
-              return c;
-          }
-  
-        struct Input {
-            float2 uv_MainTex;
-        };
-        
-        sampler2D _MainTex;
-        
-        void surf (Input IN, inout SurfaceOutput o) {
-            o.Albedo = tex2D (_MainTex, IN.uv_MainTex).rgb;
-        }
-        ENDCG
-        }
-        Fallback "Diffuse"
+    }
+    Fallback "Diffuse"
 }
