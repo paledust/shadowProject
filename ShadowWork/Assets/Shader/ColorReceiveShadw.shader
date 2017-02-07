@@ -23,19 +23,18 @@
 		inline fixed4 LightingShadowOnly (SurfaceOutput s, fixed3 lightDir, fixed atten) 
 		{
         	fixed4 color;
-            color.rgb = s.Albedo * atten;
+            color.rgb = s.Albedo * atten * _LightColor0;
             color.a = s.Alpha;
             return color;
         }
-                 
-		
+
 		fixed4 _Color;
 
 		void surf (Input IN, inout SurfaceOutput o) 
 		{
         	fixed4 color = tex2D(_MainTex, IN.uv_MainTex) * _Color;
         	o.Albedo = color.rgb;
-        	o.Alpha = 0;
+        	o.Alpha = 1;
         }
 		ENDCG
 	}
