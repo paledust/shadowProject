@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 6182bf926be20a9469b60b207e7a537e
+timeCreated: 1487026726
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - tex2D: {fileID: 8400000, guid: 47794880c6acc0d41bed5c76d09697cd, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
