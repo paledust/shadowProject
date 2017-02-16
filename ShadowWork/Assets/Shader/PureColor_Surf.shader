@@ -20,7 +20,7 @@
 			float2 uv_MainTex;
 		};
 
-		inline fixed4 LightingShadowOnly (SurfaceOutput s, fixed3 lightDir, fixed atten) 
+		inline fixed4 LightingShadowOnly (SurfaceOutput s, fixed3 lightDir, fixed3 viewDir, fixed atten) 
 		{
         	fixed4 color;
 			float light;
@@ -33,6 +33,7 @@
                 light = 0.0;
 			
             color.rgb = s.Albedo * light * (atten)*_LightColor0;
+			//color.rgb = cross(color.rgb,viewDir);
             color.a = s.Alpha;
             return color;
         }
