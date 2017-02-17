@@ -4,13 +4,15 @@
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
 	}
 	SubShader {
-		Tags { "RenderType"="Opaque" }
+		Tags {"Queue" = "Transparent" "IgnoreProjector"="True" "RenderType"="Transparent"}
 		LOD 200
 		
+		ZWrite off
+		//Blend SrcAlpha OneMinusSrcAlpha
+		AlphaToMask On
 		CGPROGRAM
 		// Physically based Standard lighting model, and enable shadows on all light types
-		#pragma surface surf ShadowOnly fullforwardshadows
-
+		#pragma surface surf ShadowOnly fullforwardshadows alphatest:_Cutoff  
 		// Use shader model 3.0 target, to get nicer looking lighting
 		#pragma target 3.0
 
@@ -24,17 +26,22 @@
 		{
         	fixed4 color;
 			float light;
+			float temp;
 
 			light = dot (s.Normal, lightDir);
+			//temp = normalize(lightDir.x + lightDir.z)
 
-			if(light >= 0.3)
-                light = 1.0;
-            if(light < 0.3)
-                light = 0.0;
+			//light = light * light * light;
+
+			//light = light*0.5 + 0.5;
 			
+			if(light <= (lightDir.x))
+				light = 0.0;
+			else
+				light = 1.0;
             color.rgb = s.Albedo * light * (atten)*_LightColor0;
+			color.a = 1 - light;
 			//color.rgb = cross(color.rgb,viewDir);
-            color.a = s.Alpha;
             return color;
         }
 
@@ -44,7 +51,7 @@
 		{
         	fixed4 color = tex2D(_MainTex, IN.uv_MainTex) * _Color;
         	o.Albedo = color.rgb;
-        	o.Alpha = 1;
+        	o.Alpha = color.a;
         }
 		ENDCG
 	}

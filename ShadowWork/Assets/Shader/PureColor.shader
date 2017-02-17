@@ -25,7 +25,6 @@
         	fixed4 color;
 			
             color.rgb = s.Albedo * atten * _LightColor0;
-			//color.rgb = cross(color.rgb,viewDir);
             color.a = s.Alpha;
             return color;
         }
