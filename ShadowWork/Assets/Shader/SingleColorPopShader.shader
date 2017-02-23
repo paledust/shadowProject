@@ -31,7 +31,7 @@
 
 			//light = light*0.5 + 0.5;
 			
-			if(light <= 0.3)
+			if(light <= 0.2)
 				light = 0.0;
 			else
 				light = 1.0;
