@@ -6,6 +6,7 @@ public class RotateObjectScript : MonoBehaviour {
 
 	public float rotateSpeed = 20;
 
+	bool draggable = false;
 	public bool dragging = false;
 
 	public bool rotateOnX = false;
@@ -13,7 +14,6 @@ public class RotateObjectScript : MonoBehaviour {
 	public bool rotateOnZ = false;
 
 	public bool rotateAround = false;
-
 
 	public GameObject pivot;
 
