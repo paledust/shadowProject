@@ -8,6 +8,15 @@ public class RotateObjectScript : MonoBehaviour {
 
 	public bool dragging = false;
 
+	public bool rotateOnX = false;
+	public bool rotateOnY = false;
+	public bool rotateOnZ = false;
+
+	public bool rotateAround = false;
+
+
+	public GameObject pivot;
+
 	void OnMouseOver(){
 		if(Input.GetMouseButton(1) && dragging == false){
 			dragging = true;
@@ -19,13 +28,44 @@ public class RotateObjectScript : MonoBehaviour {
 		if(Input.GetMouseButtonUp(1)){
 			dragging = false;
 		}
-		if(dragging == true){
-			float rotX = Input.GetAxis("Mouse X")*rotateSpeed*Mathf.Deg2Rad;
-			float rotY = Input.GetAxis("Mouse Y")*rotateSpeed*Mathf.Deg2Rad;
-
-			transform.RotateAround(transform.parent.position, Vector3.forward, -rotX);
-			transform.RotateAround(transform.parent.position, Vector3.forward, -rotY);
+		if(dragging == true && rotateAround == true){
+			if(rotateOnX == true){
+				RotateAround(Vector3.right);
+			}
+			if(rotateOnY == true){
+				RotateAround(Vector3.up);
+			}
+			if(rotateOnZ == true){
+				RotateAround(Vector3.forward);
+			}
+		}else if(dragging == true){
+			if(rotateOnX == true){
+				Rotate(Vector3.right);
+			}
+			if(rotateOnY == true){
+				Rotate(Vector3.up);
+			}
+			if(rotateOnZ == true){
+				Rotate(Vector3.forward);
+			}
 		}
+	}
+
+	void RotateAround(Vector3 axis){
+		float rotX = Input.GetAxis("Mouse X")*rotateSpeed*Mathf.Deg2Rad;
+		float rotY = Input.GetAxis("Mouse Y")*rotateSpeed*Mathf.Deg2Rad;
+
+		transform.RotateAround(pivot.transform.position, axis, -rotX);
+		transform.RotateAround(pivot.transform.position, axis, -rotY);
+
+	}
+
+	void Rotate(Vector3 axis){
+		float rotX = Input.GetAxis("Mouse X")*rotateSpeed*Mathf.Deg2Rad;
+		float rotY = Input.GetAxis("Mouse Y")*rotateSpeed*Mathf.Deg2Rad;
+
+		pivot.transform.Rotate(axis * -rotX);
+		pivot.transform.Rotate(axis * -rotY);
 
 	}
 		
