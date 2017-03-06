@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scene/Scene_KeyPuzzle.unity
+- path: Assets/Scene/KeyLevel/Scene_Kevin_KeyPuzzle.unity
   isLoaded: 1
   isActive: 1
