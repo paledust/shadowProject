@@ -17,7 +17,7 @@ public class CastRay : MonoBehaviour {
 		if(Input.GetButton("Fire1"))
 		{
 			ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			if(Physics.Raycast(ray, out rayHit, 100.0f, layer))
+			if(Physics.Raycast(ray, out rayHit, 3000.0f, layer))
 			{
 				ObjectHit(rayHit.collider);
 				MoveObject();

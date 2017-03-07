@@ -10,11 +10,6 @@ public class MovingPlat : MonoBehaviour {
 		AllowDirection = Vector3.up;
 		ifMove = false;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-
-	}
 
 	public void SetMove(bool _setMove)
 	{
