@@ -16,23 +16,30 @@ public class LightRaycastScript : MonoBehaviour {
 		Vector3 forward = transform.TransformDirection (Vector3.forward) * 100;
 		Debug.DrawRay(transform.position, forward, Color.green);
 
-		if(Physics.SphereCast(transform.position, radius, (forward), out hit, 100)){
+		if(Physics.Raycast(transform.position, (forward), out hit, 100)){
 			distanceToObject = hit.distance;
-			//print (distanceToObject + " " + hit.collider.gameObject.name);
-
-			if(!lastRotatableObjectHit == null && !hit.collider.gameObject == lastRotatableObjectHit){
-				lastRotatableObjectHit.GetComponent<RotateObjectScript>().lightIsHitting = false;
-				print (lastRotatableObjectHit + " Check");
+			if(lastRotatableObjectHit != null)
+			{
+				if(hit.collider.gameObject != lastRotatableObjectHit){
+					lastRotatableObjectHit.GetComponent<RotateObjectScript>().lightIsHitting = false;
+					print (lastRotatableObjectHit + " Check");
+				}
+				if(hit.collider.tag == "Rotatable"){
+					lastRotatableObjectHit.GetComponent<RotateObjectScript>().lightIsHitting = false;
+					lastRotatableObjectHit = hit.collider.gameObject;
+					lastRotatableObjectHit.GetComponent<RotateObjectScript>().lightIsHitting = true;
+				} 
+				else
+				{
+					lastRotatableObjectHit.GetComponent<RotateObjectScript>().lightIsHitting = false;
+					print ("false");
+					//lastRotatableObjectHit = null;
+				}
 			}
-			if(hit.collider.tag == "Rotatable"){
+			else if(hit.collider.tag == "Rotatable")
+			{
 				lastRotatableObjectHit = hit.collider.gameObject;
 				lastRotatableObjectHit.GetComponent<RotateObjectScript>().lightIsHitting = true;
-
-
-			} else{
-				lastRotatableObjectHit.GetComponent<RotateObjectScript>().lightIsHitting = false;
-				print ("false");
-				//lastRotatableObjectHit = null;
 			}
 		}
 	}

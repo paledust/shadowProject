@@ -14,9 +14,9 @@ public class TrailMove : MonoBehaviour {
 	void OnTriggerStay(Collider collider)
 	{
 		DragObjectScript dragObject;
-		if(collider.gameObject.GetComponent<DragObjectScript>())
+		if(collider.GetComponent<DragObjectScript>() && !collider.GetComponent<DragObjectScript>().ifDrag)
 		{
-			dragObject = collider.gameObject.GetComponent<DragObjectScript>();
+			dragObject = collider.GetComponent<DragObjectScript>();
 			switch (dirOption)
 			{
 				case DirectionOption.X:

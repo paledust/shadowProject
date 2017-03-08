@@ -10,13 +10,10 @@ public class PullObjectBack : MonoBehaviour {
 		if(collider.gameObject.GetComponent<DragObjectScript>())
 		{
 			dragObject = collider.gameObject.GetComponent<DragObjectScript>();
-			
-			if(!dragObject.ifMoveing && !CheckPos(collider.gameObject,gameObject))
+
+			if(!dragObject.ifDrag && !CheckPos(collider.gameObject, gameObject))
 			{
-				Debug.Log("What");
-				collider.transform.position = new Vector3(transform.position.x, 
-																	collider.transform.position.y, 
-																	transform.position.z);
+				collider.GetComponent<DragObjectScript>().moveTo(transform.position);
 			}
 		}
 	}

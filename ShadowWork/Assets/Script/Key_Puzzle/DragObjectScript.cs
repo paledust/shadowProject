@@ -16,7 +16,7 @@ namespace CS_Kevin
 public class DragObjectScript : MonoBehaviour {
 	public AvailableDir direction;
 	public float DragSpeed = 5;
-	public bool ifMoveing = false;
+	public bool ifDrag = false;
 	private Vector3 dragStartPosition;
 	private float dragStartDistance;
 	private float MouseDir = 0.0f;
@@ -38,13 +38,13 @@ public class DragObjectScript : MonoBehaviour {
 
 	void OnMouseUp()
 	{
-		ifMoveing = false;
+		ifDrag = false;
 	}
 
 	//For Dragging things Here and There
 	void OnMouseDrag()
 	{
-		ifMoveing = true;
+		ifDrag = true;
 		Vector3 tempVec = Vector3.zero;
 		// dragStartPosition = transform.position;
 		// dragStartDistance = (Camera.main.transform.position - transform.position).magnitude;
@@ -70,6 +70,24 @@ public class DragObjectScript : MonoBehaviour {
 			tempVec = Vector3.right;
 			//transform.position = new Vector3(worldDragTo.x, dragStartPosition.y, dragStartPosition.z);	
 			transform.position += tempVec * Input.GetAxis("Mouse X")*DragSpeed;		
+		}
+	}
+
+	public void moveTo(Vector3 MoveToPos)
+	{
+		Debug.Log("Moving");
+		Vector3 tempPos = new Vector3(MoveToPos.x, transform.position.y, MoveToPos.z);
+		transform.position = Vector3.Lerp(transform.position, tempPos, Time.deltaTime * 3);
+		// ifDrag = true;
+
+		if((transform.position - tempPos).magnitude <= 0.1)
+		{
+			transform.position = tempPos;
+		}
+
+		if(transform.position == tempPos)
+		{
+			ifDrag = false;
 		}
 	}
 }
