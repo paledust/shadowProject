@@ -3,18 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using CS_Kevin;
 
-namespace CS_Kevin
-{
-	public class AvailableDir
-	{
-		public bool ifX;
-		public bool ifY;
-		public bool ifZ;
-	}
-}
-
 public class DragObjectScript : MonoBehaviour {
-	public AvailableDir direction;
+	public DirectionCheck direction;
 	public float DragSpeed = 5;
 	public bool ifDrag = false;
 	private Vector3 dragStartPosition;
@@ -23,11 +13,7 @@ public class DragObjectScript : MonoBehaviour {
 
 	void Start()
 	{
-		direction = new AvailableDir();
-
-		direction.ifX = false;
-		direction.ifY = false;
-		direction.ifZ = false;
+		direction = new DirectionCheck();
 	}
 
 	void OnMouseDown()
@@ -40,17 +26,16 @@ public class DragObjectScript : MonoBehaviour {
 	{
 		if(!GetComponent<ObjectStateManager>().objectState.ifFrozen)
 			GetComponent<ObjectStateManager>().objectState.SetStatus(MovingState.Frozen);
-		//ifDrag = false;
 	}
 
 	//For Dragging things Here and There
 	void OnMouseDrag()
 	{
-		//ifDrag = true;
-
+		//Check whether it's Frozen, if it is, the object can't move
 		if(!GetComponent<ObjectStateManager>().objectState.ifFrozen)
 		{
-			if(!GetComponent<ObjectStateManager>().objectState.ifMoving)
+			//Check whether set to movable state then Set the State from moveable to moving
+			if(GetComponent<ObjectStateManager>().objectState.ifMoveable)
 				GetComponent<ObjectStateManager>().objectState.SetStatus(MovingState.Moving);
 			Vector3 tempVec = Vector3.zero;
 
@@ -60,7 +45,7 @@ public class DragObjectScript : MonoBehaviour {
 				MouseDir = Mathf.Abs(MouseDir*Mathf.Rad2Deg);
 			}
 
-			if(MouseDir > 45 && MouseDir < 135 && direction.ifY)
+			if(MouseDir > 45 && MouseDir < 135 && direction.ifZ)
 			{
 				tempVec = Vector3.forward;
 				transform.position += tempVec * Input.GetAxis("Mouse Y")*DragSpeed;			
@@ -80,18 +65,26 @@ public class DragObjectScript : MonoBehaviour {
 		Vector3 tempPos = new Vector3(MoveToPos.x, transform.position.y, MoveToPos.z);
 		transform.position = Vector3.Lerp(transform.position, tempPos, Time.deltaTime * 3);
 
-		if((transform.position - tempPos).magnitude <= 0.1)
-		{
+		if((transform.position - tempPos).magnitude <= 0.1) 
 			transform.position = tempPos;
-		}
 
-		if(transform.position == tempPos)
-		{
+		if(transform.position == tempPos) 
 			ifDrag = false;
-		}
 	}
 
-	public void SetDirectionX(bool ifAvaliable){direction.ifX = ifAvaliable;}
-	public void SetDirectionY(bool ifAvaliable){direction.ifY = ifAvaliable;}
-	public void SetDirectionZ(bool ifAvaliable){direction.ifZ = ifAvaliable;}
+	public void SetDirection(DirectionOption dirOption, bool ifAvaliable){
+		switch (dirOption)
+		{
+			case DirectionOption.left: direction.ifLeft = ifAvaliable; break;
+			case DirectionOption.right: direction.ifRight = ifAvaliable; break;
+			case DirectionOption.up: direction.ifUp = ifAvaliable; break;
+			case DirectionOption.down: direction.ifDown = ifAvaliable; break;
+			case DirectionOption.forward: direction.ifForward = ifAvaliable; break;
+			case DirectionOption.back: direction.ifBack = ifAvaliable; break;
+			case DirectionOption.x: direction.ifLeft = ifAvaliable; direction.ifRight = ifAvaliable; break;
+			case DirectionOption.y: direction.ifUp = ifAvaliable; direction.ifDown = ifAvaliable; break;
+			case DirectionOption.z: direction.ifForward = ifAvaliable; direction.ifBack = ifAvaliable; break;
+			default: break;
+		}
+	}
 }

@@ -41,12 +41,7 @@ public class ObjectState {
 	protected void OnBecomeMoveable()
 	{
 		Debug.Log(movingObject);
-		if(movingObject.GetComponentInChildren<DetectInShadow>().setDirection.ifX)
-			movingObject.GetComponent<DragObjectScript>().SetDirectionX(true);
-		if(movingObject.GetComponentInChildren<DetectInShadow>().setDirection.ifY)
-			movingObject.GetComponent<DragObjectScript>().SetDirectionY(true);
-		if(movingObject.GetComponentInChildren<DetectInShadow>().setDirection.ifZ)
-			movingObject.GetComponent<DragObjectScript>().SetDirectionZ(true);
+		
 	}
 	protected void OnBecomeMoving()
 	{Debug.Log("OnMoving State");}
