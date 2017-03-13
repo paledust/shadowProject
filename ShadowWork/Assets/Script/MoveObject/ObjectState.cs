@@ -4,15 +4,17 @@ using UnityEngine;
 public enum MovingState{
 	Frozen,
 	Moveable,
-	Moving
+	Moving,
+	Pulled
 }
 
 public class ObjectState {
-	private GameObject movingObject;
+	static private GameObject movingObject;
 	public MovingState movingState;
 	public bool ifFrozen{get{return movingState == MovingState.Frozen;}}
 	public bool ifMoveable{get{return movingState == MovingState.Moveable;}}
 	public bool ifMoving{get{return movingState == MovingState.Moving;}}
+	public bool ifPulled{get{return movingState == MovingState.Pulled;}}
 
 	
 	public void SetStatus(MovingState _State){
@@ -29,6 +31,9 @@ public class ObjectState {
 			case MovingState.Moving:
 				OnBecomeMoving();
 				break;
+			case MovingState.Pulled:
+				OnBecomePulled();
+				break;
 			default:
 				Debug.Log("Enter Into Non-Status! Wrong!");
 				Debug.Assert(false);
@@ -37,18 +42,20 @@ public class ObjectState {
 	}
 
 	protected void OnBecomeFrozen()
-	{Debug.Log("Frozen State");}
+	{}
 	protected void OnBecomeMoveable()
-	{
-		Debug.Log(movingObject);
-		
-	}
+	{}
 	protected void OnBecomeMoving()
-	{Debug.Log("OnMoving State");}
+	{}
+	protected void OnBecomePulled()
+	{}
 	internal void MovingUpdate()
-	{Debug.Log("Moving State");}
+	{}
 	internal void SetMovingObject(GameObject _object)
 	{
 		movingObject = _object;
+	}
+	internal void PulledUpdate()
+	{
 	}
 }

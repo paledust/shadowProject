@@ -31,8 +31,9 @@ public class DragObjectScript : MonoBehaviour {
 	//For Dragging things Here and There
 	void OnMouseDrag()
 	{
+		Debug.Log("MOUSE DRAG");
 		//Check whether it's Frozen, if it is, the object can't move
-		if(!GetComponent<ObjectStateManager>().objectState.ifFrozen)
+		if(!GetComponent<ObjectStateManager>().objectState.ifFrozen && !GetComponent<ObjectStateManager>().objectState.ifPulled)
 		{
 			//Check whether set to movable state then Set the State from moveable to moving
 			if(GetComponent<ObjectStateManager>().objectState.ifMoveable)
@@ -45,15 +46,53 @@ public class DragObjectScript : MonoBehaviour {
 				MouseDir = Mathf.Abs(MouseDir*Mathf.Rad2Deg);
 			}
 
-			if(MouseDir > 45 && MouseDir < 135 && direction.ifZ)
+			if(MouseDir > 30 && MouseDir < 60 && direction.ifZ)
 			{
 				tempVec = Vector3.forward;
 				transform.position += tempVec * Input.GetAxis("Mouse Y")*DragSpeed;			
 			}
-			else if(MouseDir >= 0 && direction.ifX)
+			else if(MouseDir >= 0 && MouseDir <=30 && direction.ifX)
 			{
 				tempVec = Vector3.right;
 				transform.position += tempVec * Input.GetAxis("Mouse X")*DragSpeed;		
+			}
+			else if(direction.ifY && MouseDir >= 60 && MouseDir <= 90)
+			{
+				tempVec = Vector3.up;
+				transform.position += tempVec * Input.GetAxis("Mouse X")*DragSpeed;	
+			}
+		}
+	}
+
+	void Update()
+	{
+		if(!GetComponent<ObjectStateManager>().objectState.ifFrozen && !GetComponent<ObjectStateManager>().objectState.ifPulled)
+		{
+			//Check whether set to movable state then Set the State from moveable to moving
+			if(GetComponent<ObjectStateManager>().objectState.ifMoveable)
+				GetComponent<ObjectStateManager>().objectState.SetStatus(MovingState.Moving);
+			Vector3 tempVec = Vector3.zero;
+
+			if(MouseDir == 0)
+			{
+				MouseDir = Mathf.Atan2(Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse X"));
+				MouseDir = Mathf.Abs(MouseDir*Mathf.Rad2Deg);
+			}
+
+			if(Input.GetButton("Vertical") && direction.ifZ)
+			{
+				tempVec = Vector3.forward;
+				transform.position += tempVec * Input.GetAxis("Vertical")*DragSpeed;			
+			}
+			else if(Input.GetButton("Horizontal") && direction.ifX)
+			{
+				tempVec = Vector3.right;
+				transform.position += tempVec * Input.GetAxis("Horizontal")*DragSpeed;		
+			}
+			else if(Input.GetButton("Height") && direction.ifY)
+			{
+				tempVec = Vector3.up;
+				transform.position += tempVec * Input.GetAxis("Height")*DragSpeed;	
 			}
 		}
 	}
@@ -81,9 +120,9 @@ public class DragObjectScript : MonoBehaviour {
 			case DirectionOption.down: direction.ifDown = ifAvaliable; break;
 			case DirectionOption.forward: direction.ifForward = ifAvaliable; break;
 			case DirectionOption.back: direction.ifBack = ifAvaliable; break;
-			case DirectionOption.x: direction.ifLeft = ifAvaliable; direction.ifRight = ifAvaliable; break;
-			case DirectionOption.y: direction.ifUp = ifAvaliable; direction.ifDown = ifAvaliable; break;
-			case DirectionOption.z: direction.ifForward = ifAvaliable; direction.ifBack = ifAvaliable; break;
+			case DirectionOption.x: direction.ifLeft = ifAvaliable; direction.ifRight = ifAvaliable;Debug.Log("X");  break;
+			case DirectionOption.y: direction.ifUp = ifAvaliable; direction.ifDown = ifAvaliable; Debug.Log("Y"); break;
+			case DirectionOption.z: direction.ifForward = ifAvaliable; direction.ifBack = ifAvaliable; Debug.Log("Z"); break;
 			default: break;
 		}
 	}

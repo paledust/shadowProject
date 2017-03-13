@@ -20,5 +20,11 @@ public class ObjectStateManager : MonoBehaviour {
 		{
 			objectState.MovingUpdate();
 		}
+		if(objectState.ifPulled)
+		{
+			
+		}
+
+		Debug.Log(objectState);
 	}
 }
