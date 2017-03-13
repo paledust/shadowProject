@@ -49,7 +49,7 @@ public class DragObjectScript : MonoBehaviour {
 			if(MouseDir > 30 && MouseDir < 60 && direction.ifZ)
 			{
 				tempVec = Vector3.forward;
-				transform.position += tempVec * Input.GetAxis("Mouse Y")*DragSpeed;			
+				transform.position += tempVec * (Input.GetAxis("Mouse Y"))*DragSpeed;			
 			}
 			else if(MouseDir >= 0 && MouseDir <=30 && direction.ifX)
 			{
@@ -59,7 +59,7 @@ public class DragObjectScript : MonoBehaviour {
 			else if(direction.ifY && MouseDir >= 60 && MouseDir <= 90)
 			{
 				tempVec = Vector3.up;
-				transform.position += tempVec * Input.GetAxis("Mouse X")*DragSpeed;	
+				transform.position += tempVec * Input.GetAxis("Mouse Y")*DragSpeed;	
 			}
 		}
 	}
@@ -68,33 +68,18 @@ public class DragObjectScript : MonoBehaviour {
 	{
 		if(!GetComponent<ObjectStateManager>().objectState.ifFrozen && !GetComponent<ObjectStateManager>().objectState.ifPulled)
 		{
-			//Check whether set to movable state then Set the State from moveable to moving
-			if(GetComponent<ObjectStateManager>().objectState.ifMoveable)
+			//Change State with Keyboard
+			if(Input.GetButtonUp("Horizontal") || Input.GetButtonUp("Vertical") || Input.GetButtonUp("Height"))
+				GetComponent<ObjectStateManager>().objectState.SetStatus(MovingState.Frozen);
+			
+			if(Input.GetButtonDown("Horizontal") || Input.GetButtonDown("Vertical") || Input.GetButtonDown("Height"))
 				GetComponent<ObjectStateManager>().objectState.SetStatus(MovingState.Moving);
-			Vector3 tempVec = Vector3.zero;
 
-			if(MouseDir == 0)
-			{
-				MouseDir = Mathf.Atan2(Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse X"));
-				MouseDir = Mathf.Abs(MouseDir*Mathf.Rad2Deg);
-			}
-
-			if(Input.GetButton("Vertical") && direction.ifZ)
-			{
-				tempVec = Vector3.forward;
-				transform.position += tempVec * Input.GetAxis("Vertical")*DragSpeed;			
-			}
-			else if(Input.GetButton("Horizontal") && direction.ifX)
-			{
-				tempVec = Vector3.right;
-				transform.position += tempVec * Input.GetAxis("Horizontal")*DragSpeed;		
-			}
-			else if(Input.GetButton("Height") && direction.ifY)
-			{
-				tempVec = Vector3.up;
-				transform.position += tempVec * Input.GetAxis("Height")*DragSpeed;	
-			}
+			UpdateMove();
 		}
+
+		
+		MovementCheck();
 	}
 
 	//Forced Set The Object into some Place
@@ -120,10 +105,70 @@ public class DragObjectScript : MonoBehaviour {
 			case DirectionOption.down: direction.ifDown = ifAvaliable; break;
 			case DirectionOption.forward: direction.ifForward = ifAvaliable; break;
 			case DirectionOption.back: direction.ifBack = ifAvaliable; break;
-			case DirectionOption.x: direction.ifLeft = ifAvaliable; direction.ifRight = ifAvaliable;Debug.Log("X");  break;
-			case DirectionOption.y: direction.ifUp = ifAvaliable; direction.ifDown = ifAvaliable; Debug.Log("Y"); break;
-			case DirectionOption.z: direction.ifForward = ifAvaliable; direction.ifBack = ifAvaliable; Debug.Log("Z"); break;
+			case DirectionOption.x: direction.ifLeft = ifAvaliable; direction.ifRight = ifAvaliable;  break;
+			case DirectionOption.y: direction.ifUp = ifAvaliable; direction.ifDown = ifAvaliable; break;
+			case DirectionOption.z: direction.ifForward = ifAvaliable; direction.ifBack = ifAvaliable; break;
 			default: break;
 		}
 	}
+
+	void UpdateMove()
+	{
+		Vector3 tempVec = Vector3.zero;
+		if(Input.GetAxis("Vertical")>0 && direction.ifForward)
+		{
+			tempVec = Vector3.forward;
+			transform.position += tempVec * Input.GetAxis("Vertical")*DragSpeed;			
+		}
+		if(Input.GetAxis("Vertical")<0 && direction.ifBack)
+		{
+			tempVec = Vector3.forward;
+			transform.position += tempVec * Input.GetAxis("Vertical")*DragSpeed;			
+		}
+		if(Input.GetAxis("Horizontal")>0 && direction.ifRight)
+		{
+			tempVec = Vector3.right;
+			transform.position += tempVec * Input.GetAxis("Horizontal")*DragSpeed;			
+		}
+		if(Input.GetAxis("Horizontal")<0 && direction.ifLeft)
+		{		
+			tempVec = Vector3.right;
+			transform.position += tempVec * Input.GetAxis("Horizontal")*DragSpeed;			
+		}
+		if(Input.GetAxis("Height")>0 && direction.ifUp)
+		{		
+			tempVec = Vector3.up;
+			transform.position += tempVec * Input.GetAxis("Height")*DragSpeed;			
+		}
+		if(Input.GetAxis("Height")<0 && direction.ifDown)
+		{		
+			tempVec = Vector3.up;
+			transform.position += tempVec * Input.GetAxis("Height")*DragSpeed;			
+		}
+		// if(Input.GetButton("Vertical") && direction.ifZ)
+		// {
+		// 	tempVec = Vector3.forward;
+		// 	transform.position += tempVec * Input.GetAxis("Vertical")*DragSpeed;			
+		// }
+		// else if(Input.GetButton("Horizontal") && direction.ifX)
+		// {
+		// 	tempVec = Vector3.right;
+		// 	transform.position += tempVec * Input.GetAxis("Horizontal")*DragSpeed;		
+		// }
+		// else if(Input.GetButton("Height") && direction.ifY)
+		// {
+		// 	tempVec = Vector3.up;
+		// 	transform.position += tempVec * Input.GetAxis("Height")*DragSpeed;	
+		// }
+	}
+
+	void MovementCheck()
+	{
+		//GroundCheck
+		if(transform.position.y < transform.GetChild(0).localScale.y/2.0f)
+		{
+			transform.position = new Vector3(transform.position.x,transform.GetChild(0).localScale.y/2.0f, transform.position.z);
+		}
+	}
+
 }

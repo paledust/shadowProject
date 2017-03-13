@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ObjectStateManager : MonoBehaviour {
 	public ObjectState objectState;
+	public MovingState movingState;
 
 	void Awake()
 	{
@@ -24,7 +25,6 @@ public class ObjectStateManager : MonoBehaviour {
 		{
 			
 		}
-
-		Debug.Log(objectState);
+		movingState = objectState.movingState;
 	}
 }

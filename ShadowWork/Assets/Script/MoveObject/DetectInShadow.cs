@@ -38,8 +38,11 @@ public class DetectInShadow : MonoBehaviour {
 				}
 			}
 			//Set the State to movable State
-			if(!GetComponentInParent<ObjectStateManager>().objectState.ifMoveable && rayHits.Length>0)
-				GetComponentInParent<ObjectStateManager>().objectState.SetStatus(MovingState.Moveable);
+			if(rayHits.Length>0)
+			{
+				if(GetComponentInParent<ObjectStateManager>().objectState.ifFrozen)
+					GetComponentInParent<ObjectStateManager>().objectState.SetStatus(MovingState.Moveable);
+			}
 		}
 
 		Debug.DrawLine(ray.origin,ray.direction * 500 + ray.origin, Color.white);
@@ -65,7 +68,6 @@ public class DetectInShadow : MonoBehaviour {
 	}
 
 	//Based on the ShadowTrail, it will calculate the final available direction for ShadowBox, but it's actually wrong!!!!!!!!!!!!!!!!!!
-	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! The calculation condition Need to be fixed, right now, it didn't consider light direction.
 	DirectionOption CalculateDir(DirectionOption _direction)
 	{
 		switch (directionOPT)
@@ -73,14 +75,29 @@ public class DetectInShadow : MonoBehaviour {
 			case DirectionOption.x:
 				if(_direction == DirectionOption.x)
 					_direction = DirectionOption.y;
+
+				if(_direction == DirectionOption.right)
+					_direction = DirectionOption.up;
+				if(_direction == DirectionOption.left)
+					_direction = DirectionOption.down;
 				break;
 			case DirectionOption.y:
 				if(_direction == DirectionOption.y)
 					_direction = DirectionOption.z;
+
+				if(_direction == DirectionOption.up)
+					_direction = DirectionOption.forward;
+				if(_direction == DirectionOption.down)
+					_direction = DirectionOption.back;
 				break;
 			case DirectionOption.z:
 				if(_direction == DirectionOption.z)
 					_direction = DirectionOption.y;
+
+				if(_direction == DirectionOption.forward)
+					_direction = DirectionOption.up;
+				if(_direction == DirectionOption.back)
+					_direction = DirectionOption.down;
 				break;
 			default:
 				break;
