@@ -40,11 +40,11 @@ public class MoveObjectScript : MonoBehaviour {
 			keyHit2 = true;
 		}
 		if(keyHit == true){
-			LerpObjectScript.LerpObject(objectToMove, currentPos, endPos1, timeToMove, timeSpentMoving);
+			LerpObjectScript.Instance.LerpObject(objectToMove, currentPos, endPos1, timeToMove, timeSpentMoving);
 			timeSpentMoving += Time.deltaTime;
 		}
 		if(keyHit2 == true){
-			LerpObjectScript.LerpObject(objectToMove, currentPos, endPos2, timeToMove, timeSpentMoving);
+			LerpObjectScript.Instance.LerpObject(objectToMove, currentPos, endPos2, timeToMove, timeSpentMoving);
 			timeSpentMoving += Time.deltaTime;
 		}
 	}
