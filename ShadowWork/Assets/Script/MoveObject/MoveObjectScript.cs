@@ -11,9 +11,9 @@ public class MoveObjectScript : MonoBehaviour {
 	private Vector3 endPos1;
 	private Vector3 endPos2;
 
-	public float lerpTime = 5;
+	public float timeToMove = 5;
 
-	private float currentLerpTime = 0;
+	private float timeSpentMoving = 0;
 
 	private bool keyHit = false;
 	private bool keyHit2 = false;
@@ -28,30 +28,33 @@ public class MoveObjectScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetKeyDown(KeyCode.P)){
-			currentLerpTime = 0;
+			timeSpentMoving = 0;
+			currentPos = objectToMove.transform.position;
 			keyHit2 = false;
 			keyHit = true;
 		}
 		if (Input.GetKeyDown(KeyCode.O)){
-			currentLerpTime = 0;
+			timeSpentMoving = 0;
+			currentPos = objectToMove.transform.position;
 			keyHit = false;
 			keyHit2 = true;
 		}
 		if(keyHit == true){
-			LerpObject(currentPos, endPos1);
+			LerpObjectScript.LerpObject(objectToMove, currentPos, endPos1, timeToMove, timeSpentMoving);
+			timeSpentMoving += Time.deltaTime;
 		}
 		if(keyHit2 == true){
-			LerpObject(currentPos, endPos2);
+			LerpObjectScript.LerpObject(objectToMove, currentPos, endPos2, timeToMove, timeSpentMoving);
+			timeSpentMoving += Time.deltaTime;
 		}
 	}
 
-	void LerpObject(Vector3 pos1, Vector3 pos2){
-		currentLerpTime += Time.deltaTime;
-		if(currentLerpTime >= lerpTime){
-			currentLerpTime = lerpTime;
-		}
-		float perc = currentLerpTime/lerpTime;
-		objectToMove.transform.position = Vector3.Lerp(pos1, pos2, perc);
-		currentPos = objectToMove.transform.position;
-	}
+//	void LerpObject(GameObject obj, Vector3 pos1, Vector3 pos2, float lerpTime, float currentLerpTime){
+//		currentLerpTime += Time.deltaTime;
+//		if(currentLerpTime >= lerpTime){
+//			currentLerpTime = lerpTime;
+//		}
+//		float perc = currentLerpTime/lerpTime;
+//		obj.transform.position = Vector3.Lerp(pos1, pos2, perc);
+//	}
 }
