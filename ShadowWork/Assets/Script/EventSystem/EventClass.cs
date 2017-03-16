@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class Event {
+public abstract class Event {
 	public delegate void Handler(Event e);
 }
 
@@ -24,7 +24,11 @@ public class CameraMoveEvent: Event{
 }
 
 public class changeDirLightEvent: Event{
-	public Quaternion rotation = new Quaternion();
-	public Transform dirLightTransform;
+	public RotationInfo dirRotationInfo = new RotationInfo();
+}
+
+public class swithDirLightEvent: Event{
+	public Light firstLight;
+	public Light SecondLight;
 }
 

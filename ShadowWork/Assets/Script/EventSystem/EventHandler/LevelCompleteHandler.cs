@@ -11,7 +11,7 @@ public class LevelCompleteHandler : MonoBehaviour {
 	}
 	private void RestartLevelHandler(Event e)
 	{
-		RestartEvent tempEvent = e as RestartEvent;
+		// RestartEvent tempEvent = e as RestartEvent;
 		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	}
 	private void CameraMoveHandler(Event e)
@@ -20,7 +20,7 @@ public class LevelCompleteHandler : MonoBehaviour {
 		CameraMoveManager camMoveManager = Camera.main.GetComponent<CameraMoveManager>();
 		if(!camMoveManager.ifMove)
 		{
-			Debug.Log("Camera Information Sent");
+			//Debug.Log("Camera Information Sent");
 			camMoveManager.ifMove = true;
 			camMoveManager.SetMoveInfo(tempEvent.camMoveInfo);
 		}
@@ -28,7 +28,17 @@ public class LevelCompleteHandler : MonoBehaviour {
 	private void ChangeDirLightHandler(Event e)
 	{
 		changeDirLightEvent tempEvent = e as changeDirLightEvent;
-		tempEvent.dirLightTransform.rotation = tempEvent.rotation;
+		DirLightRotationManager dirChangeManager = KeyObjCollect.Instance.ActiveDirLight.transform.GetComponent<DirLightRotationManager>();
+		if(!dirChangeManager.ifRotate)
+		{
+			//Debug.Log("Camera Information Sent");
+			dirChangeManager.ifRotate = true;
+			dirChangeManager.setRotateInfo(tempEvent.dirRotationInfo);
+		}
+	}
+	private void DirLightSwitchHandler(Event e)
+	{
+		
 	}
 
 	public void RegisterFunction()
