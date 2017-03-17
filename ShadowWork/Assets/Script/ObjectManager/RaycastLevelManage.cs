@@ -3,19 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class RaycastLevelManage : MonoBehaviour {
-	public Transform ActiveDirectionalLight;
-	public Vector3 startPos;
 	public Vector3 endPos;
 	public float lerpTime;
 	public int NextLevelIndex;
 	public Vector3 Dir_TargetRotationEuler;
-	private Quaternion Dir_TargetRotation;
 	LevelCompleteHandler _levelCompleteHandler;
 	Ray ray;
 	RaycastHit rayhit;
 	// Use this for initialization
 	void Start () {
-		Dir_TargetRotation = Quaternion.Euler(Dir_TargetRotationEuler);
 		_levelCompleteHandler = GetComponent<LevelCompleteHandler>();
 		_levelCompleteHandler.RegisterFunction();
 
@@ -34,7 +30,8 @@ public class RaycastLevelManage : MonoBehaviour {
 				// CompleteEvent e = new CompleteEvent();
 				// e.NextLevelIndex = NextLevelIndex;
 				Fire_CameraMove_Event();
-				Fire_DirectionLightChange_Event();
+				if(Camera.main.GetComponent<CameraMoveManager>().ifMoveToEndPos())
+					Fire_DirectionLightChange_Event();
 			}
 		}
 		
@@ -61,7 +58,6 @@ public class RaycastLevelManage : MonoBehaviour {
 		camMoveInfo.startPos = Camera.main.gameObject.transform.position;
 		camMoveInfo.endPos = endPos;
 		camMoveInfo.lerpTime = lerpTime;
-		camMoveInfo.lerpSpeed = 1.0f;
 		camMoveInfo.MethodIndex = 0;
 	}
 	private void SetDirLightRotateInfo(RotationInfo dirRotateInfo)
@@ -69,7 +65,6 @@ public class RaycastLevelManage : MonoBehaviour {
 		dirRotateInfo.startEularAngle = KeyObjCollect.Instance.ActiveDirLight.transform.rotation.eulerAngles;
 		dirRotateInfo.endEularAngle = Dir_TargetRotationEuler;
 		dirRotateInfo.lerpTime = lerpTime;
-		dirRotateInfo.lerpSpeed = 1.0f;
 		dirRotateInfo.MethodIndex = 0;
 	}
 

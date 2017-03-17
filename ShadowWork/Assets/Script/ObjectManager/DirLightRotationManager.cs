@@ -9,7 +9,7 @@ public class DirLightRotationManager : MonoBehaviour {
 	void Update () {
 		if(ifRotate)
 		{
-			LerpObjectScript.Instance.RotateObject(gameObject, rotationInfo, timer);
+			rotateLight(rotationInfo.MethodIndex);
 			timer += Time.deltaTime;
 			if(transform.rotation.eulerAngles == rotationInfo.endEularAngle)
 			{
@@ -18,6 +18,21 @@ public class DirLightRotationManager : MonoBehaviour {
 		}
 	}
 
+	private void rotateLight(int methodIndex)
+	{
+		switch (methodIndex)
+		{
+			case 0:
+				LerpObjectScript.Instance.RotateObject(gameObject, rotationInfo, timer);
+				break;
+			case 1:
+				LerpObjectScript.Instance.SmoothRotateObject(gameObject, rotationInfo, timer);
+				break;
+			default:
+				break;
+		}
+		timer += Time.deltaTime;
+	}
 	public void ResetToUnRotate()
 	{
 		Debug.Log("Reset Camera To Unmove");
@@ -29,5 +44,9 @@ public class DirLightRotationManager : MonoBehaviour {
 	public void setRotateInfo(RotationInfo m_rotationInfo)
 	{
 		rotationInfo = m_rotationInfo;
+	}
+	public bool ifRotateToEndEular()
+	{
+		return transform.rotation.eulerAngles == rotationInfo.endEularAngle;
 	}
 }

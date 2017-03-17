@@ -5,7 +5,7 @@ using UnityEngine;
 public class LevelManager : MonoBehaviour {
 	public GameObject ActiveDirLight;
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		KeyObjCollect.Instance.SetNewActiveDirLight(ActiveDirLight);
 	}
 }

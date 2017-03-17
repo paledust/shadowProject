@@ -4,7 +4,6 @@ using UnityEngine;
 
 public abstract class TransInfo{
 	public float lerpTime;
-	public float lerpSpeed;
 	public int MethodIndex;
 }
 public class CameraMoveInfo: TransInfo{
@@ -45,17 +44,12 @@ public class LerpObjectScript {
 		obj.transform.position = Vector3.Lerp(startPos, endPos, perc);
 	}
 
-	public void SmoothOutLerp(GameObject obj, CameraMoveInfo camMoveInfo)
+	public void SmoothOutLerp(GameObject obj, CameraMoveInfo camMoveInfo, float currentLerpTime)
 	{
-		obj.transform.position = Vector3.Lerp(obj.transform.position, camMoveInfo.endPos, camMoveInfo.lerpSpeed * Time.deltaTime);
-		if((obj.transform.position - camMoveInfo.endPos).magnitude <= 0.01f)
-		{
-			obj.transform.position = camMoveInfo.endPos;
-		}
+		obj.transform.position = Vector3.Lerp(obj.transform.position, camMoveInfo.endPos, Time.deltaTime * 1.0f/camMoveInfo.lerpTime);
 	}
-	public void SmoothOutLerp(GameObject obj, Vector3 startPos, Vector3 endPos, float lerpSpeed)
-	{
-		obj.transform.position = Vector3.Lerp(startPos, endPos, lerpSpeed * Time.deltaTime);
+	public void SmoothOutLerp(GameObject obj, Vector3 startPos, Vector3 endPos, float lerpTime, float currentLerpTime){
+		obj.transform.position = Vector3.Lerp(obj.transform.position, endPos, Time.deltaTime * 1.0f/lerpTime);
 		if((obj.transform.position - endPos).magnitude <= 0.01f)
 		{
 			obj.transform.position = endPos;
@@ -68,10 +62,14 @@ public class LerpObjectScript {
 		}
 
 		float perc = currentLerpTime/rotateInfo.lerpTime;
-		obj.transform.rotation = Quaternion.Euler(Vector3.Lerp(rotateInfo.startEularAngle, rotateInfo.endEularAngle, perc*5));
+		obj.transform.rotation = Quaternion.Euler(Vector3.Lerp(rotateInfo.startEularAngle, rotateInfo.endEularAngle, perc));
 	}
 
-	public void SmoothRotateObject(GameObject obj, RotationInfo rotateInfo){
-
+	public void SmoothRotateObject(GameObject obj, RotationInfo rotateInfo, float currentLerpTime){
+		obj.transform.rotation = Quaternion.Euler(Vector3.Lerp(obj.transform.rotation.eulerAngles, rotateInfo.endEularAngle, Time.deltaTime * 1.0f/rotateInfo.lerpTime));
+		if(Quaternion.Angle(obj.transform.rotation, Quaternion.Euler(rotateInfo.endEularAngle)) <= 0.1f)
+		{
+			obj.transform.rotation = Quaternion.Euler(rotateInfo.endEularAngle);
+		}
 	}
 }

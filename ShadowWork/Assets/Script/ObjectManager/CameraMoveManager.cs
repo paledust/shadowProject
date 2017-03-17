@@ -15,13 +15,28 @@ public class CameraMoveManager : MonoBehaviour {
 	void Update () {
 		if(ifMove)
 		{
-			LerpObjectScript.Instance.LerpObject(Camera.main.gameObject, camMoveInfo, timer);
-			timer += Time.deltaTime;
+			moveCamera(camMoveInfo.MethodIndex);
 			if(Camera.main.gameObject.transform.position == camMoveInfo.endPos)
 			{
 				ResetToUnMove();
 			}
 		}
+	}
+
+	private void moveCamera(int methodIndex)
+	{
+		switch (methodIndex)
+		{
+			case 0:
+				LerpObjectScript.Instance.LerpObject(Camera.main.gameObject, camMoveInfo, timer);
+				break;
+			case 1:
+				LerpObjectScript.Instance.SmoothOutLerp(Camera.main.gameObject, camMoveInfo, timer);
+				break;
+			default:
+				break;
+		}
+		timer += Time.deltaTime;
 	}
 
 	public void ResetToUnMove()
@@ -36,4 +51,9 @@ public class CameraMoveManager : MonoBehaviour {
 	{
 		camMoveInfo = m_camMoveInfo;
 	}
+	public bool ifMoveToEndPos()
+	{
+		return Camera.main.gameObject.transform.position == camMoveInfo.endPos;
+	}
+
 }
