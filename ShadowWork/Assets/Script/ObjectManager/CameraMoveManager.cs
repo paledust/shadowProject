@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraMoveManager : MonoBehaviour {
 	public bool ifMove;
-	private float timer;
+	private float timer = 0.0f;
 	private CameraMoveInfo camMoveInfo;
 	// Use this for initialization
 	void Start () {
