@@ -28,7 +28,7 @@ public class changeDirLightEvent: Event{
 }
 
 public class swithDirLightEvent: Event{
-	public Light firstLight;
-	public Light SecondLight;
+	public Light light_Start;
+	public Light light_End;
 }
 

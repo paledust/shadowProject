@@ -3,9 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class RaycastLevelManage : MonoBehaviour {
-	public Vector3 endPos;
+	public Transform camPosTransform;
+	public Light light_Start;
+	public Light light_End;
+	private Vector3 endPos{
+		get{
+			return camPosTransform.position;
+		}
+	}
 	public float lerpTime;
-	public int NextLevelIndex;
 	public Vector3 Dir_TargetRotationEuler;
 	LevelCompleteHandler _levelCompleteHandler;
 	Ray ray;
@@ -31,15 +37,19 @@ public class RaycastLevelManage : MonoBehaviour {
 				// e.NextLevelIndex = NextLevelIndex;
 				Fire_CameraMove_Event();
 				if(Camera.main.GetComponent<CameraMoveManager>().ifMoveToEndPos())
-					Fire_DirectionLightChange_Event();
+				{
+					Debug.Log("Camera In Position");
+					if(light_Start != light_End)
+						Fire_DirlightSwitch_Event();
+					//Fire_DirectionLightChange_Event();
+				}
+				
+				if(light_End.GetComponent<DirLightSwitchManager>().ifSwitchComplete())
+				{
+					KeyObjCollect.Instance.SetNewActiveDirLight(light_End.gameObject);
+				}
 			}
 		}
-		
-		if(Input.GetKeyDown(KeyCode.R))
-		{
-			Fire_RestartLevel_Event();
-		}
-
 		//Debug.DrawLine(ray.origin,ray.direction * 500 + ray.origin, Color.green);
 	}
 
@@ -67,7 +77,17 @@ public class RaycastLevelManage : MonoBehaviour {
 		dirRotateInfo.lerpTime = lerpTime;
 		dirRotateInfo.MethodIndex = 0;
 	}
-
+	private void SetDirLightSwitchInfo(out Light m_light_End,out Light m_light_Start)
+	{
+		m_light_End = light_End;
+		m_light_Start = light_Start;
+	}
+	private void Fire_DirlightSwitch_Event()
+	{
+		swithDirLightEvent e = new swithDirLightEvent();
+		SetDirLightSwitchInfo(out e.light_End,out e.light_Start);
+		EventManager.Instance.FireEvent(e);
+	}
 	private void Fire_CameraMove_Event()
 	{
 		CameraMoveEvent e = new CameraMoveEvent();

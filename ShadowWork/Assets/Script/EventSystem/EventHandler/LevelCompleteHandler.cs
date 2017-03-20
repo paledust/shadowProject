@@ -1,19 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class LevelCompleteHandler : MonoBehaviour {
-	private void LoadNextLevelHandler(Event e)
-	{
-		CompleteEvent tempEvent = e as CompleteEvent;
-		SceneManager.LoadScene(tempEvent.NextLevelIndex);
-	}
-	private void RestartLevelHandler(Event e)
-	{
-		// RestartEvent tempEvent = e as RestartEvent;
-		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-	}
 	private void CameraMoveHandler(Event e)
 	{
 		CameraMoveEvent tempEvent = e as CameraMoveEvent;
@@ -38,23 +27,36 @@ public class LevelCompleteHandler : MonoBehaviour {
 	}
 	private void DirLightSwitchHandler(Event e)
 	{
+		swithDirLightEvent tempEvent = e as swithDirLightEvent;
+		DirLightSwitchManager switchManager_Start = tempEvent.light_Start.GetComponent<DirLightSwitchManager>();
+		DirLightSwitchManager switchManager_End = tempEvent.light_End.GetComponent<DirLightSwitchManager>();
 		
+		if(!switchManager_Start.ifSwitch)
+		{
+			Debug.Log("StartLight Set");
+			switchManager_Start.ifSwitch = true;
+			switchManager_Start.SetIntensity(0.0f);
+		}
+		if(!switchManager_End.ifSwitch)
+		{
+			Debug.Log("EndLight Set");
+			switchManager_End.ifSwitch = true;
+			switchManager_End.SetIntensity(1.0f);
+		}
 	}
 
 	public void RegisterFunction()
 	{
-		EventManager.Instance.Register<CompleteEvent>(LoadNextLevelHandler);
-		EventManager.Instance.Register<RestartEvent>(RestartLevelHandler);
 		EventManager.Instance.Register<CameraMoveEvent>(CameraMoveHandler);
 		EventManager.Instance.Register<changeDirLightEvent>(ChangeDirLightHandler);
+		EventManager.Instance.Register<swithDirLightEvent>(DirLightSwitchHandler);
 	}
 
 	public void UnRegisterAllFunction()
 	{
-		EventManager.Instance.UnRegister<CompleteEvent>(LoadNextLevelHandler);
-		EventManager.Instance.UnRegister<RestartEvent>(RestartLevelHandler);
 		EventManager.Instance.UnRegister<CameraMoveEvent>(CameraMoveHandler);
 		EventManager.Instance.UnRegister<changeDirLightEvent>(ChangeDirLightHandler);
+		EventManager.Instance.UnRegister<swithDirLightEvent>(DirLightSwitchHandler);
 	}
 
 }

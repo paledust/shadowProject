@@ -51,16 +51,17 @@ public class DragObjectScript : MonoBehaviour {
 				tempVec = Vector3.forward;
 				transform.position += tempVec * (Input.GetAxis("Mouse Y"))*DragSpeed;			
 			}
-			else if(MouseDir >= 0 && MouseDir <=30 && direction.ifX)
+			else if((MouseDir <= 150 || MouseDir <=30) && direction.ifX)
 			{
 				tempVec = Vector3.right;
 				transform.position += tempVec * Input.GetAxis("Mouse X")*DragSpeed;		
 			}
-			else if(direction.ifY && MouseDir >= 60 && MouseDir <= 90)
+			else if(direction.ifY && (MouseDir <= 120 || MouseDir >= 60))
 			{
 				tempVec = Vector3.up;
 				transform.position += tempVec * Input.GetAxis("Mouse Y")*DragSpeed;	
 			}
+			Debug.Log(MouseDir);
 		}
 	}
 
@@ -145,6 +146,7 @@ public class DragObjectScript : MonoBehaviour {
 			tempVec = Vector3.up;
 			transform.position += tempVec * Input.GetAxis("Height")*DragSpeed;			
 		}
+
 		// if(Input.GetButton("Vertical") && direction.ifZ)
 		// {
 		// 	tempVec = Vector3.forward;

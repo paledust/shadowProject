@@ -11,7 +11,7 @@ public class DirLightRotationManager : MonoBehaviour {
 		{
 			rotateLight(rotationInfo.MethodIndex);
 			timer += Time.deltaTime;
-			if(transform.rotation.eulerAngles == rotationInfo.endEularAngle)
+			if(ifRotateToEndEular())
 			{
 				ResetToUnRotate();
 			}
