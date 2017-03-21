@@ -11,7 +11,7 @@ public class PullEvent: Event{
 
 }
 
-public class CompleteEvent: Event{
+public class LoadLevelEvent: Event{
 	public int NextLevelIndex = 0;
 }
 

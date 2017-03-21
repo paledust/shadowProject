@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Task: MonoBehaviour {
+public abstract class Task {
     public enum TaskStatus{
         Detached,
         Pending,
@@ -16,7 +16,7 @@ public abstract class Task: MonoBehaviour {
         SetStatus(TaskStatus.Detached);
     }
     public TaskStatus Status{
-        get; private set;
+        get; protected set;
     }
     public bool ifDetached{get{return Status == TaskStatus.Detached;}}
     public bool ifPending{get{return Status == TaskStatus.Pending;}}

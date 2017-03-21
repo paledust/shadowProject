@@ -6,10 +6,10 @@ using UnityEngine;
 public class LevelManager : MonoBehaviour {
 	public GameObject ActiveDirLight;
 	// Use this for initialization
-	void Awake () {
+	void Start () {
 		KeyObjCollect.Instance.SetNewActiveDirLight(ActiveDirLight);
 		EventManager.Instance.Register<RestartEvent>(RestartLevelHandler);
-		EventManager.Instance.Register<CompleteEvent>(LoadNextLevelHandler);
+		EventManager.Instance.Register<LoadLevelEvent>(LoadNextLevelHandler);
 	}
 
 	void Update()
@@ -32,7 +32,7 @@ public class LevelManager : MonoBehaviour {
 	}
 	private void LoadNextLevelHandler(Event e)
 	{
-		CompleteEvent tempEvent = e as CompleteEvent;
+		LoadLevelEvent tempEvent = e as LoadLevelEvent;
 		SceneManager.LoadScene(tempEvent.NextLevelIndex);
 	}
 }

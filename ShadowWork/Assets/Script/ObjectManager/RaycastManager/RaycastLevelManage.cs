@@ -39,15 +39,15 @@ public class RaycastLevelManage : MonoBehaviour {
 				if(Camera.main.GetComponent<CameraMoveManager>().ifMoveToEndPos())
 				{
 					Debug.Log("Camera In Position");
-					if(light_Start != light_End)
-						Fire_DirlightSwitch_Event();
-					//Fire_DirectionLightChange_Event();
+					// if(light_Start != light_End)
+					// 	Fire_DirlightSwitch_Event();
+					Fire_DirectionLightChange_Event();
 				}
 				
-				if(light_End.GetComponent<DirLightSwitchManager>().ifSwitchComplete())
-				{
-					KeyObjCollect.Instance.SetNewActiveDirLight(light_End.gameObject);
-				}
+				// if(light_End.GetComponent<DirLightSwitchManager>().ifSwitchComplete())
+				// {
+				// 	KeyObjCollect.Instance.SetNewActiveDirLight(light_End.gameObject);
+				// }
 			}
 		}
 		//Debug.DrawLine(ray.origin,ray.direction * 500 + ray.origin, Color.green);

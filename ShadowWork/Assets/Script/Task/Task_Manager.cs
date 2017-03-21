@@ -2,17 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Task_Manager:MonoBehaviour {
+public class Task_Manager: MonoBehaviour {
 	public List<Task> tasks = new List<Task>();
-	void Start()
-	{
-
-	}
 	void Update()
 	{
-		int i = 0;
-		foreach (Task task in tasks)
+		for (int i = tasks.Count-1; i >= 0;i--)
 		{
+			Task task = tasks[i];
 			if(task.ifPending) 
 				task.SetStatus(Task.TaskStatus.Working);
 
@@ -23,7 +19,6 @@ public class Task_Manager:MonoBehaviour {
 				task.TUpdate();
 				if(task.ifFinished) HandleCompletion(task,i);
 			}
-			i++;
 		}
 	}
 
@@ -38,9 +33,7 @@ public class Task_Manager:MonoBehaviour {
 	public void AddTask(Task task)
 	{
 		Debug.Log("Add Task");
-		Debug.Assert(task != null);
 		Debug.Assert(task.ifDetached);
-		Debug.Log(tasks);
 		tasks.Add(task);
 		task.SetStatus(Task.TaskStatus.Pending);
 	} 
