@@ -6,7 +6,7 @@ public abstract class TransInfo{
 	public float lerpTime;
 	public int MethodIndex;
 }
-public class CameraMoveInfo: TransInfo{
+public class MoveInfo: TransInfo{
 	public Vector3 startPos;
 	public Vector3 endPos;
 }
@@ -26,7 +26,7 @@ public class LerpObjectScript {
 		}
 	}
 
-	public void LerpObject(GameObject obj, CameraMoveInfo camMoveInfo, float currentLerpTime){
+	public void LerpObject(GameObject obj, MoveInfo camMoveInfo, float currentLerpTime){
 		//currentLerpTime += Time.deltaTime;
 		if(currentLerpTime >= camMoveInfo.lerpTime){
 			currentLerpTime = camMoveInfo.lerpTime;
@@ -44,7 +44,7 @@ public class LerpObjectScript {
 		obj.transform.position = Vector3.Lerp(startPos, endPos, perc);
 	}
 
-	public void SmoothOutLerp(GameObject obj, CameraMoveInfo camMoveInfo, float currentLerpTime)
+	public void SmoothOutLerp(GameObject obj, MoveInfo camMoveInfo, float currentLerpTime)
 	{
 		obj.transform.position = Vector3.Lerp(obj.transform.position, camMoveInfo.endPos, Time.deltaTime * 1.0f/camMoveInfo.lerpTime);
 	}

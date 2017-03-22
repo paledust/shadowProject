@@ -15,6 +15,10 @@ public class KeyObjCollect {
 	public GameObject ActiveDirLight;
 	public void SetNewActiveDirLight(GameObject m_Light)
 	{
+		if(ActiveDirLight != null)
+			ActiveDirLight.GetComponent<DirLightManager>().UnregisterFunction();
+			
 		ActiveDirLight = m_Light;
+		ActiveDirLight.GetComponent<DirLightManager>().registerFunction();
 	}
 }

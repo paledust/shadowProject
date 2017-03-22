@@ -116,37 +116,78 @@ public class DragObjectScript : MonoBehaviour {
 	void UpdateMove()
 	{
 		Vector3 tempVec = Vector3.zero;
-		if(Input.GetAxis("Vertical")>0 && direction.ifForward)
+		if(Input.GetAxis("Vertical")>0)
 		{
-			tempVec = Vector3.forward;
-			transform.position += tempVec * Input.GetAxis("Vertical")*DragSpeed;			
-		}
-		if(Input.GetAxis("Vertical")<0 && direction.ifBack)
-		{
-			tempVec = Vector3.forward;
-			transform.position += tempVec * Input.GetAxis("Vertical")*DragSpeed;			
-		}
-		if(Input.GetAxis("Horizontal")>0 && direction.ifRight)
-		{
-			tempVec = Vector3.right;
-			transform.position += tempVec * Input.GetAxis("Horizontal")*DragSpeed;			
-		}
-		if(Input.GetAxis("Horizontal")<0 && direction.ifLeft)
-		{		
-			tempVec = Vector3.right;
-			transform.position += tempVec * Input.GetAxis("Horizontal")*DragSpeed;			
-		}
-		if(Input.GetAxis("Height")>0 && direction.ifUp)
-		{		
-			tempVec = Vector3.up;
-			transform.position += tempVec * Input.GetAxis("Height")*DragSpeed;			
-		}
-		if(Input.GetAxis("Height")<0 && direction.ifDown)
-		{		
-			tempVec = Vector3.up;
-			transform.position += tempVec * Input.GetAxis("Height")*DragSpeed;			
-		}
+			if(direction.ifForward)
+			{
+				tempVec = Vector3.forward;
+				transform.position += tempVec * Input.GetAxis("Vertical")*DragSpeed;
+			}
+			else
+			{
 
+			}			
+		}
+		if(Input.GetAxis("Vertical")<0)
+		{
+			if(direction.ifBack)
+			{
+				tempVec = Vector3.forward;
+				transform.position += tempVec * Input.GetAxis("Vertical")*DragSpeed;	
+			}
+			else
+			{
+
+			}		
+		}
+		if(Input.GetAxis("Horizontal")>0)
+		{
+			if(direction.ifRight)
+			{
+				tempVec = Vector3.right;
+				transform.position += tempVec * Input.GetAxis("Horizontal")*DragSpeed;	
+			}
+			else
+			{
+
+			}
+		}
+		if(Input.GetAxis("Horizontal")<0)
+		{	
+			if(direction.ifLeft)
+			{
+				tempVec = Vector3.right;
+				transform.position += tempVec * Input.GetAxis("Horizontal")*DragSpeed;	
+			}
+			else
+			{
+
+			}	
+		}
+		if(Input.GetAxis("Height")>0)
+		{		
+			if(direction.ifUp)
+			{
+				tempVec = Vector3.up;
+				transform.position += tempVec * Input.GetAxis("Height")*DragSpeed;		
+			}
+			else
+			{
+
+			}				
+		}
+		if(Input.GetAxis("Height")<0)
+		{	
+			if(direction.ifDown)
+			{
+				tempVec = Vector3.up;
+				transform.position += tempVec * Input.GetAxis("Height")*DragSpeed;	
+			}
+			else
+			{
+
+			}		
+		}
 		// if(Input.GetButton("Vertical") && direction.ifZ)
 		// {
 		// 	tempVec = Vector3.forward;
@@ -163,7 +204,10 @@ public class DragObjectScript : MonoBehaviour {
 		// 	transform.position += tempVec * Input.GetAxis("Height")*DragSpeed;	
 		// }
 	}
+	void ShowWrongDirection()
+	{
 
+	}
 	void MovementCheck()
 	{
 		//GroundCheck
