@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RaycastManager : MonoBehaviour {
+public class SetTaskManager : MonoBehaviour {
 	public Task_Manager taskManager{
 		get; private set;
 	}

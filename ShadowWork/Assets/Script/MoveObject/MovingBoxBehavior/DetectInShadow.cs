@@ -9,13 +9,29 @@ public class DetectInShadow : MonoBehaviour {
 	public List<ShadowTrail> shadowTrailList;
 	[SerializeField] Color DeactiveColor = Color.black;
 	[SerializeField] Color ActivateColor = Color.blue;
-
 	RaycastHit[] rayHits;
 	Ray ray;
 	
 	void Start()
 	{
 		shadowTrailList = new List<ShadowTrail>();
+		switch (directionOPT)
+		{
+			case DirectionOption.x:
+				EventManager.Instance.Register<ButtonEvent_Left>(ShootParticle);
+				EventManager.Instance.Register<ButtonEvent_Right>(ShootParticle);
+				break;
+			case DirectionOption.y:
+				EventManager.Instance.Register<ButtonEvent_Forward>(ShootParticle);
+				EventManager.Instance.Register<ButtonEvent_Back>(ShootParticle);
+				break;
+			case DirectionOption.z:
+				EventManager.Instance.Register<ButtonEvent_Forward>(ShootParticle);
+				EventManager.Instance.Register<ButtonEvent_Back>(ShootParticle);
+				break;
+			default:
+				break;
+		}
 	}
 
 	// Update Function Start-----------------------------------------------------------
@@ -136,5 +152,10 @@ public class DetectInShadow : MonoBehaviour {
 		}
 		//Debug.Log(Vector3.Dot(DetectDirection,ray.direction));
 		return (Vector3.Dot(DetectDirection,ray.direction) >= 0.05f);
+	}
+
+	void ShootParticle(Event e)
+	{
+
 	}
 }

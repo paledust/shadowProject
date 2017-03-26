@@ -78,7 +78,6 @@ public class DragObjectScript : MonoBehaviour {
 
 			UpdateMove();
 		}
-
 		
 		MovementCheck();
 	}
@@ -125,7 +124,8 @@ public class DragObjectScript : MonoBehaviour {
 			}
 			else
 			{
-
+				ButtonEvent_Forward tempEvent = new ButtonEvent_Forward();
+				EventManager.Instance.FireEvent(tempEvent);
 			}			
 		}
 		if(Input.GetAxis("Vertical")<0)
@@ -137,7 +137,8 @@ public class DragObjectScript : MonoBehaviour {
 			}
 			else
 			{
-
+				ButtonEvent_Back tempEvent = new ButtonEvent_Back();
+				EventManager.Instance.FireEvent(tempEvent);
 			}		
 		}
 		if(Input.GetAxis("Horizontal")>0)
@@ -149,7 +150,8 @@ public class DragObjectScript : MonoBehaviour {
 			}
 			else
 			{
-
+				ButtonEvent_Right tempEvent = new ButtonEvent_Right();
+				EventManager.Instance.FireEvent(tempEvent);
 			}
 		}
 		if(Input.GetAxis("Horizontal")<0)
@@ -161,7 +163,8 @@ public class DragObjectScript : MonoBehaviour {
 			}
 			else
 			{
-
+				ButtonEvent_Left tempEvent = new ButtonEvent_Left();
+				EventManager.Instance.FireEvent(tempEvent);
 			}	
 		}
 		if(Input.GetAxis("Height")>0)
@@ -173,7 +176,8 @@ public class DragObjectScript : MonoBehaviour {
 			}
 			else
 			{
-
+				ButtonEvent_Up tempEvent = new ButtonEvent_Up();
+				EventManager.Instance.FireEvent(tempEvent);
 			}				
 		}
 		if(Input.GetAxis("Height")<0)
@@ -185,7 +189,8 @@ public class DragObjectScript : MonoBehaviour {
 			}
 			else
 			{
-
+				ButtonEvent_Down tempEvent = new ButtonEvent_Down();
+				EventManager.Instance.FireEvent(tempEvent);
 			}		
 		}
 		// if(Input.GetButton("Vertical") && direction.ifZ)
@@ -204,9 +209,33 @@ public class DragObjectScript : MonoBehaviour {
 		// 	transform.position += tempVec * Input.GetAxis("Height")*DragSpeed;	
 		// }
 	}
-	void ShowWrongDirection()
+	void OnKeyDown(KeyCode key)
 	{
+		if(Input.GetKeyDown(key))
+		{
+			switch (key)
+			{
+				case KeyCode.A:
 
+					break;
+				case KeyCode.D:
+
+					break;
+				case KeyCode.W:
+
+					break;
+				case KeyCode.S:
+
+					break;
+				case KeyCode.R:
+
+					break;
+				case KeyCode.F:
+					break;
+				default:
+					break;
+			}
+		}
 	}
 	void MovementCheck()
 	{
@@ -216,5 +245,4 @@ public class DragObjectScript : MonoBehaviour {
 			transform.position = new Vector3(transform.position.x,transform.GetChild(0).localScale.y/2.0f, transform.position.z);
 		}
 	}
-
 }

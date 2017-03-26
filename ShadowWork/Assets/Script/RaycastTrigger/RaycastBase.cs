@@ -9,7 +9,7 @@ public abstract class RaycastBase : MonoBehaviour {
 	
 	virtual protected void Start()
 	{
-		taskManager = GetComponent<RaycastManager>().taskManager;
+		taskManager = GetComponent<SetTaskManager>().taskManager;
 	}
 	// Update is called once per frame
 	protected void Update () {

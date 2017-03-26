@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using CS_Kevin;
 
 public abstract class Event {
 	public delegate void Handler(Event e);
@@ -30,5 +30,24 @@ public class changeDirLightEvent: Event{
 public class swithDirLightEvent: Event{
 	public Light light_Start;
 	public Light light_End;
+}
+
+public class ButtonEvent_Right: Event{
+
+}
+public class ButtonEvent_Left: Event{
+
+}
+public class ButtonEvent_Up: Event{
+
+}
+public class ButtonEvent_Down: Event{
+
+}
+public class ButtonEvent_Forward: Event{
+
+}
+public class ButtonEvent_Back: Event{
+
 }
 
