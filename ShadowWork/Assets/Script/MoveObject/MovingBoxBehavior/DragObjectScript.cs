@@ -114,6 +114,30 @@ public class DragObjectScript : MonoBehaviour {
 
 	void UpdateMove()
 	{
+		if(direction.ifBack)
+			FireLightOn(DirectionOption.back);
+		else
+			FireLightOff(DirectionOption.back);
+		if(direction.ifForward)
+			FireLightOn(DirectionOption.forward);
+		else
+		if(direction.ifLeft)
+			FireLightOn(DirectionOption.left);
+		else
+			FireLightOff(DirectionOption.left);
+		if(direction.ifRight)
+			FireLightOn(DirectionOption.right);
+		else
+			FireLightOff(DirectionOption.right);
+		if(direction.ifDown)
+			FireLightOn(DirectionOption.down);
+		else
+			FireLightOff(DirectionOption.down);
+		if(direction.ifUp)
+			FireLightOn(DirectionOption.up);
+		else
+			FireLightOff(DirectionOption.up);
+
 		Vector3 tempVec = Vector3.zero;
 		if(Input.GetAxis("Vertical")>0)
 		{
@@ -240,9 +264,17 @@ public class DragObjectScript : MonoBehaviour {
 	void MovementCheck()
 	{
 		//GroundCheck
-		if(transform.position.y < transform.GetChild(0).localScale.y/2.0f)
+		if(transform.position.y < 7.5f)
 		{
-			transform.position = new Vector3(transform.position.x,transform.GetChild(0).localScale.y/2.0f, transform.position.z);
+			transform.position = new Vector3(transform.position.x,7.5f, transform.position.z);
 		}
+	}
+	void FireLightOn(DirectionOption dirOption){
+		DirectionCheckEvent tempEvent = new DirectionCheckEvent(dirOption, true);
+		EventManager.Instance.FireEvent(tempEvent);
+	}
+	void FireLightOff(DirectionOption dirOption){
+		DirectionCheckEvent tempEvent = new DirectionCheckEvent(dirOption, false);
+		EventManager.Instance.FireEvent(tempEvent);	
 	}
 }

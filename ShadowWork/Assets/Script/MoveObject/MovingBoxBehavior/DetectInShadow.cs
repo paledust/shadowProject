@@ -34,7 +34,6 @@ public class DetectInShadow : MonoBehaviour {
 		}
 	}
 
-	// Update Function Start-----------------------------------------------------------
 	void Update () {
 		ray = new Ray(transform.position, KeyObjCollect.Instance.ActiveDirLight.transform.rotation * Vector3.back);
 		rayHits = Physics.RaycastAll(ray.origin,ray.direction,500.0f);
@@ -72,16 +71,13 @@ public class DetectInShadow : MonoBehaviour {
 
 		//Debug.DrawLine(ray.origin,ray.direction * 500 + ray.origin, Color.white);
 	}
-	//Update Function End---------------------------------------------------------------
-	
-
 	//Add ShadowTrail into the list, if already added then skip it.
 	void AddShadowTrail(ShadowTrail _shadowtrail)
 	{
 		if(!shadowTrailList.Contains(_shadowtrail))
 			shadowTrailList.Add(_shadowtrail);
 	}
-	
+
 	//Clear all the avaiable Direction and Clear all the shadowTraillist
 	void ClearShadowTrailList()
 	{
@@ -153,9 +149,5 @@ public class DetectInShadow : MonoBehaviour {
 		//Debug.Log(Vector3.Dot(DetectDirection,ray.direction));
 		return (Vector3.Dot(DetectDirection,ray.direction) >= 0.05f);
 	}
-
-	void ShootParticle(Event e)
-	{
-
-	}
+	void ShootParticle(Event e){}
 }
