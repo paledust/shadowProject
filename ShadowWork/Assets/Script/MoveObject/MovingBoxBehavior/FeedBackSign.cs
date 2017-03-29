@@ -30,29 +30,29 @@ public class FeedBackSign : MonoBehaviour {
 
 	private void directionRegister(){
 		EventManager.Instance.Register<DirectionCheckEvent>(Active);
-		switch (dirOption)
-		{
-			case DirectionOption.left:
-				EventManager.Instance.Register<ButtonEvent_Left>(Error);
-				break;
-			case DirectionOption.right:
-				EventManager.Instance.Register<ButtonEvent_Right>(Error);
-				break;
-			case DirectionOption.up:
-				EventManager.Instance.Register<ButtonEvent_Up>(Error);
-				break;
-			case DirectionOption.down:
-				EventManager.Instance.Register<ButtonEvent_Down>(Error);
-				break;
-			case DirectionOption.forward:
-				EventManager.Instance.Register<ButtonEvent_Forward>(Error);
-				break;
-			case DirectionOption.back:
-				EventManager.Instance.Register<ButtonEvent_Back>(Error);
-				break;
-			default:
-				break;
-		}
+		// switch (dirOption)
+		// {
+		// 	case DirectionOption.left:
+		// 		EventManager.Instance.Register<ButtonEvent_Left>(Error);
+		// 		break;
+		// 	case DirectionOption.right:
+		// 		EventManager.Instance.Register<ButtonEvent_Right>(Error);
+		// 		break;
+		// 	case DirectionOption.up:
+		// 		EventManager.Instance.Register<ButtonEvent_Up>(Error);
+		// 		break;
+		// 	case DirectionOption.down:
+		// 		EventManager.Instance.Register<ButtonEvent_Down>(Error);
+		// 		break;
+		// 	case DirectionOption.forward:
+		// 		EventManager.Instance.Register<ButtonEvent_Forward>(Error);
+		// 		break;
+		// 	case DirectionOption.back:
+		// 		EventManager.Instance.Register<ButtonEvent_Back>(Error);
+		// 		break;
+		// 	default:
+		// 		break;
+		// }
 	}
 
 	//Call When DirectionCheckEvent Fire
@@ -151,7 +151,7 @@ public class FeedBackSign : MonoBehaviour {
 		internal override void TUpdate()
 		{
 			timer += Time.deltaTime;
-			feedBackSign.GetComponent<Renderer>().material.color = Color.Lerp(targetColor, targetColor,Mathf.Sin(timer*Mathf.PI/2));
+			feedBackSign.GetComponent<Renderer>().material.color = Color.Lerp(targetColor, targetColor,timer/2.0f);
 			if(timer >= 2f)
 			{
 				SetStatus(TaskStatus.Success);

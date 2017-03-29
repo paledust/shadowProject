@@ -121,6 +121,7 @@ public class DragObjectScript : MonoBehaviour {
 		if(direction.ifForward)
 			FireLightOn(DirectionOption.forward);
 		else
+			FireLightOff(DirectionOption.forward);
 		if(direction.ifLeft)
 			FireLightOn(DirectionOption.left);
 		else
