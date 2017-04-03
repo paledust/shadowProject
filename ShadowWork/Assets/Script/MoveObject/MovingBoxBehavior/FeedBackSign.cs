@@ -8,7 +8,7 @@ public class FeedBackSign : MonoBehaviour {
 	[SerializeField] Color DeactColor;
 	[SerializeField] Color actColor;
 	[SerializeField] Color ErrorColor;
-	[SerializeField] DragObjectScript dragObjectScript;
+	[SerializeField] MoveObject moveObject;
 	private bool ifError = false;
 	private Task_Manager taskManager = new Task_Manager();
 	private BlinkColorTask blinkTask;
@@ -17,7 +17,7 @@ public class FeedBackSign : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		GetComponent<Renderer>().material.color = DeactColor;
-		dragObjectScript = GetComponentInParent<DragObjectScript>();
+		moveObject = GetComponentInParent<MoveObject>();
 		directionRegister();
 		blinkTask = new BlinkColorTask(this);
 		lightTask = new LightColorTask(this, this.actColor);

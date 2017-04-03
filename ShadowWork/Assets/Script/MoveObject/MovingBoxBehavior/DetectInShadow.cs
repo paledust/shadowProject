@@ -4,150 +4,139 @@ using UnityEngine;
 using CS_Kevin;
 
 public class DetectInShadow : MonoBehaviour {
-	//Contain all the ShadowTrail this ShadowWheel Get.
-	public DirectionOption directionOPT;
-	public List<ShadowTrail> shadowTrailList;
+	public enum FACING_DIRECTIOM{
+		X,
+		Y,
+		Z
+	};
+	public FACING_DIRECTIOM facingDir;
+	public List<DIRECTION> directions;
 	[SerializeField] Color DeactiveColor = Color.black;
 	[SerializeField] Color ActivateColor = Color.blue;
+	MoveObject moveObject;
 	RaycastHit[] rayHits;
 	Ray ray;
 	
-	void Start()
-	{
-		shadowTrailList = new List<ShadowTrail>();
-		switch (directionOPT)
-		{
-			case DirectionOption.x:
-				EventManager.Instance.Register<ButtonEvent_Left>(ShootParticle);
-				EventManager.Instance.Register<ButtonEvent_Right>(ShootParticle);
-				break;
-			case DirectionOption.y:
-				EventManager.Instance.Register<ButtonEvent_Forward>(ShootParticle);
-				EventManager.Instance.Register<ButtonEvent_Back>(ShootParticle);
-				break;
-			case DirectionOption.z:
-				EventManager.Instance.Register<ButtonEvent_Forward>(ShootParticle);
-				EventManager.Instance.Register<ButtonEvent_Back>(ShootParticle);
-				break;
-			default:
-				break;
-		}
+	void Start() {
+		//Register UpdateDir_Handler Function to UpdateDir_Event
+		//Whenever UpdateDir_Event Fired, UpdateDir_Handler Function will be Called once
+		EventManager.Instance.Register<UpdateDir_Event>(UpdateDir_Handler);
+		moveObject = GetComponentInParent<MoveObject>();
 	}
-
-	void Update () {
+	void Update(){
 		ray = new Ray(transform.position, KeyObjCollect.Instance.ActiveDirLight.transform.rotation * Vector3.back);
 		rayHits = Physics.RaycastAll(ray.origin,ray.direction,500.0f);
-
-		//Check and change player's possible moving Direction only when the object is Frozen, 
-		//and then change its state to movable.
-		// if(GetComponentInParent<ObjectStateManager>().objectState.ifFrozen)
-		if(CheckIfInTrail())
-		{
-			ClearShadowTrailList();
-			foreach (RaycastHit _rayhit in rayHits)
-			{
-				//Debug.Log(_rayhit.collider.gameObject.name);
-				if(_rayhit.collider.gameObject.GetComponent<ShadowTrail>())
-				{
-					GetComponent<Renderer>().material.color = ActivateColor;
-					ShadowTrail _shadowTrail = _rayhit.collider.gameObject.GetComponent<ShadowTrail>();
-					AddShadowTrail(_shadowTrail);
-					GetComponentInParent<DragObjectScript>().SetDirection(CalculateDir(_shadowTrail.directionOption),true);
-				}
-			}
-			//Set the State to movable State
-			if(rayHits.Length>0)
-			{
-				if(GetComponentInParent<ObjectStateManager>().objectState.ifFrozen)
-					GetComponentInParent<ObjectStateManager>().objectState.SetStatus(MovingState.Moveable);
-			}
-			else
-				GetComponent<Renderer>().material.color = DeactiveColor;
+		if(rayHits.Length>0){
+			GetComponent<Renderer>().material.color = ActivateColor;
 		}
 		else
-		{
 			GetComponent<Renderer>().material.color = DeactiveColor;
+	}
+
+	//This Function will only be called once when UpdateDir_Event is fired once somewhere!
+	void UpdateDir_Handler(Event e) {
+		//Create a Ray to Detect whether it's in shadow and in the shadow of What kind of Thing
+		//FOR EXAMPLE: Some Thing allow Box move along X Direction, Another Thing allow Box move along Y Direction
+		ray = new Ray(transform.position, KeyObjCollect.Instance.ActiveDirLight.transform.rotation * Vector3.back);
+		rayHits = Physics.RaycastAll(ray.origin,ray.direction,500.0f);
+		
+		//Before Add any DIRECTION into the Avaliable List, First Clear All the old Direction it stores.
+		CLEAR_DIRECTION();
+		
+		//For each Thing it casted, get the information from its ShadowTrail to find out what direction it allow
+		foreach (RaycastHit _rayhit in rayHits){
+			if(_rayhit.collider.gameObject.GetComponent<AllowDirection>()){
+				AllowDirection _AllowDir = _rayhit.collider.gameObject.GetComponent<AllowDirection>();
+				//Add This Direction into the DirectionList
+				directions.AddRange(_AllowDir.GET_DIRECTION_LIST());
+			}
 		}
-
-		//Debug.DrawLine(ray.origin,ray.direction * 500 + ray.origin, Color.white);
-	}
-	//Add ShadowTrail into the list, if already added then skip it.
-	void AddShadowTrail(ShadowTrail _shadowtrail)
-	{
-		if(!shadowTrailList.Contains(_shadowtrail))
-			shadowTrailList.Add(_shadowtrail);
-	}
-
-	//Clear all the avaiable Direction and Clear all the shadowTraillist
-	void ClearShadowTrailList()
-	{
-		foreach(ShadowTrail _shadowTrail in shadowTrailList)
-		{
-			GetComponentInParent<DragObjectScript>().SetDirection(CalculateDir(_shadowTrail.directionOption),false);
+		//If the Length is > 0, that means it hit something, meaning the dot is in ShadowTrail, Thus we need to Update The Direction
+		if(rayHits.Length>0){
+			//Update The Direction
+			SetDirection();
+			//And meanwhile, since the box has Avaliable Direction, we should set it to Moveable.
+			if(moveObject.IF_FROZEN)
+				moveObject.SetStatus(MOVESTATE.MOVEABLE);
 		}
-		shadowTrailList.Clear();
 	}
 
-	//Based on the ShadowTrail, it will calculate the final available direction for ShadowBox, but it's actually wrong!!!!!!!!!!!!!!!!!!
-	DirectionOption CalculateDir(DirectionOption _direction)
-	{
-		switch (directionOPT)
+	//Clear The list Of Directions
+	void CLEAR_DIRECTION(){directions.Clear();}
+
+	//Because of the projection, Some direction need to be recalculate
+	//FOR EXAMPLE: Imaging a Vertical Bar casting shadow on the ground, if the Dot facing Y direction,
+	//And the eular Angle of Light is (45,0,0), then if dots facing UP, it will become Z direction,
+	//But if dots facing BACK, it will become Y direction.
+	DIRECTION CalculateDirection(DIRECTION direction) {
+		DIRECTION NewDirection = direction;
+		switch (facingDir)
 		{
-			case DirectionOption.x:
-				if(_direction == DirectionOption.x)
-					_direction = DirectionOption.y;
-
-				if(_direction == DirectionOption.right)
-					_direction = DirectionOption.up;
-				if(_direction == DirectionOption.left)
-					_direction = DirectionOption.down;
+			case FACING_DIRECTIOM.X:
+				if(NewDirection == DIRECTION.RIGHT)
+					NewDirection = DIRECTION.UP;
+				if(NewDirection == DIRECTION.LEFT)
+					NewDirection = DIRECTION.DOWN;
 				break;
-			case DirectionOption.y:
-				if(_direction == DirectionOption.y)
-					_direction = DirectionOption.z;
-
-				if(_direction == DirectionOption.up)
-					_direction = DirectionOption.forward;
-				if(_direction == DirectionOption.down)
-					_direction = DirectionOption.back;
+			case FACING_DIRECTIOM.Y:
+				if(NewDirection == DIRECTION.UP)
+					NewDirection = DIRECTION.FORWARD;
+				if(NewDirection == DIRECTION.DOWN)
+					NewDirection = DIRECTION.BACK;
 				break;
-			case DirectionOption.z:
-				if(_direction == DirectionOption.z)
-					_direction = DirectionOption.y;
-
-				if(_direction == DirectionOption.forward)
-					_direction = DirectionOption.up;
-				if(_direction == DirectionOption.back)
-					_direction = DirectionOption.down;
+			case FACING_DIRECTIOM.Z:
+				if(NewDirection == DIRECTION.FORWARD)
+					NewDirection = DIRECTION.UP;
+				if(NewDirection == DIRECTION.BACK)
+					NewDirection = DIRECTION.DOWN;
 				break;
 			default:
 				break;
 		}
-
-		return _direction;
+		return NewDirection;
 	}
 
-	//Check whether it's shadow trail or it's just completely inside the shadow
-	bool CheckIfInTrail()
-	{
-		Vector3 DetectDirection = Vector3.zero;
-		switch (directionOPT)
+	//Detect Whether this dot is in "Shadow Trail" Or the Whole Face is in Shadow
+	//It's actually not quite helpful right now, 
+	bool IF_IN_TRAIL() {
+		return (Vector3.Dot(GET_FACE_VECTOR(),ray.direction) >= 0.05f);
+	}
+
+	//This Function will Transfer The Direction of the dot facing from DIRECTION type into Vector3 Type
+	Vector3 GET_FACE_VECTOR(){
+		Vector3 tempVec = Vector3.zero;
+		switch (facingDir)
 		{
-			case DirectionOption.x:
-				DetectDirection = Vector3.left;
-				break;
-			case DirectionOption.y:
-				DetectDirection = Vector3.up;
-				break;
-			case DirectionOption.z:
-				DetectDirection = Vector3.back;
-				break;
+			case FACING_DIRECTIOM.X:
+				return Vector3.right;
+			case FACING_DIRECTIOM.Y:
+				return Vector3.up;
+			case FACING_DIRECTIOM.Z:
+				return Vector3.forward;
 			default:
-				DetectDirection = Vector3.zero;
-				break;
+				return Vector3.zero;
 		}
-		//Debug.Log(Vector3.Dot(DetectDirection,ray.direction));
-		return (Vector3.Dot(DetectDirection,ray.direction) >= 0.05f);
 	}
-	void ShootParticle(Event e){}
+
+	//This Function will Set the Box Avaliable Direction
+	void SetDirection(){
+		if(directions.Contains(DIRECTION.UP)){moveObject.AddDirection(CalculateDirection(DIRECTION.UP));} 
+		else{moveObject.DisableDirection(CalculateDirection(DIRECTION.UP));}
+
+		if(directions.Contains(DIRECTION.DOWN)){moveObject.AddDirection(CalculateDirection(DIRECTION.DOWN));} 
+		else{moveObject.DisableDirection(CalculateDirection(DIRECTION.DOWN));}
+
+		if(directions.Contains(DIRECTION.LEFT)){moveObject.AddDirection(CalculateDirection(DIRECTION.LEFT));} 
+		else{moveObject.DisableDirection(CalculateDirection(DIRECTION.LEFT));}
+
+		if(directions.Contains(DIRECTION.RIGHT)){moveObject.AddDirection(CalculateDirection(DIRECTION.RIGHT));} 
+		else{moveObject.DisableDirection(CalculateDirection(DIRECTION.RIGHT));}
+
+		if(directions.Contains(DIRECTION.FORWARD)){moveObject.AddDirection(CalculateDirection(DIRECTION.FORWARD));} 
+		else{moveObject.DisableDirection(CalculateDirection(DIRECTION.FORWARD));}
+
+		if(directions.Contains(DIRECTION.BACK)){moveObject.AddDirection(CalculateDirection(DIRECTION.BACK));} 
+		else{moveObject.DisableDirection(CalculateDirection(DIRECTION.BACK));}
+
+	}
 }

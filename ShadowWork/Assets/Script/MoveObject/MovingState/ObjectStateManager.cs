@@ -9,8 +9,7 @@ public class ObjectStateManager : MonoBehaviour {
 	void Awake()
 	{
 		objectState = new ObjectState();
-
-		// objectState.SetMovingObject(gameObject);
+		
 		objectState.SetStatus(MovingState.Frozen);
 	}
 	void Update()
@@ -22,9 +21,7 @@ public class ObjectStateManager : MonoBehaviour {
 			objectState.MovingUpdate();
 		}
 		if(objectState.ifPulled)
-		{
-			
-		}
+		{}
 		movingState = objectState.movingState;
 	}
 }

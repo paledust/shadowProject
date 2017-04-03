@@ -34,7 +34,6 @@ public class ButtonEvent_Up: Event{}
 public class ButtonEvent_Down: Event{}
 public class ButtonEvent_Forward: Event{}
 public class ButtonEvent_Back: Event{}
-
 public class DirectionCheckEvent: Event{
 	public DirectionOption dirOption;
 	public bool ifLight; 
@@ -43,4 +42,6 @@ public class DirectionCheckEvent: Event{
 		ifLight = _ifLight;
 	}
 }
+public class UpdateDir_Event: Event{}
+
 

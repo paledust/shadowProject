@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace CS_Kevin {
+	public enum MOVESTATE{
+	FROZEN,
+	MOVEABLE,
+	MOVING,
+	PULLED
+	}
 	public class DirectionCheck
 	{
 		public bool ifX{get {return ifRight && ifLeft;}}
@@ -27,5 +33,27 @@ namespace CS_Kevin {
 		x,
 		y,
 		z
+	}
+	public enum DIRECTION {LEFT,RIGHT,UP,DOWN,FORWARD,BACK};
+	public static class HandleDirection{
+		static public Vector3 DIRECTION_To_VECTOR(DIRECTION direction){
+			switch (direction)
+			{
+				case DIRECTION.FORWARD:
+					return Vector3.forward;
+				case DIRECTION.BACK:
+					return Vector3.back;
+				case DIRECTION.RIGHT:
+					return Vector3.right;
+				case DIRECTION.LEFT:
+					return Vector3.left;
+				case DIRECTION.UP:
+					return Vector3.up;
+				case DIRECTION.DOWN:
+					return Vector3.down;
+				default:
+					return Vector3.zero;
+			}
+		}
 	}
 }
