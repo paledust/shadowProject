@@ -32,7 +32,7 @@ namespace CS_Kevin {
 		y,
 		z
 	}
-	public enum DIRECTION {LEFT,RIGHT,UP,DOWN,FORWARD,BACK};
+	public enum DIRECTION {LEFT,RIGHT,UP,DOWN,FORWARD,BACK,EMPTY};
 	public static class HandleDirection{
 		static public Vector3 DIRECTION_To_VECTOR(DIRECTION direction){
 			switch (direction)

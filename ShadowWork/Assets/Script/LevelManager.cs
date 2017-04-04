@@ -8,6 +8,10 @@ public class LevelManager : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
 		KeyObjCollect.Instance.SetNewActiveDirLight(ActiveDirLight);
+		// EventManager.Instance.Register<RestartEvent>(RestartLevelHandler);
+		// EventManager.Instance.Register<LoadLevelEvent>(LoadNextLevelHandler);
+	}
+	void Start(){
 		EventManager.Instance.Register<RestartEvent>(RestartLevelHandler);
 		EventManager.Instance.Register<LoadLevelEvent>(LoadNextLevelHandler);
 	}
@@ -28,10 +32,12 @@ public class LevelManager : MonoBehaviour {
 	private void RestartLevelHandler(Event e)
 	{
 		// RestartEvent tempEvent = e as RestartEvent;
+		EventManager.Instance.ClearList();
 		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	}
 	private void LoadNextLevelHandler(Event e)
 	{
+		EventManager.Instance.ClearList();
 		LoadLevelEvent tempEvent = e as LoadLevelEvent;
 		SceneManager.LoadScene(tempEvent.NextLevelIndex);
 	}

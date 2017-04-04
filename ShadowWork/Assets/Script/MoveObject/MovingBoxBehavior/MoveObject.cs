@@ -17,10 +17,12 @@ public class MoveObject : MonoBehaviour {
 	private Vector3 pos;
 	private MoveToTask moveToTask;
 	private Task_Manager taskManager = new Task_Manager();
+	private DragObjectScriptDanVersion dragObject;
 	void Start() {
 		moveState = MOVESTATE.FROZEN;
 		availableDir = new List<DIRECTION>();
 		moveToTask = new MoveToTask(transform, transform.position,speed);
+		dragObject = GetComponent<DragObjectScriptDanVersion>();
 	}
 	void Update() {
 		taskManager.Update();
@@ -83,7 +85,7 @@ public class MoveObject : MonoBehaviour {
 		//Inside it, is to detect whether player input in this direction and whether this direction is allowed.
 		if(buttonCooldown <= 0)
 		{
-			if(Input.GetAxis("Vertical")>0 && availableDir.Contains(DIRECTION.FORWARD))
+			if(CanMoveThisDirection(DIRECTION.FORWARD) && availableDir.Contains(DIRECTION.FORWARD))
 			{
 				if(dir != DIRECTION.FORWARD)
 				{
@@ -97,7 +99,7 @@ public class MoveObject : MonoBehaviour {
 					moveTo(pos);
 				}
 			}
-			else if(Input.GetAxis("Vertical")<0 && availableDir.Contains(DIRECTION.BACK))
+			else if(CanMoveThisDirection(DIRECTION.BACK) && availableDir.Contains(DIRECTION.BACK))
 			{
 				if(dir != DIRECTION.BACK)
 				{
@@ -111,7 +113,7 @@ public class MoveObject : MonoBehaviour {
 					moveTo(pos);
 				}
 			}						
-			else if(Input.GetAxis("Horizontal")<0 && availableDir.Contains(DIRECTION.LEFT))
+			else if(CanMoveThisDirection(DIRECTION.LEFT) && availableDir.Contains(DIRECTION.LEFT))
 			{
 				if(dir != DIRECTION.LEFT)
 				{
@@ -125,7 +127,7 @@ public class MoveObject : MonoBehaviour {
 					moveTo(pos);
 				}
 			}					
-			else if(Input.GetAxis("Horizontal")>0 && availableDir.Contains(DIRECTION.RIGHT))
+			else if(CanMoveThisDirection(DIRECTION.RIGHT) && availableDir.Contains(DIRECTION.RIGHT))
 			{
 				if(dir != DIRECTION.RIGHT)
 				{
@@ -139,7 +141,7 @@ public class MoveObject : MonoBehaviour {
 					moveTo(pos);
 				}
 			}					
-			else if(Input.GetAxis("Height")>0 && availableDir.Contains(DIRECTION.UP))
+			else if(CanMoveThisDirection(DIRECTION.UP) && availableDir.Contains(DIRECTION.UP))
 			{
 				if(dir != DIRECTION.UP)
 				{
@@ -153,7 +155,7 @@ public class MoveObject : MonoBehaviour {
 					moveTo(pos);
 				}
 			}						
-			else if(Input.GetAxis("Height")<0 && availableDir.Contains(DIRECTION.DOWN))
+			else if(CanMoveThisDirection(DIRECTION.DOWN) && availableDir.Contains(DIRECTION.DOWN))
 			{
 				if(dir != DIRECTION.DOWN)
 				{
@@ -173,6 +175,26 @@ public class MoveObject : MonoBehaviour {
 	//This way is actually a little bit clunky, I could have used one function in moveTo, but I use a task System instead.
 	//What it did is to add a move task to taskmanager to let the box move.(Why not directly let the box move!!!!, because 
 	//I'm over concerned about some other task might be implemented into this system)
+	private bool CanMoveThisDirection(DIRECTION checkDirection)
+	{
+		switch (checkDirection)
+		{
+			case DIRECTION.UP:
+				return dragObject.DragDirection == checkDirection || Input.GetAxis("Height")>0;
+			case DIRECTION.DOWN:
+				return dragObject.DragDirection == checkDirection || Input.GetAxis("Height")<0;
+			case DIRECTION.LEFT:
+				return dragObject.DragDirection == checkDirection || Input.GetAxis("Horizontal")<0;
+			case DIRECTION.RIGHT:
+				return dragObject.DragDirection == checkDirection || Input.GetAxis("Horizontal")>0;
+			case DIRECTION.FORWARD:
+				return dragObject.DragDirection == checkDirection || Input.GetAxis("Vertical")>0;
+			case DIRECTION.BACK:
+				return dragObject.DragDirection == checkDirection || Input.GetAxis("Vertical")<0;
+			default:
+				return false;
+		}
+	}
 	private void moveTo(Vector3 endPos){
 		if(moveToTask.ifDetached)
 			taskManager.AddTask(moveToTask);

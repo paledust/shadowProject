@@ -46,7 +46,10 @@ public class EventManager {
 			}
 		}
 	}
-
+	public void ClearList()
+	{
+		RegisteredHandlers.Clear();
+	}
 	public void FireEvent(Event e)
 	{
 		Type type = e.GetType();
