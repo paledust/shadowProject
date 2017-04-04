@@ -9,11 +9,6 @@ public class LightGroupManager : MonoBehaviour {
 	void Start () {
 		taskManager = new Task_Manager();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
 	private void SwitchLightHandler(Event e)
 	{

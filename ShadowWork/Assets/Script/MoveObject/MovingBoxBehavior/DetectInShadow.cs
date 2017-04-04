@@ -37,7 +37,6 @@ public class DetectInShadow : MonoBehaviour {
 	void UpdateDir_Handler(Event e) {
 		//Create a Ray to Detect whether it's in shadow and in the shadow of What kind of Thing
 		//FOR EXAMPLE: Some Thing allow Box move along X Direction, Another Thing allow Box move along Y Direction
-		ray = new Ray(transform.position, KeyObjCollect.Instance.ActiveDirLight.transform.rotation * Vector3.back);
 		rayHits = Physics.RaycastAll(ray.origin,ray.direction,500.0f);
 		
 		//Before Add any DIRECTION into the Avaliable List, First Clear All the old Direction it stores.
@@ -75,20 +74,24 @@ public class DetectInShadow : MonoBehaviour {
 			case FACING_DIRECTIOM.X:
 				if(NewDirection == DIRECTION.RIGHT)
 					NewDirection = DIRECTION.UP;
-				if(NewDirection == DIRECTION.LEFT)
+				else if(NewDirection == DIRECTION.LEFT)
 					NewDirection = DIRECTION.DOWN;
 				break;
 			case FACING_DIRECTIOM.Y:
 				if(NewDirection == DIRECTION.UP)
 					NewDirection = DIRECTION.FORWARD;
-				if(NewDirection == DIRECTION.DOWN)
+				else if(NewDirection == DIRECTION.DOWN)
 					NewDirection = DIRECTION.BACK;
 				break;
 			case FACING_DIRECTIOM.Z:
 				if(NewDirection == DIRECTION.FORWARD)
 					NewDirection = DIRECTION.UP;
-				if(NewDirection == DIRECTION.BACK)
+				else if(NewDirection == DIRECTION.BACK)
 					NewDirection = DIRECTION.DOWN;
+				else if(NewDirection == DIRECTION.UP)
+				{
+					NewDirection = DIRECTION.UP;
+				}
 				break;
 			default:
 				break;
@@ -121,22 +124,16 @@ public class DetectInShadow : MonoBehaviour {
 	//This Function will Set the Box Avaliable Direction
 	void SetDirection(){
 		if(directions.Contains(DIRECTION.UP)){moveObject.AddDirection(CalculateDirection(DIRECTION.UP));} 
-		else{moveObject.DisableDirection(CalculateDirection(DIRECTION.UP));}
 
 		if(directions.Contains(DIRECTION.DOWN)){moveObject.AddDirection(CalculateDirection(DIRECTION.DOWN));} 
-		else{moveObject.DisableDirection(CalculateDirection(DIRECTION.DOWN));}
 
 		if(directions.Contains(DIRECTION.LEFT)){moveObject.AddDirection(CalculateDirection(DIRECTION.LEFT));} 
-		else{moveObject.DisableDirection(CalculateDirection(DIRECTION.LEFT));}
 
 		if(directions.Contains(DIRECTION.RIGHT)){moveObject.AddDirection(CalculateDirection(DIRECTION.RIGHT));} 
-		else{moveObject.DisableDirection(CalculateDirection(DIRECTION.RIGHT));}
 
 		if(directions.Contains(DIRECTION.FORWARD)){moveObject.AddDirection(CalculateDirection(DIRECTION.FORWARD));} 
-		else{moveObject.DisableDirection(CalculateDirection(DIRECTION.FORWARD));}
 
 		if(directions.Contains(DIRECTION.BACK)){moveObject.AddDirection(CalculateDirection(DIRECTION.BACK));} 
-		else{moveObject.DisableDirection(CalculateDirection(DIRECTION.BACK));}
 
 	}
 }

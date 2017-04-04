@@ -1,32 +1,26 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using CS_Kevin;
 
 public class MoveObject : MonoBehaviour {
-	public DirectionCheck direction;
 	public List<DIRECTION> availableDir;
+	public DIRECTION dir;
 	public int MoveUnit = 6;
 	public MOVESTATE moveState;
-	public DIRECTION dir;
 	public bool IF_FROZEN{get{return moveState == MOVESTATE.FROZEN;}}
 	public bool IF_MOVEABLE{get{return moveState == MOVESTATE.MOVEABLE;}}
 	public bool IF_MOVING{get{return moveState == MOVESTATE.MOVING;}}
+	public bool IF_PULLING{get{return moveState == MOVESTATE.PULLING;}}
 	[SerializeField] int CoolDownTime = 5;
-	private int speed = 7, buttonCooldown = 0;
+	[SerializeField] int speed = 7;
+	private int buttonCooldown = 0;
 	private Vector3 pos;
 	private MoveToTask moveToTask;
-	private MoveTask moveTask;
 	private Task_Manager taskManager = new Task_Manager();
-
 	void Start() {
 		moveState = MOVESTATE.FROZEN;
-		direction = new DirectionCheck();
 		availableDir = new List<DIRECTION>();
 		moveToTask = new MoveToTask(transform, transform.position,speed);
-		
-		MoveInfo moveInfo = new MoveInfo();
-		moveTask = new MoveTask(moveInfo,gameObject);
 	}
 	void Update() {
 		taskManager.Update();
@@ -40,6 +34,7 @@ public class MoveObject : MonoBehaviour {
 				break;
 			case MOVESTATE.MOVING:
 				if(transform.position == pos) {
+					ClearDirection();
 					EventManager.Instance.FireEvent(tempEvent);
 					moveState = MOVESTATE.FROZEN;
 					move();
@@ -47,6 +42,7 @@ public class MoveObject : MonoBehaviour {
 				break;
 			case MOVESTATE.FROZEN:
 				Debug.Log("FROZEN");
+				ClearDirection();
 				EventManager.Instance.FireEvent(tempEvent);
 				break;
 			default:
@@ -62,12 +58,17 @@ public class MoveObject : MonoBehaviour {
 		}
 	}
 
-	//This Function will add one direction into the availableDir list
+	//This Function will Remove one direction into the availableDir list
 	public void DisableDirection(DIRECTION direction){
 		if(availableDir.Contains(direction))
 		{
 			availableDir.Remove(direction);
 		}
+	}
+
+	//This Function will Clear The Whole availableDir List
+	public void ClearDirection(){
+		availableDir.Clear();
 	}
 
 	//This Function will Set the State of the Box

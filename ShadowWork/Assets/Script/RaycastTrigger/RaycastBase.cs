@@ -14,8 +14,7 @@ public abstract class RaycastBase : MonoBehaviour {
 	// Update is called once per frame
 	protected void Update () {
 		ray = new Ray(transform.position, transform.rotation * Vector3.forward);
-
-		if(Physics.Raycast(ray.origin,ray.direction, out rayhit, 500.0f))
+		if(Physics.Raycast(ray.origin, ray.direction, out rayhit, 500.0f))
 		{
 			if(rayhit.collider.gameObject.name == "MovingBox" && positionCheck(rayhit.collider.transform) && 
 				ifTaskDetached())

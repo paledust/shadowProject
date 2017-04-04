@@ -1,13 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace CS_Kevin {
 	public enum MOVESTATE{
 	FROZEN,
 	MOVEABLE,
 	MOVING,
-	PULLED
+	PULLING
 	}
 	public class DirectionCheck
 	{

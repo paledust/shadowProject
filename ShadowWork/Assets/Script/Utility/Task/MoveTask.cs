@@ -28,7 +28,6 @@ public class MoveTask : Task {
 		timer += Time.deltaTime;
 		if(ifMoveDone())
 		{
-			Debug.Log("MoveTask Done");
 			SetStatus(TaskStatus.Success);
 		}
 	}
@@ -37,7 +36,15 @@ public class MoveTask : Task {
 		moveInfo = null;
 		timer = 0.0f;
 	}
-	
+	public void SetEndPos(Vector3 m_startPos, Vector3 m_endPos)
+	{
+		moveInfo.startPos = m_startPos;
+		moveInfo.endPos = m_endPos;
+	}
+	public void SetMoveInfo(MoveInfo m_moveInfo)
+	{
+		moveInfo = m_moveInfo;
+	}
 	protected bool ifMoveDone()
 	{
 		return movingObject.transform.position == moveInfo.endPos;
