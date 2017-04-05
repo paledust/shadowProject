@@ -9,7 +9,6 @@ public class LightGroupManager : MonoBehaviour {
 	void Start () {
 		taskManager = new Task_Manager();
 	}
-
 	private void SwitchLightHandler(Event e)
 	{
 		swithDirLightEvent tempEvent = e as swithDirLightEvent;

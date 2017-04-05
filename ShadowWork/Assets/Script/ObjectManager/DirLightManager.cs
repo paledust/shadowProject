@@ -5,9 +5,6 @@ using UnityEngine;
 public class DirLightManager : MonoBehaviour {
 	private RotateTask rotateTask;
 	private Task_Manager taskManager = new Task_Manager();
-	// Use this for initialization
-	void Start () {
-	}
 	
 	// Update is called once per frame
 	void Update () {

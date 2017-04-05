@@ -2,13 +2,17 @@
 
 namespace CS_Kevin {
 	public enum MOVESTATE{
-	FROZEN,
-	MOVEABLE,
-	MOVING,
-	PULLING
+		MOVEABLE,
+		MOVING,
+		PULLING,
+		FROZEN,
 	}
-	public class DirectionCheck
-	{
+	public enum FACING_DIRECTIOM{
+		X,
+		Y,
+		Z
+	}
+	public class DirectionCheck{
 		public bool ifX{get {return ifRight && ifLeft;}}
 		public bool ifY{get {return ifUp && ifDown;}}
 		public bool ifZ{get {return ifForward && ifBack;}}
@@ -19,9 +23,7 @@ namespace CS_Kevin {
 		public bool ifForward;
 		public bool ifBack;
 	}
-
-	public enum DirectionOption
-	{
+	public enum DirectionOption{
 		left,
 		right,
 		up,

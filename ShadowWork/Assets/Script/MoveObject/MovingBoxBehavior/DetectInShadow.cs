@@ -4,11 +4,6 @@ using UnityEngine;
 using CS_Kevin;
 
 public class DetectInShadow : MonoBehaviour {
-	public enum FACING_DIRECTIOM{
-		X,
-		Y,
-		Z
-	};
 	public FACING_DIRECTIOM facingDir;
 	public List<DIRECTION> directions;
 	[SerializeField] Color DeactiveColor = Color.black;

@@ -4,6 +4,7 @@ using UnityEngine;
 using CS_Kevin;
 
 public class DragObjectScriptDanVersion : MonoBehaviour{
+	public List<DIRECTION> availableDir; 
 	public float DragSpeed = 5f;
 
 	// 0 degrees is right, 90 degrees is up, 180 is left, 270 is down
@@ -28,41 +29,69 @@ public class DragObjectScriptDanVersion : MonoBehaviour{
 
 	private float MouseDir = 0.0f;
 	public DIRECTION DragDirection = DIRECTION.EMPTY;
-	void OnMouseDrag () 
-	{
-		//Vector3 tempVec = Vector3.zero;
-
+	public List<FACING_DIRECTIOM> activeFace;
+	void Update(){
+		Mouse_Move();
+	}
+	void Mouse_Move () {
+		Vector3 tempVec = Vector3.zero;
+		float MouseDir = 0.0f;
 		MouseDir = Mathf.Atan2(Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse X"));
 		MouseDir = MouseDir*Mathf.Rad2Deg;
 		if (MouseDir < 0) {
 			MouseDir += 360;
 		}
-		// if ((MouseDir > minAngleForward && MouseDir <= maxAngleForward) || (MouseDir > minAngleBack && MouseDir <= maxAngleBack)) {
-		// 	tempVec = Vector3.forward;
-		// 	transform.position += tempVec * Input.GetAxis ("Mouse Y") * DragSpeed;			
-		// } else if ((MouseDir > minAngleRight && MouseDir <= maxAngleRight) || (MouseDir > minAngleLeft && MouseDir <= maxAngleLeft)) {
-		// 	tempVec = Vector3.right;
-		// 	transform.position += tempVec * Input.GetAxis ("Mouse X") * DragSpeed;		
-		// } else if ((MouseDir > minAngleUp && MouseDir <= maxAngleUp) || (MouseDir > minAngleDown && MouseDir <= maxAngleDown)) {
-		// 	tempVec = Vector3.up;
-		// 	transform.position += tempVec * Input.GetAxis ("Mouse Y") * DragSpeed;	
-		// }
-		// Debug.Log ("Direction: " + MouseDir);
-
-		if(MouseDir > minAngleForward && MouseDir <= maxAngleForward) {
-			DragDirection = DIRECTION.FORWARD;
-		} else if(MouseDir > minAngleBack && MouseDir <= maxAngleBack){
-			DragDirection = DIRECTION.BACK;
-		} else if (MouseDir > minAngleRight && MouseDir <= maxAngleRight) {
-			DragDirection = DIRECTION.RIGHT;
-		} else if(MouseDir > minAngleLeft && MouseDir <= maxAngleLeft){
-			DragDirection = DIRECTION.LEFT;
-		} else if ((MouseDir > minAngleUp && MouseDir <= maxAngleUp)) {
-			DragDirection = DIRECTION.UP;
-		} else if(MouseDir > minAngleDown && MouseDir <= maxAngleDown){
-			DragDirection = DIRECTION.DOWN;
-		} else{
-			DragDirection = DIRECTION.EMPTY;
+		if(Mouse_Check() == (DIRECTION.FORWARD) && availableDir.Contains(DIRECTION.FORWARD)) {
+			tempVec = Vector3.forward;
+			transform.position += tempVec * (int)(Input.GetAxis("Mouse Y")*6);
+		} else if(Mouse_Check() == (DIRECTION.BACK)&& availableDir.Contains(DIRECTION.BACK)) {
+			tempVec = Vector3.forward;
+			transform.position += tempVec * (int)(Input.GetAxis("Mouse Y")*6);
+		} else if (Mouse_Check() == (DIRECTION.RIGHT) && availableDir.Contains(DIRECTION.RIGHT)) {
+			tempVec = Vector3.right;
+			transform.position += tempVec * (int)(Input.GetAxis("Mouse X")*6);
+		} else if(Mouse_Check() == (DIRECTION.LEFT) && availableDir.Contains(DIRECTION.LEFT)) {
+			tempVec = Vector3.right;
+			transform.position += tempVec * (int)(Input.GetAxis("Mouse X")*6);
+		} else if (Mouse_Check() == (DIRECTION.UP) && availableDir.Contains(DIRECTION.UP)) {
+			tempVec = Vector3.up;
+			transform.position += tempVec * (int)(Input.GetAxis("Mouse Y")*6);
+		} else if(Mouse_Check() == (DIRECTION.DOWN) && availableDir.Contains(DIRECTION.DOWN)) {
+			tempVec = Vector3.up;
+			transform.position += tempVec * (int)(Input.GetAxis("Mouse Y")*6);
+		} else {
 		}
+	}
+	DIRECTION Mouse_Check(){
+		Vector3 tempVec = Vector3.zero;
+		float MouseDir = 0.0f;
+		MouseDir = Mathf.Atan2(Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse X"));
+		MouseDir = MouseDir*Mathf.Rad2Deg;
+		if (MouseDir < 0) {
+			MouseDir += 360;
+		}
+		if(MouseDir > minAngleForward && MouseDir <= maxAngleForward && (activeFace.Contains(FACING_DIRECTIOM.Y))) {
+			return DIRECTION.FORWARD;
+		} else if(MouseDir > minAngleBack && MouseDir <= maxAngleBack && (activeFace.Contains(FACING_DIRECTIOM.Y))) {
+			return DIRECTION.BACK;
+		} else if (MouseDir > minAngleRight && MouseDir <= maxAngleRight && (activeFace.Contains(FACING_DIRECTIOM.Z) || activeFace.Contains(FACING_DIRECTIOM.Y))) {
+			return DIRECTION.RIGHT;
+		} else if(MouseDir > minAngleLeft && MouseDir <= maxAngleLeft && (activeFace.Contains(FACING_DIRECTIOM.Z) || activeFace.Contains(FACING_DIRECTIOM.Y))) {
+			return DIRECTION.LEFT;
+		} else if ((MouseDir > minAngleUp && MouseDir <= maxAngleUp) && (activeFace.Contains(FACING_DIRECTIOM.Z))) {
+			return DIRECTION.UP;
+		} else if(MouseDir > minAngleDown && MouseDir <= maxAngleDown && (activeFace.Contains(FACING_DIRECTIOM.Z))) {
+			return DIRECTION.DOWN;
+		} else {
+			return DIRECTION.EMPTY;
+		}
+	}
+	void OnMouseUp(){
+		Debug.Log("Up");
+		activeFace.Clear();
+	}
+	public void AddFaceDir(FACING_DIRECTIOM face_Direction){
+		if(!activeFace.Contains(face_Direction))
+			activeFace.Add(face_Direction);
 	}
 }
