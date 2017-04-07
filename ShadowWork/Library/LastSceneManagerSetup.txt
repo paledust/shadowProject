@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scene/PuzzlePrototype/ObjectTestLevel_01.unity
+- path: Assets/Scene/MultipleLevel/Scene_Kevin_Cube_01.unity
   isLoaded: 1
   isActive: 1

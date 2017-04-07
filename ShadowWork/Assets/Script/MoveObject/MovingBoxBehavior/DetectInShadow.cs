@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using CS_Kevin;
 
@@ -11,6 +10,8 @@ public class DetectInShadow : MonoBehaviour {
 	MoveObject moveObject;
 	RaycastHit[] rayHits;
 	Ray ray;
+	RaycastHit rayhit;
+	private bool ifDrag = false;
 	
 	void Start() {
 		//Register UpdateDir_Handler Function to UpdateDir_Event
@@ -26,6 +27,22 @@ public class DetectInShadow : MonoBehaviour {
 		}
 		else
 			GetComponent<Renderer>().material.color = DeactiveColor;
+		FACE_ACTIVE();
+	}
+	void FACE_ACTIVE(){
+		Camera.main.GetComponent<CustomLockCursor>().Cursor_Raycast(out rayhit);
+		if(rayhit.collider.gameObject == gameObject && Input.GetButtonDown("Fire1")){
+			ifDrag = true;		
+		} 	
+		if(ifDrag){
+			// Vector3 cursorPos = Camera.main.WorldToScreenPoint(transform.position);
+			// Camera.main.GetComponent<CustomLockCursor>().SetCursor(cursorPos);
+			// Debug.Log("Hello");
+			GetComponentInParent<MoveObject>().Set_DragFace(facingDir);	
+		}
+		if(Input.GetButtonUp("Fire1")){
+			ifDrag = false;
+		}
 	}
 
 	//This Function will only be called once when UpdateDir_Event is fired once somewhere!

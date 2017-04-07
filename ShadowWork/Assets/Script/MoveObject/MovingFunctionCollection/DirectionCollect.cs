@@ -10,7 +10,8 @@ namespace CS_Kevin {
 	public enum FACING_DIRECTIOM{
 		X,
 		Y,
-		Z
+		Z,
+		EMPTY
 	}
 	public class DirectionCheck{
 		public bool ifX{get {return ifRight && ifLeft;}}

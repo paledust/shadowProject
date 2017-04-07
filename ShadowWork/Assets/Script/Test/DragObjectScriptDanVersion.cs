@@ -27,11 +27,17 @@ public class DragObjectScriptDanVersion : MonoBehaviour{
 	public float minAngleDown = 240f; //250
 	public float maxAngleDown = 300f; //290
 
-	private float MouseDir = 0.0f;
-	public DIRECTION DragDirection = DIRECTION.EMPTY;
-	public List<FACING_DIRECTIOM> activeFace;
+	public FACING_DIRECTIOM activeFace;
+
 	void Update(){
-		Mouse_Move();
+		if(Input.GetButton("Fire1"))
+			Mouse_Move();
+		if(Input.GetButtonUp("Fire1"))
+			OnMouse_Up();
+		// Vector3 rayPos = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10.0f);
+		// ray = Camera.main.ScreenPointToRay(rayPos);
+		// Physics.Raycast(ray.origin,ray.direction,out rayhit, 300.0f, layerZ);
+		// Debug.Log(rayhit.point.z.ToString() + rayhit.collider.name);
 	}
 	void Mouse_Move () {
 		Vector3 tempVec = Vector3.zero;
@@ -43,22 +49,22 @@ public class DragObjectScriptDanVersion : MonoBehaviour{
 		}
 		if(Mouse_Check() == (DIRECTION.FORWARD) && availableDir.Contains(DIRECTION.FORWARD)) {
 			tempVec = Vector3.forward;
-			transform.position += tempVec * (int)(Input.GetAxis("Mouse Y")*6);
+			transform.position += tempVec * (int)(Input.GetAxis("Mouse Y") * DragSpeed);
 		} else if(Mouse_Check() == (DIRECTION.BACK)&& availableDir.Contains(DIRECTION.BACK)) {
 			tempVec = Vector3.forward;
-			transform.position += tempVec * (int)(Input.GetAxis("Mouse Y")*6);
+			transform.position += tempVec * (int)(Input.GetAxis("Mouse Y") * DragSpeed);
 		} else if (Mouse_Check() == (DIRECTION.RIGHT) && availableDir.Contains(DIRECTION.RIGHT)) {
 			tempVec = Vector3.right;
-			transform.position += tempVec * (int)(Input.GetAxis("Mouse X")*6);
+			transform.position += tempVec * (int)(Input.GetAxis("Mouse X") * DragSpeed);
 		} else if(Mouse_Check() == (DIRECTION.LEFT) && availableDir.Contains(DIRECTION.LEFT)) {
 			tempVec = Vector3.right;
-			transform.position += tempVec * (int)(Input.GetAxis("Mouse X")*6);
+			transform.position += tempVec * (int)(Input.GetAxis("Mouse X") * DragSpeed);
 		} else if (Mouse_Check() == (DIRECTION.UP) && availableDir.Contains(DIRECTION.UP)) {
 			tempVec = Vector3.up;
-			transform.position += tempVec * (int)(Input.GetAxis("Mouse Y")*6);
+			transform.position += tempVec * (int)(Input.GetAxis("Mouse Y") * DragSpeed);
 		} else if(Mouse_Check() == (DIRECTION.DOWN) && availableDir.Contains(DIRECTION.DOWN)) {
 			tempVec = Vector3.up;
-			transform.position += tempVec * (int)(Input.GetAxis("Mouse Y")*6);
+			transform.position += tempVec * (int)(Input.GetAxis("Mouse Y") * DragSpeed);
 		} else {
 		}
 	}
@@ -70,28 +76,30 @@ public class DragObjectScriptDanVersion : MonoBehaviour{
 		if (MouseDir < 0) {
 			MouseDir += 360;
 		}
-		if(MouseDir > minAngleForward && MouseDir <= maxAngleForward && (activeFace.Contains(FACING_DIRECTIOM.Y))) {
+		if(MouseDir > minAngleForward && MouseDir <= maxAngleForward && (activeFace == (FACING_DIRECTIOM.Y))) {
 			return DIRECTION.FORWARD;
-		} else if(MouseDir > minAngleBack && MouseDir <= maxAngleBack && (activeFace.Contains(FACING_DIRECTIOM.Y))) {
+		} else if(MouseDir > minAngleBack && MouseDir <= maxAngleBack && (activeFace == (FACING_DIRECTIOM.Y))) {
 			return DIRECTION.BACK;
-		} else if (MouseDir > minAngleRight && MouseDir <= maxAngleRight && (activeFace.Contains(FACING_DIRECTIOM.Z) || activeFace.Contains(FACING_DIRECTIOM.Y))) {
+		} else if (MouseDir > minAngleRight && MouseDir <= maxAngleRight && (activeFace == (FACING_DIRECTIOM.Z) || activeFace == (FACING_DIRECTIOM.Y))) {
 			return DIRECTION.RIGHT;
-		} else if(MouseDir > minAngleLeft && MouseDir <= maxAngleLeft && (activeFace.Contains(FACING_DIRECTIOM.Z) || activeFace.Contains(FACING_DIRECTIOM.Y))) {
+		} else if(MouseDir > minAngleLeft && MouseDir <= maxAngleLeft && (activeFace == (FACING_DIRECTIOM.Z) || activeFace == (FACING_DIRECTIOM.Y))) {
 			return DIRECTION.LEFT;
-		} else if ((MouseDir > minAngleUp && MouseDir <= maxAngleUp) && (activeFace.Contains(FACING_DIRECTIOM.Z))) {
+		} else if ((MouseDir > minAngleUp && MouseDir <= maxAngleUp) && (activeFace == (FACING_DIRECTIOM.Z))) {
 			return DIRECTION.UP;
-		} else if(MouseDir > minAngleDown && MouseDir <= maxAngleDown && (activeFace.Contains(FACING_DIRECTIOM.Z))) {
+		} else if(MouseDir > minAngleDown && MouseDir <= maxAngleDown && (activeFace == (FACING_DIRECTIOM.Z))) {
 			return DIRECTION.DOWN;
 		} else {
 			return DIRECTION.EMPTY;
 		}
 	}
-	void OnMouseUp(){
-		Debug.Log("Up");
-		activeFace.Clear();
+	void OnMouse_Up(){
+		activeFace = FACING_DIRECTIOM.EMPTY;
+	}
+	public void ClearActiveFace(){
+		activeFace = FACING_DIRECTIOM.EMPTY;
 	}
 	public void AddFaceDir(FACING_DIRECTIOM face_Direction){
-		if(!activeFace.Contains(face_Direction))
-			activeFace.Add(face_Direction);
+		if(activeFace != (face_Direction) && activeFace == FACING_DIRECTIOM.EMPTY)
+			activeFace = face_Direction;
 	}
 }
