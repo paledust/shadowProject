@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public abstract class RaycastBase : MonoBehaviour {
 	Ray ray;
@@ -9,7 +7,7 @@ public abstract class RaycastBase : MonoBehaviour {
 	
 	virtual protected void Start()
 	{
-		taskManager = GetComponent<SetTaskManager>().taskManager;
+		taskManager = new Task_Manager();
 	}
 	// Update is called once per frame
 	protected void Update () {

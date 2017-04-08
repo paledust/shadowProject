@@ -61,6 +61,9 @@ public class MoveObject : MonoBehaviour {
 			case MOVESTATE.FROZEN:
 				FROZEN_Update();
 				break;
+			case MOVESTATE.PULLING:
+				PULLING_Update();
+				break;
 			default:
 				break;
 		}
@@ -74,8 +77,7 @@ public class MoveObject : MonoBehaviour {
 		}
 	}
 	void MOVEABLE_Update(){
-		Debug.Log("MOVEABLE");
-		//Nextpos = transform.position;
+		// Nextpos = new Vector3((int)transform.position.x, (int)transform.position.y, (int)transform.position.z);
 		moveCheck();
 		if(Input.GetButtonUp("Fire1")){
 			OnMouse_Up();
@@ -84,22 +86,28 @@ public class MoveObject : MonoBehaviour {
 	void MOVING_Update(){
 		UpdateDir_Event updateDir_Event = new UpdateDir_Event(); 
 		if(transform.position == Nextpos) {
-			Debug.Log("Should Change to Moveable");
 			ClearDirection();	
 			moveState = MOVESTATE.FROZEN;
 			EventManager.Instance.FireEvent(updateDir_Event);
 		}
 		else{
-			if(Input.GetButton("Fire1"))
-				Mouse_Move();
-			//transform.position = Vector3.MoveTowards(transform.position, pos, Time.deltaTime * speed*60);
+			// if(Input.GetButton("Fire1"))
+			// 	Mouse_Move();
+			transform.position = Vector3.MoveTowards(transform.position, Nextpos, Time.deltaTime * speed*40);
 		}
 		if((transform.position-Nextpos).magnitude >= MoveUnit){
 			Nextpos += (transform.position - Nextpos).normalized * MoveUnit;
+
+			ClearDirection();	
+			moveState = MOVESTATE.FROZEN;
+			EventManager.Instance.FireEvent(updateDir_Event);
 		}
 		if(Input.GetButtonUp("Fire1")){
 			OnMouse_Up();
 		}
+	}
+	void PULLING_Update(){
+		
 	}
 	//This Function will add one direction into the availableDir list
 	public void AddDirection(DIRECTION direction){
@@ -217,7 +225,7 @@ public class MoveObject : MonoBehaviour {
 				return false;
 		}
 	}
-	private void moveTo(Vector3 endPos){
+	public void moveTo(Vector3 endPos){
 		if(moveToTask.ifDetached)
 			taskManager.AddTask(moveToTask);
 		moveToTask.SetEndPos(endPos);
@@ -238,22 +246,22 @@ public class MoveObject : MonoBehaviour {
 			MouseDir += 360;
 		}
 		if(Mouse_Check() == (DIRECTION.FORWARD) && availableDir.Contains(DIRECTION.FORWARD)) {
-			int MoveUnit = (int)Mathf.Min(1.0f, Mathf.Abs(Input.GetAxis("Mouse Y")));
+			int MoveUnit = Mathf.Min(1, (int)Mathf.Abs(Input.GetAxis("Mouse Y")));
 			transform.position += Vector3.forward * MoveUnit * DragSpeed;
 		} else if(Mouse_Check() == (DIRECTION.BACK)&& availableDir.Contains(DIRECTION.BACK)) {
-			int MoveUnit = (int)Mathf.Min(1.0f, Mathf.Abs(Input.GetAxis("Mouse Y")));
+			int MoveUnit = Mathf.Min(1, (int)Mathf.Abs(Input.GetAxis("Mouse Y")));
 			transform.position += Vector3.back * MoveUnit * DragSpeed;
 		} else if (Mouse_Check() == (DIRECTION.RIGHT) && availableDir.Contains(DIRECTION.RIGHT)) {
-			int MoveUnit = (int)Mathf.Min(1.0f, Mathf.Abs(Input.GetAxis("Mouse X")));
+			int MoveUnit = Mathf.Min(1, (int)Mathf.Abs(Input.GetAxis("Mouse X")));
 			transform.position += Vector3.right * MoveUnit * DragSpeed;
 		} else if(Mouse_Check() == (DIRECTION.LEFT) && availableDir.Contains(DIRECTION.LEFT)) {
-			int MoveUnit = (int)Mathf.Min(1.0f, Mathf.Abs(Input.GetAxis("Mouse X")));
+			int MoveUnit = Mathf.Min(1, (int)Mathf.Abs(Input.GetAxis("Mouse X")));
 			transform.position += Vector3.left * MoveUnit * DragSpeed;
 		} else if (Mouse_Check() == (DIRECTION.UP) && availableDir.Contains(DIRECTION.UP)) {
-			int MoveUnit = (int)Mathf.Min(1.0f, Mathf.Abs(Input.GetAxis("Mouse Y")));
+			int MoveUnit = Mathf.Min(1, (int)Mathf.Abs(Input.GetAxis("Mouse Y")));
 			transform.position += Vector3.up * MoveUnit * DragSpeed;
 		} else if(Mouse_Check() == (DIRECTION.DOWN) && availableDir.Contains(DIRECTION.DOWN)) {
-			int MoveUnit = (int)Mathf.Min(1.0f, Mathf.Abs(Input.GetAxis("Mouse Y")));
+			int MoveUnit = Mathf.Min(1, (int)Mathf.Abs(Input.GetAxis("Mouse Y")));
 			transform.position += Vector3.down * MoveUnit * DragSpeed;
 		} else {
 		}

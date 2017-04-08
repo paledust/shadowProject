@@ -8,6 +8,7 @@ public class LoadLevel_Raycast : RaycastBase {
 	override protected void Start()
 	{
 		base.Start();
+		// taskManager = new Task_Manager();
 		loadLevelTask = new LoadLevelTask(levelIndex);
 	}
 

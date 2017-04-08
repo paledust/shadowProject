@@ -21,7 +21,7 @@ public class CustomLockCursor : MonoBehaviour {
 		}
 	}
 	void Update () {
-		if(Input.GetButtonDown("Fire1") && Cursor_Raycast(out rayhit, 100.0f, DragLayer)){
+		if(Input.GetButtonDown("Fire1") && Cursor_Raycast(out rayhit, 300.0f, DragLayer)){
 			CursorFollow = true;
 			SetCursor(rayhit.collider.transform.position);
 		}
@@ -32,7 +32,6 @@ public class CustomLockCursor : MonoBehaviour {
 			Camera.main.GetComponent<CustomLockCursor>().SetCursor(cursorPos);
 			SetCursor(cursorPos);
 		} else{
-			Debug.Log("No!!");
 			Vector3 p = cursor.rectTransform.position;
 			p.x += Input.GetAxis ("Mouse X") * MouseSpeed;
 			p.y += Input.GetAxis ("Mouse Y") * MouseSpeed;
