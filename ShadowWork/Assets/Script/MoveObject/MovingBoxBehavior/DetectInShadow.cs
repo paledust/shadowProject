@@ -16,11 +16,11 @@ public class DetectInShadow : MonoBehaviour {
 	void Start() {
 		//Register UpdateDir_Handler Function to UpdateDir_Event
 		//Whenever UpdateDir_Event Fired, UpdateDir_Handler Function will be Called once
-		EventManager.Instance.Register<UpdateDir_Event>(UpdateDir_Handler);
+		Service.eventManager.Register<UpdateDir_Event>(UpdateDir_Handler);
 		moveObject = GetComponentInParent<MoveObject>();
 	}
 	void Update(){
-		ray = new Ray(transform.position, KeyObjCollect.Instance.ActiveDirLight.transform.rotation * Vector3.back);
+		ray = new Ray(transform.position, Service.ActiveDirLight.transform.rotation * Vector3.back);
 		rayHits = Physics.RaycastAll(ray.origin,ray.direction,500.0f);
 		if(rayHits.Length>0){
 			GetComponent<Renderer>().material.color = ActivateColor;
@@ -30,7 +30,7 @@ public class DetectInShadow : MonoBehaviour {
 		FACE_ACTIVE();
 	}
 	void FACE_ACTIVE(){
-		Camera.main.GetComponent<CustomLockCursor>().Cursor_Raycast(out rayhit);
+		Camera.main.GetComponent<CustomCursor>().Cursor_Raycast(out rayhit);
 		if(rayhit.collider.gameObject == gameObject && Input.GetButtonDown("Fire1")){
 			ifDrag = true;		
 		} 	

@@ -24,7 +24,7 @@ public class OldDetectShadow : MonoBehaviour {
 		moveObject = GetComponentInParent<OldMoveObject>();
 	}
 	void Update () {
-		ray = new Ray(transform.position, KeyObjCollect.Instance.ActiveDirLight.transform.rotation * Vector3.back);
+		ray = new Ray(transform.position, Service.ActiveDirLight.transform.rotation * Vector3.back);
 		rayHits = Physics.RaycastAll(ray.origin,ray.direction,500.0f);
 
 		if(IF_IN_TRAIL())

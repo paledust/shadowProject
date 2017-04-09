@@ -30,7 +30,7 @@ public class DragMouse : MonoBehaviour {
 		}
 	}
 	void FACE_ACTIVE(){
-		Camera.main.GetComponent<CustomLockCursor>().Cursor_Raycast(out rayhit);
+		Camera.main.GetComponent<CustomCursor>().Cursor_Raycast(out rayhit);
 		if(rayhit.collider.gameObject == gameObject && Input.GetButtonDown("Fire1")){
 			ifDrag = true;		
 		} 	
@@ -45,7 +45,7 @@ public class DragMouse : MonoBehaviour {
 		}
 	}
 	void OnMouseDown(){
-		Camera.main.GetComponent<CustomLockCursor>().Cursor_Raycast(out rayhit);
+		Camera.main.GetComponent<CustomCursor>().Cursor_Raycast(out rayhit);
 		if(rayhit.collider.gameObject == gameObject){
 			ifDrag = true;	
 			moveObject.AddFaceDir(facingDir);

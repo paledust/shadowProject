@@ -9,39 +9,42 @@ public class AudioManagerScript : MonoBehaviour {
 	float ambientVolPerc = 1; //ambient sound volume
 
 	AudioSource[] ambientSources; //array of audio sources for ambient sounds
-	int activeAmbientSourceIndex; //index for the current ambient sound audio source
+	int activeAmbientSourceIndex = 0; //index for the current ambient sound audio source
 
 	AudioLibraryScript library; //reference to sound library
-
-	public static AudioManagerScript instance;
-
-	void Awake(){
-
-		if(instance != null){
-			Destroy (gameObject);
-		}
-		else{
-			instance = this;
-			DontDestroyOnLoad(gameObject);
-
-			library = GetComponent<AudioLibraryScript>();
-
-			ambientSources = new AudioSource[2]; //creates audio sources for ambient sounds
-			for (int i = 0; i < 2; i++) {
-				GameObject newAmbientSource = new GameObject("Ambient source " + (i + 1));
-				ambientSources[i] = newAmbientSource.AddComponent<AudioSource>();
-				newAmbientSource.transform.parent = transform;  //parents sources to audio manager
-			}   
+	static private AudioManagerScript instance;
+	static public AudioManagerScript Instance{
+		get{
+			if(instance == null)
+				instance = new AudioManagerScript();
+			return instance;
 		}
 	}
 
+	public void InitialAudio(AudioLibraryScript _library){
+		// library = GetComponent<AudioLibraryScript>();
+		library = _library;
+
+		ambientSources = new AudioSource[2]; //creates audio sources for ambient sounds
+		for (int i = 0; i < 2; i++) {
+			GameObject newAmbientSource = new GameObject("Ambient source " + (i + 1));
+			ambientSources[i] = newAmbientSource.AddComponent<AudioSource>();
+			newAmbientSource.transform.parent = transform;  //parents sources to audio manager
+			ambientSources[i].loop = true;
+		}
+	}
 	public void PlayAmbient(AudioClip clip, float fadeDuration = 1){ //for playing ambient sounds
 		activeAmbientSourceIndex = 1 - activeAmbientSourceIndex; //cycles audio source index
 		ambientSources[activeAmbientSourceIndex].clip = clip;//sets new active audio source as the clip to be played
 		ambientSources[activeAmbientSourceIndex].Play(); //plays ambient audio source
 		StartCoroutine(AmbientCrossfade(fadeDuration)); //crossfades using provided duration
 	}
-		
+	public void PlayAmbient(string soundName, float fadeDuration = 1){
+		Debug.Log(library);
+		Debug.Log(library.GetClipFromName(soundName));
+		PlayAmbient(library.GetClipFromName(soundName), fadeDuration);
+	}
+
 	public void PlaySound(string soundName, Vector3 pos){ //for playing sound effects through audio library
 		PlaySound(library.GetClipFromName(soundName), pos);//calls other playSound function with clips from library
 	}
@@ -56,8 +59,6 @@ public class AudioManagerScript : MonoBehaviour {
 	}
 	//use the following format in other scripts to use this function
 	//AudioManagerScript.instance.PlaySound(audioSourceGoesHere, positionGoesHere);
-
-
 
 	IEnumerator AmbientCrossfade(float duration){ //crossfade coroutine
 		float perc = 0; //percent into fade

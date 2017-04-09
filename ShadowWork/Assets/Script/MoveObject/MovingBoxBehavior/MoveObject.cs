@@ -68,7 +68,7 @@ public class MoveObject : MonoBehaviour {
 	void FROZEN_Update(){
 		UpdateDir_Event updateDir_Event = new UpdateDir_Event();
 		ClearDirection();
-		EventManager.Instance.FireEvent(updateDir_Event);
+		Service.eventManager.FireEvent(updateDir_Event);
 		if(Input.GetButtonUp("Fire1")){
 			OnMouse_Up();
 		}
@@ -81,10 +81,11 @@ public class MoveObject : MonoBehaviour {
 	}
 	void MOVING_Update(){
 		UpdateDir_Event updateDir_Event = new UpdateDir_Event(); 
+		
 		if(transform.position == Nextpos) {
 			ClearDirection();	
 			moveState = MOVESTATE.FROZEN;
-			EventManager.Instance.FireEvent(updateDir_Event);
+			Service.eventManager.FireEvent(updateDir_Event);
 			moveTo(Nextpos);
 		}
 		else{
@@ -97,7 +98,7 @@ public class MoveObject : MonoBehaviour {
 
 			ClearDirection();	
 			moveState = MOVESTATE.FROZEN;
-			EventManager.Instance.FireEvent(updateDir_Event);
+			Service.eventManager.FireEvent(updateDir_Event);
 		}
 		if(Input.GetButtonUp("Fire1")){
 			OnMouse_Up();
@@ -234,7 +235,7 @@ public class MoveObject : MonoBehaviour {
 			moveToTask.SetEndPos(endPos);
 		}
 	}
-	public void moveTo(Vector3 endPos, int move_Speed){
+	public void moveTo(Vector3 endPos, float move_Speed){
 		if(moveToTask.ifDetached){
 			taskManager.AddTask(moveToTask);
 			moveToTask.SetSpeed(move_Speed);
@@ -358,7 +359,7 @@ public class MoveObject : MonoBehaviour {
 		private Vector3 startPos;
 		private Vector3 endPos;
 		private float timer;
-		private int speed;
+		private float speed;
 		public MoveToTask(Transform m_Trans, Vector3 m_endPos, int m_speed){
 			moveTrans = m_Trans;
 			startPos = moveTrans.position;
@@ -380,8 +381,8 @@ public class MoveObject : MonoBehaviour {
 			startPos = moveTrans.position;
 			endPos = m_endPos;
 		}
-		public void SetSpeed(int m_Speed){
-			speed = Mathf.Max(5, m_Speed);
+		public void SetSpeed(float m_Speed){
+			speed = Mathf.Min(5.0f, m_Speed);
 		}
 		public Vector3 GET_ENDPOS(){
 			return endPos;

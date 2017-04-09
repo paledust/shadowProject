@@ -29,7 +29,7 @@ public class FeedBackSign : MonoBehaviour {
 	}
 
 	private void directionRegister(){
-		EventManager.Instance.Register<DirectionCheckEvent>(Active);
+		Service.eventManager.Register<DirectionCheckEvent>(Active);
 		// switch (dirOption)
 		// {
 		// 	case DirectionOption.left:

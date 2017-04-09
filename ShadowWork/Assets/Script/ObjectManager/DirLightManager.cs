@@ -28,10 +28,10 @@ public class DirLightManager : MonoBehaviour {
 
 	public void registerFunction()
 	{
-		EventManager.Instance.Register<changeDirLightEvent>(changeDirLightHandler);
+		Service.eventManager.Register<changeDirLightEvent>(changeDirLightHandler);
 	}
 	public void UnregisterFunction()
 	{
-		EventManager.Instance.UnRegister<changeDirLightEvent>(changeDirLightHandler);
+		Service.eventManager.UnRegister<changeDirLightEvent>(changeDirLightHandler);
 	}
 }

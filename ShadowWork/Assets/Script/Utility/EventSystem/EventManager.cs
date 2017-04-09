@@ -14,8 +14,7 @@ public class EventManager {
 
 	private Dictionary<Type, Event.Handler> RegisteredHandlers = new Dictionary<Type, Event.Handler>();
 
-	public void Register<T>(Event.Handler handler) where T: Event
-	{
+	public void Register<T>(Event.Handler handler) where T: Event {
 		Type  type = typeof(T);
 
 		if(RegisteredHandlers.ContainsKey(type))

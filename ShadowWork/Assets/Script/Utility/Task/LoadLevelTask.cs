@@ -12,6 +12,6 @@ public class LoadLevelTask : Task {
 		Debug.Log("Load");
 		LoadLevelEvent tempEvent = new LoadLevelEvent();
 		tempEvent.NextLevelIndex = LevelIndex;
-		EventManager.Instance.FireEvent(tempEvent);
+		Service.eventManager.FireEvent(tempEvent);
 	}
 }

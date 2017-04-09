@@ -37,6 +37,6 @@ public class MoveCam_Raycast : RaycastBase {
 		
 		CameraMoveEvent tempEvent = new CameraMoveEvent();
 		tempEvent.camMoveInfo = camMoveInfo;
-		EventManager.Instance.FireEvent(tempEvent);
+		Service.eventManager.FireEvent(tempEvent);
 	}
 }

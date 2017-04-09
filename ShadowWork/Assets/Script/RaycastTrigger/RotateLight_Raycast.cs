@@ -11,7 +11,7 @@ public class RotateLight_Raycast : RaycastBase {
 	override protected void Start () {
 		base.Start();
 		dirRotateInfo = new RotationInfo();
-		dirRotateInfo.startEularAngle = KeyObjCollect.Instance.ActiveDirLight.transform.rotation.eulerAngles;
+		dirRotateInfo.startEularAngle = Service.ActiveDirLight.transform.rotation.eulerAngles;
 		dirRotateInfo.endEularAngle = Dir_TargetRotationEuler;
 		dirRotateInfo.lerpTime = lerpTime;
 		dirRotateInfo.MethodIndex = 0;
@@ -27,10 +27,10 @@ public class RotateLight_Raycast : RaycastBase {
 
 	void FirechangeDirLightEvent()
 	{
-		dirRotateInfo.startEularAngle = KeyObjCollect.Instance.ActiveDirLight.transform.rotation.eulerAngles;
+		dirRotateInfo.startEularAngle = Service.ActiveDirLight.transform.rotation.eulerAngles;
 		
 		changeDirLightEvent tempEvent = new changeDirLightEvent();
 		tempEvent.dirRotationInfo = dirRotateInfo;
-		EventManager.Instance.FireEvent(tempEvent);
+		Service.eventManager.FireEvent(tempEvent);
 	}
 }

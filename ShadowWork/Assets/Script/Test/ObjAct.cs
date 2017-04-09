@@ -33,7 +33,7 @@ public class ObjAct : MonoBehaviour {
 		    || Input.GetMouseButton (1)) {
 
 			RaycastHit hit;
-			Ray ray = Camera.main.ScreenPointToRay (CustomLockCursor.MousePosition);
+			Ray ray = Camera.main.ScreenPointToRay (CustomCursor.MousePosition);
 			if (Physics.Raycast (ray.origin, ray.direction, out hit)) {
 				if (hit.collider.gameObject == this.gameObject) {
 					Material m = this.GetComponent<Renderer>().material;

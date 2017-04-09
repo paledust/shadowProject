@@ -21,7 +21,7 @@ public class SwitchLight_Raycast : RaycastBase {
 	// Use this for initialization
 	override protected void Start () {
 		base.Start();
-		old_light_Object = KeyObjCollect.Instance.ActiveDirLight;
+		old_light_Object = Service.ActiveDirLight;
 		switchLightTask = new SwitchLighTask(new_light, old_light);
 	}
 	override protected void AddTask()

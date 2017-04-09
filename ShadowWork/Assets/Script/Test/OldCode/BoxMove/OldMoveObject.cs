@@ -38,14 +38,14 @@ public class OldMoveObject : MonoBehaviour {
 				break;
 			case MOVESTATE.MOVING:
 				if(transform.position == pos) {
-					EventManager.Instance.FireEvent(tempEvent);
+					Service.eventManager.FireEvent(tempEvent);
 					moveState = MOVESTATE.FROZEN;
 					move();
 				}
 				break;
 			case MOVESTATE.FROZEN:
 				Debug.Log("FROZEN");
-				EventManager.Instance.FireEvent(tempEvent);
+				Service.eventManager.FireEvent(tempEvent);
 				break;
 			default:
 				break;
@@ -188,7 +188,7 @@ public class OldMoveObject : MonoBehaviour {
 			else
 			{
 				ButtonEvent_Forward tempEvent = new ButtonEvent_Forward();
-				EventManager.Instance.FireEvent(tempEvent);
+				Service.eventManager.FireEvent(tempEvent);
 			}			
 		}
 		if(Input.GetAxis("Vertical")<0)
@@ -201,7 +201,7 @@ public class OldMoveObject : MonoBehaviour {
 			else
 			{
 				ButtonEvent_Back tempEvent = new ButtonEvent_Back();
-				EventManager.Instance.FireEvent(tempEvent);
+				Service.eventManager.FireEvent(tempEvent);
 			}		
 		}
 		if(Input.GetAxis("Horizontal")>0)
@@ -214,7 +214,7 @@ public class OldMoveObject : MonoBehaviour {
 			else
 			{
 				ButtonEvent_Right tempEvent = new ButtonEvent_Right();
-				EventManager.Instance.FireEvent(tempEvent);
+				Service.eventManager.FireEvent(tempEvent);
 			}
 		}
 		if(Input.GetAxis("Horizontal")<0)
@@ -227,7 +227,7 @@ public class OldMoveObject : MonoBehaviour {
 			else
 			{
 				ButtonEvent_Left tempEvent = new ButtonEvent_Left();
-				EventManager.Instance.FireEvent(tempEvent);
+				Service.eventManager.FireEvent(tempEvent);
 			}	
 		}
 		if(Input.GetAxis("Height")>0)
@@ -240,7 +240,7 @@ public class OldMoveObject : MonoBehaviour {
 			else
 			{
 				ButtonEvent_Up tempEvent = new ButtonEvent_Up();
-				EventManager.Instance.FireEvent(tempEvent);
+				Service.eventManager.FireEvent(tempEvent);
 			}				
 		}
 		if(Input.GetAxis("Height")<0)
@@ -253,7 +253,7 @@ public class OldMoveObject : MonoBehaviour {
 			else
 			{
 				ButtonEvent_Down tempEvent = new ButtonEvent_Down();
-				EventManager.Instance.FireEvent(tempEvent);
+				Service.eventManager.FireEvent(tempEvent);
 			}		
 		}
 	}

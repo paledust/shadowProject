@@ -5,7 +5,7 @@ public class CameraManager : MonoBehaviour {
 	private Task_Manager taskManager = new Task_Manager();
 	// Use this for initialization
 	void Start () {
-		EventManager.Instance.Register<CameraMoveEvent>(CameraMoveHandler);
+		Service.eventManager.Register<CameraMoveEvent>(CameraMoveHandler);
 	}
 	void Update()
 	{

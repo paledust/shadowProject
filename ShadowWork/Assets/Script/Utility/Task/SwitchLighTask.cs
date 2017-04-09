@@ -31,6 +31,6 @@ public class SwitchLighTask : Task {
 	override protected void OnSuccess()
 	{
 		Debug.Log("Done");
-		KeyObjCollect.Instance.SetNewActiveDirLight(new_light.gameObject);
+		Service.SetNewActiveDirLight(new_light.gameObject);
 	}
 }
