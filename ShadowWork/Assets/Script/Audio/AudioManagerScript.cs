@@ -11,17 +11,28 @@ public class AudioManagerScript : MonoBehaviour {
 	AudioSource[] ambientSources; //array of audio sources for ambient sounds
 	int activeAmbientSourceIndex; //index for the current ambient sound audio source
 
+	AudioLibraryScript library; //reference to sound library
+
 	public static AudioManagerScript instance;
 
 	void Awake(){
-		instance = this;
 
-		ambientSources = new AudioSource[2]; //creates audio sources for ambient sounds
-		for (int i = 0; i < 2; i++) {
-			GameObject newAmbientSource = new GameObject("Ambient source " + (i + 1));
-			ambientSources[i] = newAmbientSource.AddComponent<AudioSource>();
-			newAmbientSource.transform.parent = transform;  //parents sources to audio manager
-		}   
+		if(instance != null){
+			Destroy (gameObject);
+		}
+		else{
+			instance = this;
+			DontDestroyOnLoad(gameObject);
+
+			library = GetComponent<AudioLibraryScript>();
+
+			ambientSources = new AudioSource[2]; //creates audio sources for ambient sounds
+			for (int i = 0; i < 2; i++) {
+				GameObject newAmbientSource = new GameObject("Ambient source " + (i + 1));
+				ambientSources[i] = newAmbientSource.AddComponent<AudioSource>();
+				newAmbientSource.transform.parent = transform;  //parents sources to audio manager
+			}   
+		}
 	}
 
 	public void PlayAmbient(AudioClip clip, float fadeDuration = 1){ //for playing ambient sounds
@@ -30,10 +41,23 @@ public class AudioManagerScript : MonoBehaviour {
 		ambientSources[activeAmbientSourceIndex].Play(); //plays ambient audio source
 		StartCoroutine(AmbientCrossfade(fadeDuration)); //crossfades using provided duration
 	}
-
-	public void PlaySound(AudioClip clip, Vector3 pos){ //for playing sound effects
-		AudioSource.PlayClipAtPoint (clip, pos, sfxVolPerc * masterVolPerc); //plays audio clip at position, at adjusted volume
+		
+	public void PlaySound(string soundName, Vector3 pos){ //for playing sound effects through audio library
+		PlaySound(library.GetClipFromName(soundName, pos));//calls other playSound function with clips from library
 	}
+
+	//use the following format in other scripts to use this function
+	//AudioManagerScript.instance.PlaySound("soundNameHere", positionGoesHere);
+
+	public void PlaySound(AudioClip clip, Vector3 pos){ //for playing sound effects directly using clips
+		if(clip != null){
+			AudioSource.PlayClipAtPoint (clip, pos, sfxVolPerc * masterVolPerc); //plays audio clip at position, at adjusted volume
+		}
+	}
+	//use the following format in other scripts to use this function
+	//AudioManagerScript.instance.PlaySound(audioSourceGoesHere, positionGoesHere);
+
+
 
 	IEnumerator AmbientCrossfade(float duration){ //crossfade coroutine
 		float perc = 0; //percent into fade
