@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public abstract class Task {
     public enum TaskStatus{
@@ -86,4 +84,24 @@ public abstract class Task {
     {}
     internal virtual void TUpdate()
     {}
+    public Task Then(Task nextTask){
+        if(nextTask.ifDetached){
+            NextTask = nextTask;
+        }
+        return nextTask;
+    }
+}
+
+public class WaitTask: Task{
+    private float WaitTime;
+    private float timer;
+    public WaitTask(float m_waitTime){
+        WaitTime = m_waitTime;
+    }
+    internal override void TUpdate(){
+        timer += Time.deltaTime;
+        if(timer >= WaitTime){
+            SetStatus(TaskStatus.Success);
+        }
+    }
 }

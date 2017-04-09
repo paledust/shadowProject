@@ -43,7 +43,7 @@ public class AudioManagerScript : MonoBehaviour {
 	}
 		
 	public void PlaySound(string soundName, Vector3 pos){ //for playing sound effects through audio library
-		PlaySound(library.GetClipFromName(soundName, pos));//calls other playSound function with clips from library
+		PlaySound(library.GetClipFromName(soundName), pos);//calls other playSound function with clips from library
 	}
 
 	//use the following format in other scripts to use this function

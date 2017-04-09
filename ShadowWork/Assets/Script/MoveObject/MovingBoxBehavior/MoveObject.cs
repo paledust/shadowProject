@@ -3,8 +3,7 @@ using UnityEngine;
 using CS_Kevin;
 
 public class MoveObject : MonoBehaviour {
-	public float DragSpeed = 5f;
-
+	public float DragSpeed;
 	// 0 degrees is right, 90 degrees is up, 180 is left, 270 is down
 	//floats for setting angle degrees for each arc
 	public float minAngleForward = 120f; //110
@@ -47,8 +46,6 @@ public class MoveObject : MonoBehaviour {
 	}
 	void Update() {
 		taskManager.Update();
-		// if(Input.GetButtonUp("Fire1"))
-		// 	OnMouse_Up();
 
 		switch (moveState)
 		{
@@ -77,7 +74,6 @@ public class MoveObject : MonoBehaviour {
 		}
 	}
 	void MOVEABLE_Update(){
-		// Nextpos = new Vector3((int)transform.position.x, (int)transform.position.y, (int)transform.position.z);
 		moveCheck();
 		if(Input.GetButtonUp("Fire1")){
 			OnMouse_Up();
@@ -89,11 +85,12 @@ public class MoveObject : MonoBehaviour {
 			ClearDirection();	
 			moveState = MOVESTATE.FROZEN;
 			EventManager.Instance.FireEvent(updateDir_Event);
+			moveTo(Nextpos);
 		}
 		else{
 			// if(Input.GetButton("Fire1"))
 			// 	Mouse_Move();
-			transform.position = Vector3.MoveTowards(transform.position, Nextpos, Time.deltaTime * speed*40);
+			moveTo(Nextpos);
 		}
 		if((transform.position-Nextpos).magnitude >= MoveUnit){
 			Nextpos += (transform.position - Nextpos).normalized * MoveUnit;
@@ -140,6 +137,7 @@ public class MoveObject : MonoBehaviour {
 			{
 				Nextpos += Vector3.forward*MoveUnit;
 				moveState = MOVESTATE.MOVING;
+				moveTo(Nextpos);
 			}
 		}
 		else if(CanMoveThisDirection(DIRECTION.BACK) && availableDir.Contains(DIRECTION.BACK))
@@ -152,6 +150,7 @@ public class MoveObject : MonoBehaviour {
 			{
 				Nextpos += Vector3.back*MoveUnit;
 				moveState = MOVESTATE.MOVING;
+				moveTo(Nextpos);
 			}
 		}						
 		else if(CanMoveThisDirection(DIRECTION.LEFT) && availableDir.Contains(DIRECTION.LEFT))
@@ -164,6 +163,7 @@ public class MoveObject : MonoBehaviour {
 			{
 				Nextpos += Vector3.left*MoveUnit;
 				moveState = MOVESTATE.MOVING;
+				moveTo(Nextpos);
 			}
 		}					
 		else if(CanMoveThisDirection(DIRECTION.RIGHT) && availableDir.Contains(DIRECTION.RIGHT))
@@ -176,6 +176,7 @@ public class MoveObject : MonoBehaviour {
 			{
 				Nextpos += Vector3.right*MoveUnit;
 				moveState = MOVESTATE.MOVING;
+				moveTo(Nextpos);
 			}
 		}					
 		else if(CanMoveThisDirection(DIRECTION.UP) && availableDir.Contains(DIRECTION.UP))
@@ -188,6 +189,7 @@ public class MoveObject : MonoBehaviour {
 			{
 				Nextpos += Vector3.up*MoveUnit;
 				moveState = MOVESTATE.MOVING;
+				moveTo(Nextpos);
 			}
 		}						
 		else if(CanMoveThisDirection(DIRECTION.DOWN) && availableDir.Contains(DIRECTION.DOWN))
@@ -200,6 +202,7 @@ public class MoveObject : MonoBehaviour {
 			{
 				Nextpos += Vector3.down*MoveUnit;
 				moveState = MOVESTATE.MOVING;
+				moveTo(Nextpos);
 			}
 		}
 	}
@@ -226,9 +229,17 @@ public class MoveObject : MonoBehaviour {
 		}
 	}
 	public void moveTo(Vector3 endPos){
-		if(moveToTask.ifDetached)
+		if(moveToTask.ifDetached){
 			taskManager.AddTask(moveToTask);
-		moveToTask.SetEndPos(endPos);
+			moveToTask.SetEndPos(endPos);
+		}
+	}
+	public void moveTo(Vector3 endPos, int move_Speed){
+		if(moveToTask.ifDetached){
+			taskManager.AddTask(moveToTask);
+			moveToTask.SetSpeed(move_Speed);
+			moveToTask.SetEndPos(endPos);
+		}
 	}
 	//Move Check will Check whether the Box on the ground.
 	void MovementCheck(){
@@ -245,49 +256,95 @@ public class MoveObject : MonoBehaviour {
 		if (MouseDir < 0) {
 			MouseDir += 360;
 		}
+		// if(Mouse_Check() == (DIRECTION.FORWARD) && availableDir.Contains(DIRECTION.FORWARD)) {
+		// 	int MoveUnit = (int)Mathf.Min(1.0f, Mathf.Abs(Input.GetAxis("Mouse Y")));
+		// 	transform.position += Vector3.forward * MoveUnit * DragSpeed;
+		// } else if(Mouse_Check() == (DIRECTION.BACK)&& availableDir.Contains(DIRECTION.BACK)) {
+		// 	int MoveUnit = (int)Mathf.Min(1.0f, Mathf.Abs(Input.GetAxis("Mouse Y")));
+		// 	transform.position += Vector3.back * MoveUnit * DragSpeed;
+		// } else if (Mouse_Check() == (DIRECTION.RIGHT) && availableDir.Contains(DIRECTION.RIGHT)) {
+		// 	int MoveUnit = (int)Mathf.Min(1.0f, Mathf.Abs(Input.GetAxis("Mouse X")));
+		// 	transform.position += Vector3.right * MoveUnit * DragSpeed;
+		// } else if(Mouse_Check() == (DIRECTION.LEFT) && availableDir.Contains(DIRECTION.LEFT)) {
+		// 	int MoveUnit = (int)Mathf.Min(1.0f, Mathf.Abs(Input.GetAxis("Mouse X")));
+		// 	transform.position += Vector3.left * MoveUnit * DragSpeed;
+		// } else if (Mouse_Check() == (DIRECTION.UP) && availableDir.Contains(DIRECTION.UP)) {
+		// 	int MoveUnit = (int)Mathf.Min(1.0f, Mathf.Abs(Input.GetAxis("Mouse Y")));
+		// 	transform.position += Vector3.up * MoveUnit * DragSpeed;
+		// } else if(Mouse_Check() == (DIRECTION.DOWN) && availableDir.Contains(DIRECTION.DOWN)) {
+		// 	int MoveUnit = (int)Mathf.Min(1.0f, Mathf.Abs(Input.GetAxis("Mouse Y")));
+		// 	transform.position += Vector3.down * MoveUnit * DragSpeed;
+		// } else {
+		// }
+
 		if(Mouse_Check() == (DIRECTION.FORWARD) && availableDir.Contains(DIRECTION.FORWARD)) {
-			int MoveUnit = Mathf.Min(1, (int)Mathf.Abs(Input.GetAxis("Mouse Y")));
-			transform.position += Vector3.forward * MoveUnit * DragSpeed;
+			tempVec = Vector3.forward;
+			transform.position += tempVec * (int)(Input.GetAxis("Mouse Y") * DragSpeed);
 		} else if(Mouse_Check() == (DIRECTION.BACK)&& availableDir.Contains(DIRECTION.BACK)) {
-			int MoveUnit = Mathf.Min(1, (int)Mathf.Abs(Input.GetAxis("Mouse Y")));
-			transform.position += Vector3.back * MoveUnit * DragSpeed;
+			tempVec = Vector3.forward;
+			transform.position += tempVec * (int)(Input.GetAxis("Mouse Y") * DragSpeed);
 		} else if (Mouse_Check() == (DIRECTION.RIGHT) && availableDir.Contains(DIRECTION.RIGHT)) {
-			int MoveUnit = Mathf.Min(1, (int)Mathf.Abs(Input.GetAxis("Mouse X")));
-			transform.position += Vector3.right * MoveUnit * DragSpeed;
+			tempVec = Vector3.right;
+			transform.position += tempVec * (int)(Input.GetAxis("Mouse X") * DragSpeed);
 		} else if(Mouse_Check() == (DIRECTION.LEFT) && availableDir.Contains(DIRECTION.LEFT)) {
-			int MoveUnit = Mathf.Min(1, (int)Mathf.Abs(Input.GetAxis("Mouse X")));
-			transform.position += Vector3.left * MoveUnit * DragSpeed;
+			tempVec = Vector3.right;
+			transform.position += tempVec * (int)(Input.GetAxis("Mouse X") * DragSpeed);
 		} else if (Mouse_Check() == (DIRECTION.UP) && availableDir.Contains(DIRECTION.UP)) {
-			int MoveUnit = Mathf.Min(1, (int)Mathf.Abs(Input.GetAxis("Mouse Y")));
-			transform.position += Vector3.up * MoveUnit * DragSpeed;
+			tempVec = Vector3.up;
+			transform.position += tempVec * (int)(Input.GetAxis("Mouse Y") * DragSpeed);
 		} else if(Mouse_Check() == (DIRECTION.DOWN) && availableDir.Contains(DIRECTION.DOWN)) {
-			int MoveUnit = Mathf.Min(1, (int)Mathf.Abs(Input.GetAxis("Mouse Y")));
-			transform.position += Vector3.down * MoveUnit * DragSpeed;
+			tempVec = Vector3.up;
+			transform.position += tempVec * (int)(Input.GetAxis("Mouse Y") * DragSpeed);
 		} else {
 		}
 	}
 	DIRECTION Mouse_Check(){
-		Vector3 tempVec = Vector3.zero;
-		float MouseDir = 0.0f;
-		MouseDir = Mathf.Atan2(Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse X"));
-		MouseDir = MouseDir*Mathf.Rad2Deg;
-		if (MouseDir < 0) {
-			MouseDir += 360;
+		Vector2 mouseVec = new Vector2(Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse X"));
+		if(mouseVec.magnitude >= 7.0f){
+			Vector3 tempVec = Vector3.zero;
+			float MouseDir = 0.0f;
+			MouseDir = Mathf.Atan2(Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse X"));
+			MouseDir = MouseDir*Mathf.Rad2Deg;
+			if (MouseDir < 0) {
+				MouseDir += 360;
+			}
+			if(MouseDir > minAngleForward && MouseDir <= maxAngleForward && (DragFace == (FACING_DIRECTIOM.Y))) {
+				return DIRECTION.FORWARD;
+			} else if(MouseDir > minAngleBack && MouseDir <= maxAngleBack && (DragFace == (FACING_DIRECTIOM.Y))) {
+				return DIRECTION.BACK;
+			} else if (MouseDir > minAngleRight && MouseDir <= maxAngleRight && (DragFace == (FACING_DIRECTIOM.Z) || DragFace == (FACING_DIRECTIOM.Y))) {
+				return DIRECTION.RIGHT;
+			} else if(MouseDir > minAngleLeft && MouseDir <= maxAngleLeft && (DragFace == (FACING_DIRECTIOM.Z) || DragFace == (FACING_DIRECTIOM.Y))) {
+				return DIRECTION.LEFT;
+			} else if ((MouseDir > minAngleUp && MouseDir <= maxAngleUp) && (DragFace == (FACING_DIRECTIOM.Z))) {
+				return DIRECTION.UP;
+			} else if(MouseDir > minAngleDown && MouseDir <= maxAngleDown && (DragFace == (FACING_DIRECTIOM.Z))) {
+				return DIRECTION.DOWN;
+			} else {
+				return DIRECTION.EMPTY;
+			}
 		}
-		if(MouseDir > minAngleForward && MouseDir <= maxAngleForward && (DragFace == (FACING_DIRECTIOM.Y))) {
-			return DIRECTION.FORWARD;
-		} else if(MouseDir > minAngleBack && MouseDir <= maxAngleBack && (DragFace == (FACING_DIRECTIOM.Y))) {
-			return DIRECTION.BACK;
-		} else if (MouseDir > minAngleRight && MouseDir <= maxAngleRight && (DragFace == (FACING_DIRECTIOM.Z) || DragFace == (FACING_DIRECTIOM.Y))) {
-			return DIRECTION.RIGHT;
-		} else if(MouseDir > minAngleLeft && MouseDir <= maxAngleLeft && (DragFace == (FACING_DIRECTIOM.Z) || DragFace == (FACING_DIRECTIOM.Y))) {
-			return DIRECTION.LEFT;
-		} else if ((MouseDir > minAngleUp && MouseDir <= maxAngleUp) && (DragFace == (FACING_DIRECTIOM.Z))) {
-			return DIRECTION.UP;
-		} else if(MouseDir > minAngleDown && MouseDir <= maxAngleDown && (DragFace == (FACING_DIRECTIOM.Z))) {
-			return DIRECTION.DOWN;
-		} else {
+		else
 			return DIRECTION.EMPTY;
+	}
+	float MouseSpeed(DIRECTION DragDir){
+		switch (DragDir)
+		{
+			case DIRECTION.FORWARD:
+				return Input.GetAxis("Mouse X")*Mathf.Sin(Mathf.Deg2Rad * maxAngleForward) + Input.GetAxis("Mouse Y")*Mathf.Cos(Mathf.Deg2Rad * maxAngleForward);			
+			case DIRECTION.BACK:
+				return Input.GetAxis("Mouse X")*Mathf.Sin(Mathf.Deg2Rad * maxAngleBack) + Input.GetAxis("Mouse Y")*Mathf.Cos(Mathf.Deg2Rad * maxAngleBack);			
+			case DIRECTION.UP:
+				return Input.GetAxis("Mouse X")*Mathf.Sin(Mathf.Deg2Rad * maxAngleUp) + Input.GetAxis("Mouse Y")*Mathf.Cos(Mathf.Deg2Rad * maxAngleUp);			
+			case DIRECTION.DOWN:
+				return Input.GetAxis("Mouse X")*Mathf.Sin(Mathf.Deg2Rad * maxAngleDown) + Input.GetAxis("Mouse Y")*Mathf.Cos(Mathf.Deg2Rad * maxAngleDown);			
+			case DIRECTION.LEFT:
+				return Input.GetAxis("Mouse X")*Mathf.Sin(Mathf.Deg2Rad * maxAngleLeft) + Input.GetAxis("Mouse Y")*Mathf.Cos(Mathf.Deg2Rad * maxAngleLeft);							
+			case DIRECTION.RIGHT:
+				return Input.GetAxis("Mouse X")*Mathf.Sin(Mathf.Deg2Rad * maxAngleRight) + Input.GetAxis("Mouse Y")*Mathf.Cos(Mathf.Deg2Rad * maxAngleRight);					
+			default:
+				return 0.0f;
+
 		}
 	}
 	public void Set_DragFace(FACING_DIRECTIOM m_DragFace){
@@ -312,8 +369,9 @@ public class MoveObject : MonoBehaviour {
 			timer = 0.0f;
 		}
 		internal override void TUpdate(){
+			Debug.Log("Move");
 			timer += Time.deltaTime;
-			moveTrans.position = Vector3.Lerp(startPos, endPos, Easing.BackEaseInOut(timer * speed));
+			moveTrans.position = Vector3.Lerp(startPos, endPos,timer * speed);
 
 			if(moveTrans.position == endPos)
 				SetStatus(TaskStatus.Success);
@@ -323,7 +381,7 @@ public class MoveObject : MonoBehaviour {
 			endPos = m_endPos;
 		}
 		public void SetSpeed(int m_Speed){
-			speed = m_Speed;
+			speed = Mathf.Max(5, m_Speed);
 		}
 		public Vector3 GET_ENDPOS(){
 			return endPos;

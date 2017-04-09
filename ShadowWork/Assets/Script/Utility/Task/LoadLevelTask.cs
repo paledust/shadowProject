@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+﻿using UnityEngine;
 public class LoadLevelTask : Task {
 	private int LevelIndex;
 	public LoadLevelTask(int m_LevelIndex)
@@ -12,6 +9,7 @@ public class LoadLevelTask : Task {
 	// Use this for initialization
 	override protected void Init()
 	{
+		Debug.Log("Load");
 		LoadLevelEvent tempEvent = new LoadLevelEvent();
 		tempEvent.NextLevelIndex = LevelIndex;
 		EventManager.Instance.FireEvent(tempEvent);
