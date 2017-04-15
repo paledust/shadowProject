@@ -13,7 +13,6 @@ public class AudioLibraryScript : ScriptableObject {
 	}
 
 	public void InitialAudioLibrary(){
-		Debug.Log("Initialize");
 		foreach(SoundGroup soundGroup in soundGroups){ //loops through sound groups in our array
 			soundGroupDictionary.Add(soundGroup.soundGroupID, soundGroup.group); //adds them to dictionary using the groupID as the key
 		}

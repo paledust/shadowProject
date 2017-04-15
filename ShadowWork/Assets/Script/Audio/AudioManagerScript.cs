@@ -20,6 +20,23 @@ public class AudioManagerScript : MonoBehaviour {
 			return instance;
 		}
 	}
+	void Start(){
+		if(instance != null){
+			Destroy(gameObject);
+		}
+	}
+	
+	[SerializeField] AudioLibraryScript audioLibrary;
+	void Awake(){
+		audioLibrary.InitialAudioLibrary();
+		DontDestroyOnLoad(gameObject);
+		if(!GetComponent<AudioManagerScript>())
+			Service.audioManager = gameObject.AddComponent<AudioManagerScript>();
+		else
+			Service.audioManager = GetComponent<AudioManagerScript>();
+
+		Service.audioManager.InitialAudio(audioLibrary);
+	}
 
 	public void InitialAudio(AudioLibraryScript _library){
 		// library = GetComponent<AudioLibraryScript>();

@@ -1,30 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class Main : MonoBehaviour {
 	public GameObject root{get {return gameObject;}}
-	[SerializeField] AudioLibraryScript audioLibrary;
-
 	// Use this for initialization
 	void Awake () {
 		Service.eventManager = new EventManager();	
 		Service.SetNewActiveDirLight(GameObject.Find("Directional Light"));
-		audioLibrary.InitialAudioLibrary();
-
-		if(!GetComponent<AudioManagerScript>())
-			Service.audioManager = gameObject.AddComponent<AudioManagerScript>();
-		else
-			Service.audioManager = GetComponent<AudioManagerScript>();
-
-		Service.audioManager.InitialAudio(audioLibrary);
 	}
 	void Start(){
 		Service.eventManager.Register<RestartEvent>(RestartLevelHandler);
 		Service.eventManager.Register<LoadLevelEvent>(LoadNextLevelHandler);
-
-		Service.audioManager.PlayAmbient("Ambient");
+		StartCoroutine(WaitToChangeCamera());
+		// Service.audioManager.PlayAmbient("Ambient");
 	}
 	void Update(){
 		if(Input.GetKeyDown(KeyCode.P))
@@ -45,5 +34,10 @@ public class Main : MonoBehaviour {
 		Service.eventManager.ClearList();
 		LoadLevelEvent tempEvent = e as LoadLevelEvent;
 		SceneManager.LoadScene(tempEvent.NextLevelIndex);
+	}
+	IEnumerator WaitToChangeCamera(){
+		yield return new WaitForSeconds(3.0f);
+		Camera.main.GetComponent<CameraManager>().CameraAnimationTrigger();
+		yield return null;
 	}
 }

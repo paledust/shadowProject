@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class CameraManager : MonoBehaviour {
 	private MoveTask moveTask;
+	private Animation anime;
 	private Task_Manager taskManager = new Task_Manager();
 	// Use this for initialization
 	void Start () {
 		Service.eventManager.Register<CameraMoveEvent>(CameraMoveHandler);
+		anime = GetComponent<Animation>();
 	}
 	void Update()
 	{
@@ -25,5 +28,8 @@ public class CameraManager : MonoBehaviour {
 		moveTask = new MoveTask(tempEvent.camMoveInfo, Camera.main.gameObject);
 
 		taskManager.AddTask(moveTask);
+	}
+	public void CameraAnimationTrigger(){
+		anime.Play();
 	}
 }

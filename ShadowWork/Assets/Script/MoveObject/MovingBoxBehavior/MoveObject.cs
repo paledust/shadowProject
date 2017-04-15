@@ -1,47 +1,51 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
 using CS_Kevin;
 
 public class MoveObject : MonoBehaviour {
-	public float DragSpeed;
+	[SerializeField] float DragSpeed;
+	public float DRAG_SPEED{get{return DragSpeed;}}
 	// 0 degrees is right, 90 degrees is up, 180 is left, 270 is down
 	//floats for setting angle degrees for each arc
-	public float minAngleForward = 120f; //110
-	public float maxAngleForward = 180f; //160
+	private float minAngleForward = 120f; //110
+	private float maxAngleForward = 180f; //160
 
-	public float minAngleBack = 300f; //290
-	public float maxAngleBack = 360f; //340
+	private float minAngleBack = 300f; //290
+	private float maxAngleBack = 360f; //340
 
-	public float minAngleRight = 0f; //340-360
-	public float maxAngleRight = 60f; //0-40
+	private float minAngleRight = 0f; //340-360
+	private float maxAngleRight = 60f; //0-40
 
-	public float minAngleLeft = 180f; //160
-	public float maxAngleLeft = 240f; //220
+	private float minAngleLeft = 180f; //160
+	private float maxAngleLeft = 240f; //220
 
-	public float minAngleUp = 60f; //70
-	public float maxAngleUp = 120f; //110
+	private float minAngleUp = 60f; //70
+	private float maxAngleUp = 120f; //110
 
-	public float minAngleDown = 240f; //250
-	public float maxAngleDown = 300f; //290
-	public FACING_DIRECTIOM DragFace = FACING_DIRECTIOM.EMPTY;
+	private float minAngleDown = 240f; //250
+	private float maxAngleDown = 300f; //290
+	[SerializeField] int MoveUnit = 6;
+	public FACING_DIRECTIOM DragFace{get; private set;}
 	//Snap
-	public List<DIRECTION> availableDir;
-	public DIRECTION dir;
-	public int MoveUnit = 6;
-	public MOVESTATE moveState;
+	public List<DIRECTION> availableDir{get; private set;}
+	public DIRECTION dir{get; private set;}
+	public int MOVE_UNITE{get; private set;}
+	public MOVESTATE moveState{get; private set;}
 	public bool IF_FROZEN{get{return moveState == MOVESTATE.FROZEN;}}
 	public bool IF_MOVEABLE{get{return moveState == MOVESTATE.MOVEABLE;}}
 	public bool IF_MOVING{get{return moveState == MOVESTATE.MOVING;}}
 	public bool IF_PULLING{get{return moveState == MOVESTATE.PULLING;}}
-	[SerializeField] int speed = 7;
 	private Vector3 Nextpos;
 	private Vector3 originPos;
 	private MoveToTask moveToTask;
 	private Task_Manager taskManager = new Task_Manager();
 
 	void Start() {
+		availableDir = new List<DIRECTION>();
+		DragFace = FACING_DIRECTIOM.EMPTY;
 		moveState = MOVESTATE.FROZEN;
-		moveToTask = new MoveToTask(transform, transform.position,speed);
+		moveToTask = new MoveToTask(transform, transform.position, (int)DragSpeed);
 		Nextpos = transform.position;
 	}
 	void Update() {
@@ -83,6 +87,7 @@ public class MoveObject : MonoBehaviour {
 		UpdateDir_Event updateDir_Event = new UpdateDir_Event(); 
 		
 		if(transform.position == Nextpos) {
+			originPos = transform.position;
 			ClearDirection();	
 			moveState = MOVESTATE.FROZEN;
 			Service.eventManager.FireEvent(updateDir_Event);
@@ -91,7 +96,7 @@ public class MoveObject : MonoBehaviour {
 		else{
 			// if(Input.GetButton("Fire1"))
 			// 	Mouse_Move();
-			moveTo(Nextpos);
+			// moveTo(Nextpos);
 		}
 		if((transform.position-Nextpos).magnitude >= MoveUnit){
 			Nextpos += (transform.position - Nextpos).normalized * MoveUnit;
@@ -105,7 +110,9 @@ public class MoveObject : MonoBehaviour {
 		}
 	}
 	void PULLING_Update(){
-		
+		if(transform.position == Nextpos){
+			SetStatus(MOVESTATE.FROZEN);
+		}
 	}
 	//This Function will add one direction into the availableDir list
 	public void AddDirection(DIRECTION direction){
@@ -136,6 +143,7 @@ public class MoveObject : MonoBehaviour {
 			}
 			else
 			{
+				originPos = transform.position;
 				Nextpos += Vector3.forward*MoveUnit;
 				moveState = MOVESTATE.MOVING;
 				moveTo(Nextpos);
@@ -149,6 +157,7 @@ public class MoveObject : MonoBehaviour {
 			}
 			else
 			{
+				originPos = transform.position;
 				Nextpos += Vector3.back*MoveUnit;
 				moveState = MOVESTATE.MOVING;
 				moveTo(Nextpos);
@@ -162,6 +171,7 @@ public class MoveObject : MonoBehaviour {
 			}
 			else
 			{
+				originPos = transform.position;
 				Nextpos += Vector3.left*MoveUnit;
 				moveState = MOVESTATE.MOVING;
 				moveTo(Nextpos);
@@ -175,6 +185,7 @@ public class MoveObject : MonoBehaviour {
 			}
 			else
 			{
+				originPos = transform.position;
 				Nextpos += Vector3.right*MoveUnit;
 				moveState = MOVESTATE.MOVING;
 				moveTo(Nextpos);
@@ -188,6 +199,7 @@ public class MoveObject : MonoBehaviour {
 			}
 			else
 			{
+				originPos = transform.position;
 				Nextpos += Vector3.up*MoveUnit;
 				moveState = MOVESTATE.MOVING;
 				moveTo(Nextpos);
@@ -201,6 +213,7 @@ public class MoveObject : MonoBehaviour {
 			}
 			else
 			{
+				originPos = transform.position;
 				Nextpos += Vector3.down*MoveUnit;
 				moveState = MOVESTATE.MOVING;
 				moveTo(Nextpos);
@@ -229,15 +242,28 @@ public class MoveObject : MonoBehaviour {
 				return false;
 		}
 	}
+	public void MoveBack(){
+		if(Nextpos != originPos){
+			Nextpos = originPos;
+			moveTo(Nextpos, 7.0f);
+		}
+	}
 	public void moveTo(Vector3 endPos){
 		if(moveToTask.ifDetached){
 			taskManager.AddTask(moveToTask);
+			moveToTask.SetEndPos(endPos);
+		}
+		else{
 			moveToTask.SetEndPos(endPos);
 		}
 	}
 	public void moveTo(Vector3 endPos, float move_Speed){
 		if(moveToTask.ifDetached){
 			taskManager.AddTask(moveToTask);
+			moveToTask.SetSpeed(move_Speed);
+			moveToTask.SetEndPos(endPos);
+		}
+		else{
 			moveToTask.SetSpeed(move_Speed);
 			moveToTask.SetEndPos(endPos);
 		}
@@ -354,7 +380,7 @@ public class MoveObject : MonoBehaviour {
 	}
 	//This is a MoveTask, it has its own Update Function which will be called in Task Manager that I create within this class
 	//Task Manager will handle it for us, What it did is to move one object to a specific place
-	public class MoveToTask:Task{
+	public class MoveToTask:Task {
 		private Transform moveTrans;
 		private Vector3 startPos;
 		private Vector3 endPos;
@@ -368,14 +394,15 @@ public class MoveObject : MonoBehaviour {
 		}
 		protected override void Init(){
 			timer = 0.0f;
+			startPos = moveTrans.position;
 		}
 		internal override void TUpdate(){
-			Debug.Log("Move");
 			timer += Time.deltaTime;
 			moveTrans.position = Vector3.Lerp(startPos, endPos,timer * speed);
 
-			if(moveTrans.position == endPos)
+			if(moveTrans.position == endPos){
 				SetStatus(TaskStatus.Success);
+			}
 		}
 		public void SetEndPos(Vector3 m_endPos){
 			startPos = moveTrans.position;

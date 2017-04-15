@@ -31,7 +31,7 @@ public class DetectInShadow : MonoBehaviour {
 	}
 	void FACE_ACTIVE(){
 		Camera.main.GetComponent<CustomCursor>().Cursor_Raycast(out rayhit);
-		if(rayhit.collider.gameObject == gameObject && Input.GetButtonDown("Fire1")){
+		if(rayhit.collider != null && rayhit.collider.gameObject == gameObject && Input.GetButtonDown("Fire1")){
 			ifDrag = true;		
 		} 	
 		if(ifDrag){
