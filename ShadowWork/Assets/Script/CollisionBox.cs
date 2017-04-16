@@ -13,8 +13,8 @@ public class CollisionBox : Collision_Base {
 		OriginPos = transform.position;
 
 		taskManager = new Task_Manager();
-		moveToTask = new MoveObject.MoveToTask(transform, transform.position, speed);
-		moveBack = new MoveObject.MoveToTask(transform, OriginPos, speed);
+		moveToTask = new MoveObject.MoveToTask(transform.GetChild(0), transform.position, speed);
+		moveBack = new MoveObject.MoveToTask(transform.GetChild(0), OriginPos, speed);
 		moveToTask.Then(moveBack);
 	}
 	protected override void Update(){

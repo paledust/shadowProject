@@ -245,15 +245,17 @@ public class MoveObject : MonoBehaviour {
 	public void MoveBack(){
 		if(Nextpos != originPos){
 			Nextpos = originPos;
-			moveTo(Nextpos, 7.0f);
+			moveTo(Nextpos, 3.0f);
 		}
 	}
 	public void moveTo(Vector3 endPos){
 		if(moveToTask.ifDetached){
 			taskManager.AddTask(moveToTask);
+			moveToTask.SetSpeed(DragSpeed);
 			moveToTask.SetEndPos(endPos);
 		}
 		else{
+			moveToTask.SetSpeed(DragSpeed);
 			moveToTask.SetEndPos(endPos);
 		}
 	}

@@ -4,6 +4,7 @@ using System.Collections;
 
 public class Main : MonoBehaviour {
 	public GameObject root{get {return gameObject;}}
+	[SerializeField] float waitTime = 1.0f;
 	// Use this for initialization
 	void Awake () {
 		Service.eventManager = new EventManager();	
@@ -12,7 +13,7 @@ public class Main : MonoBehaviour {
 	void Start(){
 		Service.eventManager.Register<RestartEvent>(RestartLevelHandler);
 		Service.eventManager.Register<LoadLevelEvent>(LoadNextLevelHandler);
-		StartCoroutine(WaitToChangeCamera());
+		StartCoroutine(WaitToChangeCamera(waitTime));
 		// Service.audioManager.PlayAmbient("Ambient");
 	}
 	void Update(){
@@ -35,8 +36,8 @@ public class Main : MonoBehaviour {
 		LoadLevelEvent tempEvent = e as LoadLevelEvent;
 		SceneManager.LoadScene(tempEvent.NextLevelIndex);
 	}
-	IEnumerator WaitToChangeCamera(){
-		yield return new WaitForSeconds(3.0f);
+	IEnumerator WaitToChangeCamera(float waitTime){
+		yield return new WaitForSeconds(waitTime);
 		Camera.main.GetComponent<CameraManager>().CameraAnimationTrigger();
 		yield return null;
 	}
