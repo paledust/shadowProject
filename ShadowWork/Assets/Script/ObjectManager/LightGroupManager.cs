@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using Kevin_Event;
 
 public class LightGroupManager : MonoBehaviour {
 	private SwitchLighTask switchLightTask; 
@@ -9,7 +8,7 @@ public class LightGroupManager : MonoBehaviour {
 	void Start () {
 		taskManager = new Task_Manager();
 	}
-	private void SwitchLightHandler(Event e)
+	private void SwitchLightHandler(Kevin_Event.Event e)
 	{
 		swithDirLightEvent tempEvent = e as swithDirLightEvent;
 		switchLightTask = new SwitchLighTask(tempEvent.light_Start, tempEvent.light_End);

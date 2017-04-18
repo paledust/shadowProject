@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using Kevin_Event;
 
 public class Main : MonoBehaviour {
 	public GameObject root{get {return gameObject;}}
@@ -26,12 +27,12 @@ public class Main : MonoBehaviour {
 		RestartEvent e = new RestartEvent();
 		Service.eventManager.FireEvent(e);
 	}
-	private void RestartLevelHandler(Event e){
+	private void RestartLevelHandler(Kevin_Event.Event e){
 		// RestartEvent tempEvent = e as RestartEvent;
 		Service.eventManager.ClearList();
 		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	}
-	private void LoadNextLevelHandler(Event e){
+	private void LoadNextLevelHandler(Kevin_Event.Event e){
 		Service.eventManager.ClearList();
 		LoadLevelEvent tempEvent = e as LoadLevelEvent;
 		SceneManager.LoadScene(tempEvent.NextLevelIndex);

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SetTaskManager : MonoBehaviour {
 	public Task_Manager taskManager{

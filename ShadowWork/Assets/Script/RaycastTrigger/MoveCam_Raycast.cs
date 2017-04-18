@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Kevin_Event;
 
 public class MoveCam_Raycast : RaycastBase {
 	public Transform camPosTransform;

@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using Kevin_Event;
 
 public class DirLightManager : MonoBehaviour {
 	private RotateTask rotateTask;
@@ -14,7 +13,7 @@ public class DirLightManager : MonoBehaviour {
 	{
 		return rotateTask.ifFinished;
 	}
-	private void changeDirLightHandler(Event e)
+	private void changeDirLightHandler(Kevin_Event.Event e)
 	{
 		if(rotateTask != null)
 		{

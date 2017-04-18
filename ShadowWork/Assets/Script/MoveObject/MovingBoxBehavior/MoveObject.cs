@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using System.Collections;
+using Kevin_Event;
 using CS_Kevin;
 
 public class MoveObject : MonoBehaviour {

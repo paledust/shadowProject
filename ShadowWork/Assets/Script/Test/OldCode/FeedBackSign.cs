@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using CS_Kevin;
-
+using Kevin_Event;
 public class FeedBackSign : MonoBehaviour {
 	[SerializeField] DirectionOption dirOption;
 	[SerializeField] Color DeactColor;
@@ -78,7 +78,7 @@ public class FeedBackSign : MonoBehaviour {
 			lightTask.ResetColor(this.DeactColor);
 		}
 	}
-	public void Active(Event e)
+	public void Active(Kevin_Event.Event e)
 	{
 		DirectionCheckEvent tempEvent = e as DirectionCheckEvent;
 		if(CheckDirection(tempEvent.dirOption))
@@ -89,7 +89,7 @@ public class FeedBackSign : MonoBehaviour {
 				OfflightDirection();
 		}
 	}
-	public void Error(Event e){
+	public void Error(Kevin_Event.Event e){
 		if(blinkTask.ifDetached)
 		{
 			taskManager.AddTask(blinkTask);

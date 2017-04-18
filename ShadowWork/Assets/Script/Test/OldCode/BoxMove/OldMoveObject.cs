@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using CS_Kevin;
+using Kevin_Event;
 
 public class OldMoveObject : MonoBehaviour {
 	public DirectionCheck direction;

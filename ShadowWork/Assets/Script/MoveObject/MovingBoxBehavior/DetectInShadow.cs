@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using CS_Kevin;
+using Kevin_Event;
 
 public class DetectInShadow : MonoBehaviour {
 	public FACING_DIRECTIOM facingDir;
@@ -46,7 +47,7 @@ public class DetectInShadow : MonoBehaviour {
 	}
 
 	//This Function will only be called once when UpdateDir_Event is fired once somewhere!
-	void UpdateDir_Handler(Event e) {
+	void UpdateDir_Handler(Kevin_Event.Event e) {
 		//Create a Ray to Detect whether it's in shadow and in the shadow of What kind of Thing
 		//FOR EXAMPLE: Some Thing allow Box move along X Direction, Another Thing allow Box move along Y Direction
 		rayHits = Physics.RaycastAll(ray.origin,ray.direction,500.0f);

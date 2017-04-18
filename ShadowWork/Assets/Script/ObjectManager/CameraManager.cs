@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using Kevin_Event;
 
 public class CameraManager : MonoBehaviour {
 	private MoveTask moveTask;
@@ -7,7 +7,7 @@ public class CameraManager : MonoBehaviour {
 	private Task_Manager taskManager = new Task_Manager();
 	// Use this for initialization
 	void Start () {
-		Service.eventManager.Register<CameraMoveEvent>(CameraMoveHandler);
+		Service.eventManager.Register<Kevin_Event.CameraMoveEvent>(CameraMoveHandler);
 		anime = GetComponent<Animation>();
 	}
 	void Update()
@@ -18,7 +18,7 @@ public class CameraManager : MonoBehaviour {
 	{
 		return moveTask.ifFinished;
 	}
-	private void CameraMoveHandler(Event e)
+	private void CameraMoveHandler(Kevin_Event.Event e)
 	{
 		if(moveTask != null)
 		{
