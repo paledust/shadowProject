@@ -10,12 +10,16 @@ public class Main : MonoBehaviour {
 	void Awake () {
 		Service.eventManager = new EventManager();	
 		Service.SetNewActiveDirLight(GameObject.Find("Directional Light"));
+
+		if(!AudioManagerScript.Instance)
+			Instantiate(Service.prefebList.AudioManager);
 	}
 	void Start(){
 		Service.eventManager.Register<RestartEvent>(RestartLevelHandler);
 		Service.eventManager.Register<LoadLevelEvent>(LoadNextLevelHandler);
 		StartCoroutine(WaitToChangeCamera(waitTime));
-		// Service.audioManager.PlayAmbient("Ambient");
+
+		Service.audioManager.PlayAmbient("Ambient");
 	}
 	void Update(){
 		if(Input.GetKeyDown(KeyCode.P))

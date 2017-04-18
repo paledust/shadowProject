@@ -12,6 +12,7 @@ public class DetectInShadow : MonoBehaviour {
 	RaycastHit[] rayHits;
 	Ray ray;
 	RaycastHit rayhit;
+	[SerializeField] LayerMask layerMask;
 	private bool ifDrag = false;
 	
 	void Start() {
@@ -22,7 +23,7 @@ public class DetectInShadow : MonoBehaviour {
 	}
 	void Update(){
 		ray = new Ray(transform.position, Service.ActiveDirLight.transform.rotation * Vector3.back);
-		rayHits = Physics.RaycastAll(ray.origin,ray.direction,500.0f);
+		rayHits = Physics.RaycastAll(ray.origin,ray.direction,500.0f,layerMask);
 		if(rayHits.Length>0){
 			GetComponent<Renderer>().material.color = ActivateColor;
 		}

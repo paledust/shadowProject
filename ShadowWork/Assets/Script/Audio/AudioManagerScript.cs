@@ -12,21 +12,17 @@ public class AudioManagerScript : MonoBehaviour {
 
 	AudioLibraryScript library; //reference to sound library
 	static private AudioManagerScript instance;
-	static public AudioManagerScript Instance{
-		get{
-			if(instance == null)
-				instance = new AudioManagerScript();
-			return instance;
-		}
-	}
-	void Start(){
+	static public AudioManagerScript Instance;
+	[SerializeField] AudioLibraryScript audioLibrary;
+	void Awake(){
 		if(instance != null){
 			Destroy(gameObject);
 		}
-	}
-	
-	[SerializeField] AudioLibraryScript audioLibrary;
-	void Awake(){
+		else{
+			instance = gameObject.GetComponent<AudioManagerScript>();
+		}
+		Instance = instance;
+
 		audioLibrary.InitialAudioLibrary();
 		DontDestroyOnLoad(gameObject);
 		if(!GetComponent<AudioManagerScript>())
