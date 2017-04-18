@@ -24,6 +24,7 @@ public class CustomCursor : MonoBehaviour {
 		if(Input.GetButtonDown("Fire1") && Cursor_Raycast(out rayhit, 300.0f, DragLayer)){
 			CursorFollow = true;
 			SetCursor(rayhit.collider.transform.position);
+			Service.audioManager.PlaySound("Move", transform.position);
 		}
 
 		if(CursorFollow){
@@ -47,6 +48,7 @@ public class CustomCursor : MonoBehaviour {
 
 		if(Input.GetButtonUp("Fire1")){
 			CursorFollow = false;
+			Service.audioManager.PlaySound("Move", transform.position);
 		}
 	}
 	public void SetCursor(Vector3 cursorPos){
