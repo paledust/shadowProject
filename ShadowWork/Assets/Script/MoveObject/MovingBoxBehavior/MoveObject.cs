@@ -258,6 +258,7 @@ public class MoveObject : MonoBehaviour {
 			moveToTask.SetSpeed(DragSpeed);
 			moveToTask.SetEndPos(endPos);
 		}
+		Service.audioManager.PlaySound("Drag", transform.position);
 	}
 	public void moveTo(Vector3 endPos, float move_Speed){
 		if(moveToTask.ifDetached){
@@ -269,6 +270,7 @@ public class MoveObject : MonoBehaviour {
 			moveToTask.SetSpeed(move_Speed);
 			moveToTask.SetEndPos(endPos);
 		}
+		Service.audioManager.PlaySound("Drag", transform.position);
 	}
 	//Move Check will Check whether the Box on the ground.
 	void MovementCheck(){
