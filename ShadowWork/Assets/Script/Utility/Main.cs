@@ -5,7 +5,7 @@ using Kevin_Event;
 
 public class Main : MonoBehaviour {
 	public GameObject root{get {return gameObject;}}
-	[SerializeField] float waitTime = 1.0f;
+	[SerializeField] float waitTime = 0.5f;
 	// Use this for initialization
 	void Awake () {
 		Service.eventManager = new EventManager();	
@@ -43,7 +43,8 @@ public class Main : MonoBehaviour {
 	}
 	IEnumerator WaitToChangeCamera(float waitTime){
 		yield return new WaitForSeconds(waitTime);
-		Camera.main.GetComponent<CameraManager>().CameraAnimationTrigger();
+		if(Camera.main.GetComponent<CameraManager>())
+			Camera.main.GetComponent<CameraManager>().CameraAnimationTrigger();
 		yield return null;
 	}
 }

@@ -47,6 +47,7 @@ public class MoveObject : MonoBehaviour {
 		moveState = MOVESTATE.FROZEN;
 		moveToTask = new MoveToTask(transform, transform.position, (int)DragSpeed);
 		Nextpos = transform.position;
+		SetStatus(MOVESTATE.PENDING);
 	}
 	void Update() {
 		taskManager.Update();
@@ -64,6 +65,9 @@ public class MoveObject : MonoBehaviour {
 				break;
 			case MOVESTATE.PULLING:
 				PULLING_Update();
+				break;
+			case MOVESTATE.PENDING:
+				PENDING_Update();
 				break;
 			default:
 				break;
@@ -113,6 +117,9 @@ public class MoveObject : MonoBehaviour {
 		if(transform.position == Nextpos){
 			SetStatus(MOVESTATE.FROZEN);
 		}
+	}
+	void PENDING_Update(){
+
 	}
 	//This Function will add one direction into the availableDir list
 	public void AddDirection(DIRECTION direction){
@@ -258,7 +265,7 @@ public class MoveObject : MonoBehaviour {
 			moveToTask.SetSpeed(DragSpeed);
 			moveToTask.SetEndPos(endPos);
 		}
-		Service.audioManager.PlaySound("Drag", transform.position);
+		// Service.audioManager.PlaySound("Drag", transform.position);
 	}
 	public void moveTo(Vector3 endPos, float move_Speed){
 		if(moveToTask.ifDetached){
@@ -384,39 +391,51 @@ public class MoveObject : MonoBehaviour {
 	}
 	//This is a MoveTask, it has its own Update Function which will be called in Task Manager that I create within this class
 	//Task Manager will handle it for us, What it did is to move one object to a specific place
-	public class MoveToTask:Task {
-		private Transform moveTrans;
-		private Vector3 startPos;
-		private Vector3 endPos;
-		private float timer;
-		private float speed;
-		public MoveToTask(Transform m_Trans, Vector3 m_endPos, int m_speed){
-			moveTrans = m_Trans;
-			startPos = moveTrans.position;
-			endPos = m_endPos;
-			speed = m_speed;
+}
+public class MoveToTask:Task {
+	private Transform moveTrans;
+	private Vector3 startPos;
+	private Vector3 endPos;
+	private float timer;
+	private float speed;
+	public MoveToTask(Transform m_Trans, Vector3 m_endPos, int m_speed){
+		moveTrans = m_Trans;
+		startPos = moveTrans.position;
+		endPos = m_endPos;
+		speed = m_speed;
+	}
+	protected override void Init(){
+		timer = 0.0f;
+		startPos = moveTrans.position;
+	}
+	internal override void TUpdate(){
+		timer += Time.deltaTime;
+		moveTrans.position = Vector3.Lerp(startPos, endPos,timer * speed);
+		if(moveTrans.position == endPos){
+			SetStatus(TaskStatus.Success);
 		}
-		protected override void Init(){
-			timer = 0.0f;
-			startPos = moveTrans.position;
-		}
-		internal override void TUpdate(){
-			timer += Time.deltaTime;
-			moveTrans.position = Vector3.Lerp(startPos, endPos,timer * speed);
-
-			if(moveTrans.position == endPos){
-				SetStatus(TaskStatus.Success);
-			}
-		}
-		public void SetEndPos(Vector3 m_endPos){
-			startPos = moveTrans.position;
-			endPos = m_endPos;
-		}
-		public void SetSpeed(float m_Speed){
-			speed = Mathf.Min(5.0f, m_Speed);
-		}
-		public Vector3 GET_ENDPOS(){
-			return endPos;
-		}
+	}
+	public void SetEndPos(Vector3 m_endPos){
+		startPos = moveTrans.position;
+		endPos = m_endPos;
+	}
+	public void SetSpeed(float m_Speed){
+		speed = Mathf.Min(5.0f, m_Speed);
+	}
+	public Vector3 GET_ENDPOS(){
+		return endPos;
+	}
+}
+public class SetBoxStatus: Task{
+	MOVESTATE targetState;
+	MoveObject Context;
+	
+	public SetBoxStatus(MOVESTATE _tarState, MoveObject _Context){
+		targetState = _tarState;
+		Context = _Context;
+	}
+	protected override void Init(){
+		Context.SetStatus(targetState);
+		SetStatus(TaskStatus.Success);
 	}
 }

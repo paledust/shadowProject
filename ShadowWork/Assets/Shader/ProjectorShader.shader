@@ -1,20 +1,22 @@
 ﻿Shader "Custom/ProjectorShader" {
 	Properties {
-		_MainTex ("Albedo (RGB)", 2D) = "white" {}
+		_ShadowTex ("Albedo (RGB)", 2D) = "white" {}
 
 		_TexWidth("Sheet Width", Float) = 0.0
 		_CellAmount ("Cell Amount", Float) = 0.0
 		_Speed("Speed", Range(0.01, 32)) = 12
-		_CutAlpha("Alpha Cut", Range(0,1)) = 0.5
+
+		_FalloffTex ("FallOff", 2D) = "white" {}
 	}
 	SubShader {
-		Tags { "RenderType"="Transparent" }
+		Tags { "Queue" = "Transparent" "RenderType"="Transparent" }
 		LOD 200
 		
+		ZWrite Off
 		Blend SrcAlpha OneMinusSrcAlpha 
 		CGPROGRAM
 		// Physically based Standard lighting model, and enable shadows on all light types
-		#pragma surface surf Standard fullforwardshadows
+		#pragma surface surf NoShadow alpha
 
 		// Use shader model 3.0 target, to get nicer looking lighting
 		#pragma target 3.0
@@ -28,9 +30,17 @@
 		half _TexWidth;
 		half _CellAmount;
 		half _Speed;
-		half _CutAlpha;
 
-		void surf (Input IN, inout SurfaceOutputStandard o) {
+		inline float4 LightingNoShadow(SurfaceOutput s, fixed3 lightDir, fixed3 viewDir, fixed atten){
+			fixed4 color;
+
+            color.rgb = s.Albedo;
+			color.a = s.Albedo;
+			//color.rgb = cross(color.rgb,viewDir);
+            return color;
+		}
+
+		void surf (Input IN, inout SurfaceOutput o) {
 			float2 spriteUV = IN.uv_MainTex;
 
 			float cellPixelWidth = _TexWidth/_CellAmount;
@@ -47,12 +57,6 @@
 			fixed4 c = tex2D (_MainTex, spriteUV);
 			o.Albedo = c.rgb;
 			o.Albedo = c.a;
-			if(o.Alpha < _CutAlpha){
-				o.Alpha = 0;
-			}
-			else{
-				o.Alpha = 1.0;
-			}
 		}
 		ENDCG
 	}

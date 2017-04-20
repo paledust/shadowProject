@@ -4,12 +4,12 @@ using CS_Kevin;
 public class PullBox : MonoBehaviour {
 	public int level_Index;
 	private LoadLevelTask loadLevelTask;
-	private WaitTask wait;
+	private MoveToTask pullHeroBox;
 	private Task_Manager taskManager;
 	private bool ifLoad;
+	private bool ifPulled;
 	void Start(){
 		loadLevelTask = new LoadLevelTask(level_Index);
-		wait = new WaitTask(3);
 		taskManager = new Task_Manager();
 		ifLoad = false;
 	}
@@ -18,19 +18,21 @@ public class PullBox : MonoBehaviour {
 	}
 	void OnTriggerStay(Collider m_collider){
 		Debug.Log("Collider");
-		if(m_collider.gameObject.name == "MovingBox" && m_collider.transform.position == transform.position){
+		if(m_collider.gameObject.name == "MovingBox" && m_collider.transform.position == transform.position && !ifLoad){
+			pullHeroBox = new MoveToTask(m_collider.transform, transform.parent.position, 1);
 			m_collider.gameObject.GetComponent<MoveObject>().SetStatus(MOVESTATE.PULLING);
-			m_collider.gameObject.GetComponent<MoveObject>().moveTo(transform.parent.position, 1.0f);
-			if(!ifLoad){
-				ifLoad = true;
-				LoadLevel();
-			}
+			ifLoad = true;
+			LoadLevel();
 		}
 	}
 
 	void LoadLevel(){
-		Debug.Log("Go");
-		wait.Then(loadLevelTask);
-		taskManager.AddTask(wait);
+		WaitTask startLoadLevel;
+		startLoadLevel = new WaitTask(1.0f);
+		startLoadLevel.Then(pullHeroBox).
+						Then(new WaitTask(2)).
+						Then(loadLevelTask);
+
+		taskManager.AddTask(startLoadLevel);
 	}
 }

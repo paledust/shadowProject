@@ -32,4 +32,7 @@ public class CameraManager : MonoBehaviour {
 	public void CameraAnimationTrigger(){
 		anime.Play();
 	}
+	public void ActivateBox(){
+		GameObject.Find("MovingBox").GetComponent<MoveObject>().SetStatus(CS_Kevin.MOVESTATE.FROZEN);
+	}
 }

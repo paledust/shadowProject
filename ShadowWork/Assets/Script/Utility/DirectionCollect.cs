@@ -6,6 +6,7 @@ namespace CS_Kevin {
 		MOVING,
 		PULLING,
 		FROZEN,
+		PENDING
 	}
 	public enum FACING_DIRECTIOM{
 		X,
