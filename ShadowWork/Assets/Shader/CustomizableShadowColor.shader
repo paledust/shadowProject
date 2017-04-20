@@ -36,7 +36,7 @@
 				color.rgb = ActiveFlag * shadowColor + (1-ActiveFlag) * s.Albedo;
 			}
 			else{
-				color.rgb = s.Albedo * light * atten *_LightColor0;
+				color.rgb = s.Albedo * atten *_LightColor0;
 			}
 
 			color.a = 1;

@@ -20,7 +20,7 @@ public class PullBox : MonoBehaviour {
 		Debug.Log("Collider");
 		if(m_collider.gameObject.name == "MovingBox" && m_collider.transform.position == transform.position && !ifLoad){
 			pullHeroBox = new MoveToTask(m_collider.transform, transform.parent.position, 1);
-			m_collider.gameObject.GetComponent<MoveObject>().SetStatus(MOVESTATE.PULLING);
+			m_collider.gameObject.GetComponent<MoveObject>().SetStatus(MOVESTATE.PENDING);
 			ifLoad = true;
 			LoadLevel();
 		}
