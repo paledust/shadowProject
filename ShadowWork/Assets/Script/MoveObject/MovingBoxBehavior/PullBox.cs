@@ -18,6 +18,7 @@ public class PullBox : MonoBehaviour {
 	}
 	void OnTriggerStay(Collider m_collider){
 		Debug.Log("Collider");
+		Service.audioManager.PlaySound2D("BoxSlide");
 		if(m_collider.gameObject.name == "MovingBox" && m_collider.transform.position == transform.position && !ifLoad){
 			pullHeroBox = new MoveToTask(m_collider.transform, transform.parent.position, 1);
 			m_collider.gameObject.GetComponent<MoveObject>().SetStatus(MOVESTATE.PENDING);

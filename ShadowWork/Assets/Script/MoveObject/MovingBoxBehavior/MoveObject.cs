@@ -277,7 +277,7 @@ public class MoveObject : MonoBehaviour {
 			moveToTask.SetSpeed(move_Speed);
 			moveToTask.SetEndPos(endPos);
 		}
-		Service.audioManager.PlaySound("Drag", transform.position);
+		Service.audioManager.PlaySound2D("BoxDrag");
 	}
 	//Move Check will Check whether the Box on the ground.
 	void MovementCheck(){
