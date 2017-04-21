@@ -7,6 +7,7 @@ public class AudioManagerScript : MonoBehaviour {
 	float sfxVolPerc = 1; //sound effects volume
 	float ambientVolPerc = 1; //ambient sound volume
 
+	AudioSource soundEffectSource;
 	AudioSource[] ambientSources; //array of audio sources for ambient sounds
 	int activeAmbientSourceIndex = 0; //index for the current ambient sound audio source
 
@@ -44,6 +45,9 @@ public class AudioManagerScript : MonoBehaviour {
 			newAmbientSource.transform.parent = transform;  //parents sources to audio manager
 			ambientSources[i].loop = true;
 		}
+		GameObject newSoundEffectSource = new GameObject("Sound Effect source");
+		soundEffectSource = newSoundEffectSource.AddComponent<AudioSource>();
+		newSoundEffectSource.transform.parent = transform; 
 	}
 	public void PlayAmbient(AudioClip clip, float fadeDuration = 1){ //for playing ambient sounds
 		activeAmbientSourceIndex = 1 - activeAmbientSourceIndex; //cycles audio source index
@@ -71,6 +75,10 @@ public class AudioManagerScript : MonoBehaviour {
 	}
 	//use the following format in other scripts to use this function
 	//AudioManagerScript.instance.PlaySound(audioSourceGoesHere, positionGoesHere);
+
+	public void PlaySound2D(string soundName){
+		soundEffectSource.PlayOneShot(library.GetClipFromName(soundName), sfxVolPerc * masterVolPerc);
+	}
 
 	IEnumerator AmbientCrossfade(float duration){ //crossfade coroutine
 		float perc = 0; //percent into fade
