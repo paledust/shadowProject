@@ -29,7 +29,6 @@ public class CustomCursor : MonoBehaviour {
 
 		if(CursorFollow){
 			Vector3 cursorPos = Camera.main.WorldToScreenPoint(rayhit.collider.transform.position);
-			Debug.Log(rayhit.collider);
 			Camera.main.GetComponent<CustomCursor>().SetCursor(cursorPos);
 			SetCursor(cursorPos);
 		} else{
