@@ -28,7 +28,7 @@
 
 		inline fixed4 LightingShadowOnly (SurfaceOutput s, fixed3 lightDir, fixed3 viewDir, fixed atten) 
 		{
-        	fixed4 color = (1,1,1,1);
+        	fixed4 color = fixed4(1,1,1,1);
 
 			if(atten < 1){
 				fixed ActiveFlag = dot(s.Normal, _ActiveFace.xyz);
