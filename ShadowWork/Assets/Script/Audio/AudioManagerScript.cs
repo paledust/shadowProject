@@ -7,6 +7,8 @@ public class AudioManagerScript : MonoBehaviour {
 	float sfxVolPerc = 1; //sound effects volume
 	float ambientVolPerc = 1; //ambient sound volume
 
+	public ASRScript asr{get; private set;}
+
 	AudioSource soundEffectSource;
 	AudioSource[] ambientSources; //array of audio sources for ambient sounds
 	int activeAmbientSourceIndex = 0; //index for the current ambient sound audio source
@@ -32,6 +34,8 @@ public class AudioManagerScript : MonoBehaviour {
 			Service.audioManager = GetComponent<AudioManagerScript>();
 
 		Service.audioManager.InitialAudio(audioLibrary);
+
+		asr = gameObject.GetComponent<ASRScript>();
 	}
 
 	public void InitialAudio(AudioLibraryScript _library){
