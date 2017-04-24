@@ -139,6 +139,7 @@ public class MoveObject : MonoBehaviour {
 		if(transform.position != Nextpos){
 			moveTo(Nextpos);
 		}
+		Service.audioManager.asr.Stop();
 		DragFace = FACING_DIRECTIOM.EMPTY;
 	}
 	private void moveCheck(){
@@ -265,6 +266,7 @@ public class MoveObject : MonoBehaviour {
 			moveToTask.SetSpeed(DragSpeed);
 			moveToTask.SetEndPos(endPos);
 		}
+		Service.audioManager.asr.Play();
 		// Service.audioManager.PlaySound("Drag", transform.position);
 	}
 	public void moveTo(Vector3 endPos, float move_Speed){
@@ -277,7 +279,8 @@ public class MoveObject : MonoBehaviour {
 			moveToTask.SetSpeed(move_Speed);
 			moveToTask.SetEndPos(endPos);
 		}
-		Service.audioManager.PlaySound2D("BoxDrag");
+		//Service.audioManager.PlaySound2D("BoxDrag");
+		Service.audioManager.asr.Play();
 	}
 	//Move Check will Check whether the Box on the ground.
 	void MovementCheck(){
