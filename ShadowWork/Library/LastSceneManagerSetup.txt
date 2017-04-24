@@ -1,8 +1,4 @@
 sceneSetups:
-<<<<<<< HEAD
-- path: Assets/Scene/PuzzlePrototype/PlaySceneTest.unity
-=======
-- path: Assets/Scene/MultipleLevel/DiscardLevel/Scene_Kevin_Cube_2.unity
->>>>>>> master
+- path: Assets/Scene/MultipleLevel/Scene_Kevin_Cube_01.unity
   isLoaded: 1
   isActive: 1

@@ -35,7 +35,7 @@
 			light = 1.0;
 
 			if(atten < 1){
-            	color.rgb =  (_ShadowStr) * _ShadowColor;
+            	color.rgb =  (_ShadowStr) * _ShadowColor + (1-_ShadowStr) * s.Albedo;
 			}
 			else{
 				color.rgb = s.Albedo * light * atten *_LightColor0 * _Color;
