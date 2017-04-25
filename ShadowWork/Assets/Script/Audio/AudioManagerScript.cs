@@ -83,6 +83,10 @@ public class AudioManagerScript : MonoBehaviour {
 	public void PlaySound2D(string soundName){
 		soundEffectSource.PlayOneShot(library.GetClipFromName(soundName), sfxVolPerc * masterVolPerc);
 	}
+	public void StopPlaying(string soundName){
+		if(soundEffectSource.isPlaying)
+			soundEffectSource.Stop();
+	}
 
 	IEnumerator AmbientCrossfade(float duration){ //crossfade coroutine
 		float perc = 0; //percent into fade

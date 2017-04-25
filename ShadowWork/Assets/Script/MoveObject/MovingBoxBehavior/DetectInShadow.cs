@@ -47,6 +47,25 @@ public class DetectInShadow : MonoBehaviour {
 		}
 	}
 
+	public void UpdateDirection(){
+		rayHits = Physics.RaycastAll(ray.origin,ray.direction,500.0f);
+
+		CLEAR_DIRECTION();
+		
+		//For each Thing it casted, get the information from its ShadowTrail to find out what direction it allow
+		foreach (RaycastHit _rayhit in rayHits){
+			if(_rayhit.collider.gameObject.GetComponent<AllowDirection>()){
+				AllowDirection _AllowDir = _rayhit.collider.gameObject.GetComponent<AllowDirection>();
+				//Add This Direction into the DirectionList
+				directions.AddRange(_AllowDir.GET_DIRECTION_LIST());
+			}
+		}
+		//If the Length is > 0, that means it hit something, meaning the dot is in ShadowTrail, Thus we need to Update The Direction
+		if(rayHits.Length>0){
+			SetDirection();
+			moveObject.SetStatus(MOVESTATE.MOVEABLE);
+		}
+	}
 	//This Function will only be called once when UpdateDir_Event is fired once somewhere!
 	void UpdateDir_Handler(Kevin_Event.Event e) {
 		//Create a Ray to Detect whether it's in shadow and in the shadow of What kind of Thing
@@ -68,9 +87,12 @@ public class DetectInShadow : MonoBehaviour {
 		if(rayHits.Length>0){
 			//Update The Direction
 			SetDirection();
-			//And meanwhile, since the box has Avaliable Direction, we should set it to Moveable.
-			if(moveObject.IF_FROZEN)
+			if(!moveObject.IF_MOVING){
 				moveObject.SetStatus(MOVESTATE.MOVEABLE);
+			}
+			// if(moveObject.IF_FROZEN){
+			// 	moveObject.SetStatus(MOVESTATE.MOVEABLE);	
+			// }
 		}
 	}
 

@@ -39,7 +39,7 @@ public class ASRScript : MonoBehaviour
 	public void Play()
 	{
 		StartCoroutine(AttackRelease());
-		Debug.Log("Playing");
+		// Debug.Log("Playing");
 	}
 
 	public void Stop()

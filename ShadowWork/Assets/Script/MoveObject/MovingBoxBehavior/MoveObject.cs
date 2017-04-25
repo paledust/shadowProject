@@ -25,102 +25,69 @@ public class MoveObject : MonoBehaviour {
 
 	private float minAngleDown = 240f; //250
 	private float maxAngleDown = 300f; //290
+	private bool IF_PLAY_DRAG_SOUND{get{return dir != DIRECTION.EMPTY;}}
+	private bool IfAudioPlay = false;
 	[SerializeField] int MoveUnit = 6;
+	[SerializeField] MOVESTATE moveState;
 	public FACING_DIRECTIOM DragFace{get; private set;}
 	//Snap
 	public List<DIRECTION> availableDir{get; private set;}
 	public DIRECTION dir{get; private set;}
 	public int MOVE_UNITE{get; private set;}
-	public MOVESTATE moveState{get; private set;}
-	public bool IF_FROZEN{get{return moveState == MOVESTATE.FROZEN;}}
-	public bool IF_MOVEABLE{get{return moveState == MOVESTATE.MOVEABLE;}}
-	public bool IF_MOVING{get{return moveState == MOVESTATE.MOVING;}}
-	public bool IF_PULLING{get{return moveState == MOVESTATE.PULLING;}}
+	private MOVESTATE _moveState{get{
+		if(IF_FROZEN)
+			return MOVESTATE.FROZEN;
+		if(IF_MOVEABLE)
+			return MOVESTATE.MOVEABLE;
+		if(IF_MOVING)
+			return MOVESTATE.MOVING;
+		if(IF_PENDING)
+			return MOVESTATE.PENDING;
+		if(IF_PULLING)
+			return MOVESTATE.PULLING;
+		else
+			return MOVESTATE.FROZEN;
+	}}
+	public bool IF_FROZEN{get{return _fsm.IF_IN_THE_STATE<FROZEN>();}}
+	public bool IF_MOVEABLE{get{return _fsm.IF_IN_THE_STATE<MOVEABLE>();}}
+	public bool IF_MOVING{get{return _fsm.IF_IN_THE_STATE<MOVING>();}}
+	public bool IF_PULLING{get{return _fsm.IF_IN_THE_STATE<PULLING>();}}
+	public bool IF_PENDING{get{return _fsm.IF_IN_THE_STATE<PENDING>();}}
 	private Vector3 Nextpos;
 	private Vector3 originPos;
 	private MoveToTask moveToTask;
 	private Task_Manager taskManager = new Task_Manager();
+	public FSM<MoveObject> _fsm{get; private set;}
 
 	void Start() {
+		_fsm = new FSM<MoveObject>(this);
+		_fsm.TransitionTo<PENDING>();
+		dir = DIRECTION.EMPTY;
 		availableDir = new List<DIRECTION>();
 		DragFace = FACING_DIRECTIOM.EMPTY;
-		moveState = MOVESTATE.FROZEN;
+
 		moveToTask = new MoveToTask(transform, transform.position, (int)DragSpeed);
 		Nextpos = transform.position;
-		SetStatus(MOVESTATE.PENDING);
 	}
 	void Update() {
 		taskManager.Update();
+		_fsm.Update();
 
-		switch (moveState)
-		{
-			case MOVESTATE.MOVEABLE:
-				MOVEABLE_Update();
-				break;
-			case MOVESTATE.MOVING:
-				MOVING_Update();
-				break;
-			case MOVESTATE.FROZEN:
-				FROZEN_Update();
-				break;
-			case MOVESTATE.PULLING:
-				PULLING_Update();
-				break;
-			case MOVESTATE.PENDING:
-				PENDING_Update();
-				break;
-			default:
-				break;
+		if(IF_PLAY_DRAG_SOUND && !IfAudioPlay){
+			Debug.Log("Play Sound");
+			IfAudioPlay = true;
+			// Service.audioManager.asr.Play();
+			Service.audioManager.PlaySound2D("BoxDrag");
 		}
+		else if(!IF_PLAY_DRAG_SOUND){
+			Debug.Log("End Sound");
+			IfAudioPlay = false;
+			// Service.audioManager.asr.Stop();
+			Service.audioManager.StopPlaying("BoxDrag");
+		}
+		moveState = _moveState;
 	}
-	void FROZEN_Update(){
-		UpdateDir_Event updateDir_Event = new UpdateDir_Event();
-		ClearDirection();
-		Service.eventManager.FireEvent(updateDir_Event);
-		if(Input.GetButtonUp("Fire1")){
-			OnMouse_Up();
-		}
-	}
-	void MOVEABLE_Update(){
-		moveCheck();
-		if(Input.GetButtonUp("Fire1")){
-			OnMouse_Up();
-		}
-	}
-	void MOVING_Update(){
-		UpdateDir_Event updateDir_Event = new UpdateDir_Event(); 
-		
-		if(transform.position == Nextpos) {
-			originPos = transform.position;
-			ClearDirection();	
-			moveState = MOVESTATE.FROZEN;
-			Service.eventManager.FireEvent(updateDir_Event);
-			moveTo(Nextpos);
-		}
-		else{
-			// if(Input.GetButton("Fire1"))
-			// 	Mouse_Move();
-			// moveTo(Nextpos);
-		}
-		if((transform.position-Nextpos).magnitude >= MoveUnit){
-			Nextpos += (transform.position - Nextpos).normalized * MoveUnit;
 
-			ClearDirection();	
-			moveState = MOVESTATE.FROZEN;
-			Service.eventManager.FireEvent(updateDir_Event);
-		}
-		if(Input.GetButtonUp("Fire1")){
-			OnMouse_Up();
-		}
-	}
-	void PULLING_Update(){
-		if(transform.position == Nextpos){
-			SetStatus(MOVESTATE.FROZEN);
-		}
-	}
-	void PENDING_Update(){
-
-	}
 	//This Function will add one direction into the availableDir list
 	public void AddDirection(DIRECTION direction){
 		if(!availableDir.Contains(direction)){
@@ -133,7 +100,26 @@ public class MoveObject : MonoBehaviour {
 	}
 	//This Function will Set the State of the Box
 	public void SetStatus(MOVESTATE m_moveState){
-		moveState = m_moveState;
+		switch (m_moveState)
+		{
+			case MOVESTATE.FROZEN:
+				_fsm.TransitionTo<FROZEN>();
+				break;
+			case MOVESTATE.MOVEABLE:
+				_fsm.TransitionTo<MOVEABLE>();
+				break;
+			case MOVESTATE.MOVING:
+				_fsm.TransitionTo<MOVING>();
+				break;
+			case MOVESTATE.PULLING:
+				_fsm.TransitionTo<PULLING>();
+				break;
+			case MOVESTATE.PENDING:
+				_fsm.TransitionTo<PENDING>();
+				break;
+			default:
+				break;
+		}
 	}
 	void OnMouse_Up(){
 		if(transform.position != Nextpos){
@@ -153,7 +139,9 @@ public class MoveObject : MonoBehaviour {
 			{
 				originPos = transform.position;
 				Nextpos += Vector3.forward*MoveUnit;
-				moveState = MOVESTATE.MOVING;
+				
+				if(!IF_MOVING)
+					_fsm.TransitionTo<MOVING>();
 				moveTo(Nextpos);
 			}
 		}
@@ -167,7 +155,10 @@ public class MoveObject : MonoBehaviour {
 			{
 				originPos = transform.position;
 				Nextpos += Vector3.back*MoveUnit;
-				moveState = MOVESTATE.MOVING;
+
+				if(!IF_MOVING)
+					_fsm.TransitionTo<MOVING>();
+
 				moveTo(Nextpos);
 			}
 		}						
@@ -181,7 +172,10 @@ public class MoveObject : MonoBehaviour {
 			{
 				originPos = transform.position;
 				Nextpos += Vector3.left*MoveUnit;
-				moveState = MOVESTATE.MOVING;
+
+				if(!IF_MOVING)
+					_fsm.TransitionTo<MOVING>();
+
 				moveTo(Nextpos);
 			}
 		}					
@@ -195,7 +189,10 @@ public class MoveObject : MonoBehaviour {
 			{
 				originPos = transform.position;
 				Nextpos += Vector3.right*MoveUnit;
-				moveState = MOVESTATE.MOVING;
+
+				if(!IF_MOVING)
+					_fsm.TransitionTo<MOVING>();
+
 				moveTo(Nextpos);
 			}
 		}					
@@ -209,7 +206,10 @@ public class MoveObject : MonoBehaviour {
 			{
 				originPos = transform.position;
 				Nextpos += Vector3.up*MoveUnit;
-				moveState = MOVESTATE.MOVING;
+
+				if(!IF_MOVING)
+					_fsm.TransitionTo<MOVING>();
+
 				moveTo(Nextpos);
 			}
 		}						
@@ -223,8 +223,20 @@ public class MoveObject : MonoBehaviour {
 			{
 				originPos = transform.position;
 				Nextpos += Vector3.down*MoveUnit;
-				moveState = MOVESTATE.MOVING;
+
+				if(!IF_MOVING)
+					_fsm.TransitionTo<MOVING>();
+
 				moveTo(Nextpos);
+			}
+		}
+		else{
+			dir = DIRECTION.EMPTY;
+			if(availableDir.Count>0){
+				_fsm.TransitionTo<MOVEABLE>();
+			}
+			else{
+				_fsm.TransitionTo<FROZEN>();
 			}
 		}
 	}
@@ -266,7 +278,7 @@ public class MoveObject : MonoBehaviour {
 			moveToTask.SetSpeed(DragSpeed);
 			moveToTask.SetEndPos(endPos);
 		}
-		Service.audioManager.asr.Play();
+		// Service.audioManager.asr.Play();
 		// Service.audioManager.PlaySound("Drag", transform.position);
 	}
 	public void moveTo(Vector3 endPos, float move_Speed){
@@ -280,7 +292,16 @@ public class MoveObject : MonoBehaviour {
 			moveToTask.SetEndPos(endPos);
 		}
 		//Service.audioManager.PlaySound2D("BoxDrag");
-		Service.audioManager.asr.Play();
+		// Service.audioManager.asr.Play();
+	}
+	public bool AtNextPoint(){
+		return transform.position == Nextpos;
+	}
+	public bool OverNextPoint(){
+		return (transform.position - Nextpos).magnitude > MoveUnit;
+	}
+	public void RoundNextPoint(){
+		Nextpos += (transform.position - Nextpos).normalized * MoveUnit;
 	}
 	//Move Check will Check whether the Box on the ground.
 	void MovementCheck(){
@@ -297,26 +318,6 @@ public class MoveObject : MonoBehaviour {
 		if (MouseDir < 0) {
 			MouseDir += 360;
 		}
-		// if(Mouse_Check() == (DIRECTION.FORWARD) && availableDir.Contains(DIRECTION.FORWARD)) {
-		// 	int MoveUnit = (int)Mathf.Min(1.0f, Mathf.Abs(Input.GetAxis("Mouse Y")));
-		// 	transform.position += Vector3.forward * MoveUnit * DragSpeed;
-		// } else if(Mouse_Check() == (DIRECTION.BACK)&& availableDir.Contains(DIRECTION.BACK)) {
-		// 	int MoveUnit = (int)Mathf.Min(1.0f, Mathf.Abs(Input.GetAxis("Mouse Y")));
-		// 	transform.position += Vector3.back * MoveUnit * DragSpeed;
-		// } else if (Mouse_Check() == (DIRECTION.RIGHT) && availableDir.Contains(DIRECTION.RIGHT)) {
-		// 	int MoveUnit = (int)Mathf.Min(1.0f, Mathf.Abs(Input.GetAxis("Mouse X")));
-		// 	transform.position += Vector3.right * MoveUnit * DragSpeed;
-		// } else if(Mouse_Check() == (DIRECTION.LEFT) && availableDir.Contains(DIRECTION.LEFT)) {
-		// 	int MoveUnit = (int)Mathf.Min(1.0f, Mathf.Abs(Input.GetAxis("Mouse X")));
-		// 	transform.position += Vector3.left * MoveUnit * DragSpeed;
-		// } else if (Mouse_Check() == (DIRECTION.UP) && availableDir.Contains(DIRECTION.UP)) {
-		// 	int MoveUnit = (int)Mathf.Min(1.0f, Mathf.Abs(Input.GetAxis("Mouse Y")));
-		// 	transform.position += Vector3.up * MoveUnit * DragSpeed;
-		// } else if(Mouse_Check() == (DIRECTION.DOWN) && availableDir.Contains(DIRECTION.DOWN)) {
-		// 	int MoveUnit = (int)Mathf.Min(1.0f, Mathf.Abs(Input.GetAxis("Mouse Y")));
-		// 	transform.position += Vector3.down * MoveUnit * DragSpeed;
-		// } else {
-		// }
 
 		if(Mouse_Check() == (DIRECTION.FORWARD) && availableDir.Contains(DIRECTION.FORWARD)) {
 			tempVec = Vector3.forward;
@@ -392,8 +393,63 @@ public class MoveObject : MonoBehaviour {
 		if(DragFace != (m_DragFace) && DragFace == FACING_DIRECTIOM.EMPTY)
 			DragFace = m_DragFace;
 	}
-	//This is a MoveTask, it has its own Update Function which will be called in Task Manager that I create within this class
-	//Task Manager will handle it for us, What it did is to move one object to a specific place
+
+	public class ObjectState: FSM<MoveObject>.State {}
+	public class FROZEN: ObjectState{
+		public override void Update(){
+			Debug.Log("Frozen Update");
+			UpdateDir_Event updateDir_Event = new UpdateDir_Event();
+			Context.ClearDirection();
+			Service.eventManager.FireEvent(updateDir_Event);
+			if(Input.GetButtonUp("Fire1")){
+				Context.OnMouse_Up();
+			}
+		}
+	}
+	public class MOVEABLE: ObjectState{
+		public override void Update(){
+			Context.moveCheck();
+			if(Input.GetButtonUp("Fire1")){
+				Context.OnMouse_Up();
+			}
+		}
+	}
+	public class MOVING: ObjectState{
+		public override void Update(){
+			UpdateDir_Event updateDir_Event = new UpdateDir_Event(); 
+			if(Context.AtNextPoint()) {
+				Context.originPos = Context.transform.position;
+				Context.ClearDirection();
+
+				Service.eventManager.FireEvent(updateDir_Event);
+				Context.moveCheck();
+			}
+			else{
+				// if(Input.GetButton("Fire1"))
+				// 	Mouse_Move();
+				// moveTo(Nextpos);
+			}
+			if(Context.OverNextPoint()){
+				Context.RoundNextPoint();
+				Context.ClearDirection();	
+
+				TransitionTo<FROZEN>();
+				Service.eventManager.FireEvent(updateDir_Event);
+			}
+			if(Input.GetButtonUp("Fire1")){
+				Context.OnMouse_Up();
+			}
+		}
+	}
+	public class PULLING: ObjectState{
+		public override void Update(){
+			if(Context.transform.position == Context.Nextpos){
+				TransitionTo<FROZEN>();
+			}
+		}
+	}
+	public class PENDING: ObjectState{
+	}
 }
 public class MoveToTask:Task {
 	private Transform moveTrans;

@@ -9,6 +9,7 @@ public class CameraManager : MonoBehaviour {
 	void Start () {
 		Service.eventManager.Register<Kevin_Event.CameraMoveEvent>(CameraMoveHandler);
 		anime = GetComponent<Animation>();
+		GetComponent<CameraPan>().enabled = false;
 	}
 	void Update()
 	{
@@ -34,5 +35,9 @@ public class CameraManager : MonoBehaviour {
 	}
 	public void ActivateBox(){
 		GameObject.Find("MovingBox").GetComponent<MoveObject>().SetStatus(CS_Kevin.MOVESTATE.FROZEN);
+	}
+	public void ActivateCameraPan(){
+		GetComponent<CameraPan>().enabled = true;
+		GetComponent<CameraPan>().SET_OriRotation(transform.rotation);
 	}
 }

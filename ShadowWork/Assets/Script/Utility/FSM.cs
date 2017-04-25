@@ -42,6 +42,10 @@ public class FSM<TContext> {
 			return newState;
 		}
 	}
+	public bool IF_IN_THE_STATE<TState>() where TState: State{
+		Debug.Assert(CurrentState != null);
+		return CurrentState.GetType() == typeof(TState);
+	}
 
 
 
