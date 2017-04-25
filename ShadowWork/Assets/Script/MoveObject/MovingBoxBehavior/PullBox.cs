@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using CS_Kevin;
+using UnityEngine.SceneManagement;
 
 public class PullBox : MonoBehaviour {
 	public int level_Index;
@@ -9,7 +10,11 @@ public class PullBox : MonoBehaviour {
 	private bool ifLoad;
 	private bool ifPulled;
 	void Start(){
-		loadLevelTask = new LoadLevelTask(level_Index);
+		if(SceneManager.GetActiveScene().buildIndex < 13)
+			loadLevelTask = new LoadLevelTask(SceneManager.GetActiveScene().buildIndex + 1);
+		else{
+			loadLevelTask = new LoadLevelTask(0);
+		}
 		taskManager = new Task_Manager();
 		ifLoad = false;
 	}
