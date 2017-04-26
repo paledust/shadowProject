@@ -33,7 +33,7 @@
 
 			if(atten < 1){
 				fixed ActiveFlag = dot(s.Normal, _ActiveFace.xyz);
-				color.rgb = ActiveFlag * cross(color.rgb,viewDir * sin(_Time * 0.5)) + (1-ActiveFlag) * s.Albedo;
+				color.rgb = ActiveFlag * cross(color.rgb,(0.5 + 0.5 * sin(_Time * 0.5))) + (1-ActiveFlag) * s.Albedo;
 				// color.rgb = ActiveFlag * shadowColor + (1-ActiveFlag) * s.Albedo;
 			}
 			else{

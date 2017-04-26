@@ -34,6 +34,7 @@ public class CameraManager : MonoBehaviour {
 	}
 	public void ActivateBox(){
 		GameObject.Find("MovingBox").GetComponent<MoveObject>().SetStatus(CS_Kevin.MOVESTATE.FROZEN);
+		ActivateCameraPan();
 	}
 	public void ActivateCameraPan(){
 		GetComponent<CameraPan>().enabled = true;

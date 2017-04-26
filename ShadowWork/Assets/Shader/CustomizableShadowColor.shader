@@ -31,12 +31,12 @@
         	fixed4 color = fixed4(1,1,1,1);
 
 			if(atten < 1){
-				fixed ActiveFlag = dot(s.Normal, _ActiveFace.xyz);
+				fixed ActiveFlag = abs(dot(s.Normal, _ActiveFace.xyz));
 				fixed3 shadowColor = (_ShadowStr) * _ShadowColor + (1-_ShadowStr) * s.Albedo;
 				color.rgb = ActiveFlag * shadowColor + (1-ActiveFlag) * s.Albedo;
 			}
 			else{
-				color.rgb = s.Albedo * atten *_LightColor0;
+				color.rgb = s.Albedo *_LightColor0;
 			}
 
 			color.a = 1;
