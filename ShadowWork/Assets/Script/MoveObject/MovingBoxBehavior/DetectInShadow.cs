@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Collections;
 using UnityEngine;
 using CS_Kevin;
 using Kevin_Event;
 
 public class DetectInShadow : MonoBehaviour {
 	public FACING_DIRECTIOM facingDir;
-	public List<DIRECTION> directions;
+	public List<DIRECTION> directions{get; private set;}
 	[SerializeField] Color DeactiveColor = Color.black;
 	[SerializeField] Color ActivateColor = Color.blue;
 	MoveObject moveObject;
@@ -16,16 +15,24 @@ public class DetectInShadow : MonoBehaviour {
 	[SerializeField] LayerMask layerMask;
 	private bool ifDrag = false;
 	private bool IF_Light_On = false;
+	public bool IfActive{get{return rayHits.Length > 0;}}
+	protected FSM<DetectInShadow> _fsm;
 	void Start() {
 		//Register UpdateDir_Handler Function to UpdateDir_Event
 		//Whenever UpdateDir_Event Fired, UpdateDir_Handler Function will be Called once
+		_fsm = new FSM<DetectInShadow>(this);
+
+		_fsm.TransitionTo<Off_State>();
+		directions = new List<DIRECTION>();
 		Service.eventManager.Register<UpdateDir_Event>(UpdateDir_Handler);
 		moveObject = GetComponentInParent<MoveObject>();
 	}
 	void Update(){
+		_fsm.Update();
+
 		ray = new Ray(transform.position, Service.ActiveDirLight.transform.rotation * Vector3.back);
 		rayHits = Physics.RaycastAll(ray.origin,ray.direction,500.0f,layerMask);
-		if(rayHits.Length>0){
+		if(rayHits.Length > 0){
 			GetComponent<Renderer>().material.color = Color.Lerp(GetComponent<Renderer>().material.color,
 																	ActivateColor,Time.deltaTime * 10.0f);
 		}
@@ -35,15 +42,6 @@ public class DetectInShadow : MonoBehaviour {
 		}
 
 		FACE_ACTIVE();
-	}
-
-	void Check_If_light_on(){
-		if(GetComponent<Renderer>().material.color == ActivateColor){
-			IF_Light_On = true;
-		}
-		if(GetComponent<Renderer>().material.color == DeactiveColor){
-			IF_Light_On = false;
-		}
 	}
 
 	void FACE_ACTIVE(){
@@ -183,5 +181,23 @@ public class DetectInShadow : MonoBehaviour {
 
 		if(directions.Contains(DIRECTION.BACK)){moveObject.AddDirection(CalculateDirection(DIRECTION.BACK));} 
 
+	}
+
+	public class DotsState: FSM<DetectInShadow>.State{}
+	public class On_State: DotsState{
+		override public void OnEnter(){
+
+		}
+		override public void Update(){
+
+		}
+	}
+	public class Off_State:DotsState{
+		override public void OnEnter(){
+
+		}
+		override public void Update(){
+
+		}
 	}
 }

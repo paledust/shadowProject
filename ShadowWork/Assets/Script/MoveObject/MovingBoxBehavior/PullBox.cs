@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using CS_Kevin;
 using UnityEngine.SceneManagement;
+using Kevin_Event;
 
 public class PullBox : MonoBehaviour {
 	public int level_Index;
@@ -9,17 +10,25 @@ public class PullBox : MonoBehaviour {
 	private Task_Manager taskManager;
 	private bool ifLoad;
 	private bool ifPulled;
+	private bool ifEnd = false;
 	void Start(){
 		if(SceneManager.GetActiveScene().buildIndex < 13)
 			loadLevelTask = new LoadLevelTask(SceneManager.GetActiveScene().buildIndex + 1);
 		else{
 			loadLevelTask = new LoadLevelTask(0);
 		}
+
 		taskManager = new Task_Manager();
 		ifLoad = false;
 	}
 	void Update(){
 		taskManager.Update();
+		if(GameObject.Find("MovingBox").transform.position == transform.parent.position && !ifEnd){
+			ifEnd = true;
+			
+			EndGame_Event tempEvent = new EndGame_Event();
+			Service.eventManager.FireEvent(tempEvent);
+		}
 	}
 	void OnTriggerStay(Collider m_collider){
 		Debug.Log("Collider");
