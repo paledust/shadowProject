@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using CS_Kevin;
 using Kevin_Event;
@@ -14,7 +15,7 @@ public class DetectInShadow : MonoBehaviour {
 	RaycastHit rayhit;
 	[SerializeField] LayerMask layerMask;
 	private bool ifDrag = false;
-	
+	private bool IF_Light_On = false;
 	void Start() {
 		//Register UpdateDir_Handler Function to UpdateDir_Event
 		//Whenever UpdateDir_Event Fired, UpdateDir_Handler Function will be Called once
@@ -25,21 +26,32 @@ public class DetectInShadow : MonoBehaviour {
 		ray = new Ray(transform.position, Service.ActiveDirLight.transform.rotation * Vector3.back);
 		rayHits = Physics.RaycastAll(ray.origin,ray.direction,500.0f,layerMask);
 		if(rayHits.Length>0){
-			GetComponent<Renderer>().material.color = ActivateColor;
+			GetComponent<Renderer>().material.color = Color.Lerp(GetComponent<Renderer>().material.color,
+																	ActivateColor,Time.deltaTime * 10.0f);
 		}
-		else
-			GetComponent<Renderer>().material.color = DeactiveColor;
+		else{
+			GetComponent<Renderer>().material.color = Color.Lerp(GetComponent<Renderer>().material.color,
+																	DeactiveColor,Time.deltaTime * 10.0f);
+		}
+
 		FACE_ACTIVE();
 	}
+
+	void Check_If_light_on(){
+		if(GetComponent<Renderer>().material.color == ActivateColor){
+			IF_Light_On = true;
+		}
+		if(GetComponent<Renderer>().material.color == DeactiveColor){
+			IF_Light_On = false;
+		}
+	}
+
 	void FACE_ACTIVE(){
 		Camera.main.GetComponent<CustomCursor>().Cursor_Raycast(out rayhit);
 		if(rayhit.collider != null && rayhit.collider.gameObject == gameObject && Input.GetButtonDown("Fire1")){
 			ifDrag = true;		
 		} 	
 		if(ifDrag){
-			// Vector3 cursorPos = Camera.main.WorldToScreenPoint(transform.position);
-			// Camera.main.GetComponent<CustomLockCursor>().SetCursor(cursorPos);
-			// Debug.Log("Hello");
 			GetComponentInParent<MoveObject>().Set_DragFace(facingDir);	
 		}
 		if(Input.GetButtonUp("Fire1")){
