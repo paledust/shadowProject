@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 2c68b87c444e9a84590d0eeac56d6005
-timeCreated: 1492296393
+guid: fb348b7005fde8f4e9c87299e9729bdb
+timeCreated: 1493422401
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -9,7 +9,7 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: polySurface2
+    4300000: pCube6
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -43,7 +43,7 @@ ModelImporter:
     generateSecondaryUV: 0
     useFileUnits: 1
     optimizeMeshForGPU: 1
-    keepQuads: 1
+    keepQuads: 0
     weldVertices: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
