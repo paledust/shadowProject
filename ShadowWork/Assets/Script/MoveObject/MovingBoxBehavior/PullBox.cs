@@ -30,6 +30,16 @@ public class PullBox : MonoBehaviour {
 			Service.eventManager.FireEvent(tempEvent);
 		}
 	}
+	void OnTriggerEnter(Collider m_collider){
+		Debug.Log("Collider");
+		if(m_collider.gameObject.name == "MovingBox" && m_collider.transform.position == transform.position && !ifLoad){
+			Service.audioManager.PlaySound2D("BoxSlide");
+			pullHeroBox = new MoveToTask(m_collider.transform, transform.parent.position, 1);
+			m_collider.gameObject.GetComponent<MoveObject>().SetStatus(MOVESTATE.PENDING);
+			ifLoad = true;
+			LoadLevel();
+		}
+	}
 	void OnTriggerStay(Collider m_collider){
 		Debug.Log("Collider");
 		if(m_collider.gameObject.name == "MovingBox" && m_collider.transform.position == transform.position && !ifLoad){
@@ -45,7 +55,7 @@ public class PullBox : MonoBehaviour {
 		WaitTask startLoadLevel;
 		startLoadLevel = new WaitTask(1.0f);
 		startLoadLevel.Then(pullHeroBox).
-						Then(new WaitTask(2)).
+						Then(new WaitTask(3.0f)).
 						Then(loadLevelTask);
 
 		taskManager.AddTask(startLoadLevel);
