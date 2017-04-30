@@ -5,7 +5,8 @@ using Kevin_Event;
 
 public class DetectInShadow : MonoBehaviour {
 	public FACING_DIRECTIOM facingDir;
-	public List<DIRECTION> directions{get; private set;}
+	public List<DIRECTION> _directions{get; private set;}
+	public List<DIRECTION> GET_Direction;
 	[SerializeField] Color DeactiveColor = Color.black;
 	[SerializeField] Color ActivateColor = Color.blue;
 	MoveObject moveObject;
@@ -16,20 +17,18 @@ public class DetectInShadow : MonoBehaviour {
 	private bool ifDrag = false;
 	private bool IF_Light_On = false;
 	public bool IfActive{get{return rayHits.Length > 0;}}
-	protected FSM<DetectInShadow> _fsm;
 	void Start() {
 		//Register UpdateDir_Handler Function to UpdateDir_Event
 		//Whenever UpdateDir_Event Fired, UpdateDir_Handler Function will be Called once
-		_fsm = new FSM<DetectInShadow>(this);
 
-		_fsm.TransitionTo<Off_State>();
-		directions = new List<DIRECTION>();
+		_directions = new List<DIRECTION>();
 		Service.eventManager.Register<UpdateDir_Event>(UpdateDir_Handler);
 		moveObject = GetComponentInParent<MoveObject>();
+		ray = new Ray(transform.position, Service.ActiveDirLight.transform.rotation * Vector3.back);
+		rayHits = Physics.RaycastAll(ray.origin,ray.direction,500.0f,layerMask);
+		GET_Direction = new List<DIRECTION>();
 	}
 	void Update(){
-		_fsm.Update();
-
 		ray = new Ray(transform.position, Service.ActiveDirLight.transform.rotation * Vector3.back);
 		rayHits = Physics.RaycastAll(ray.origin,ray.direction,500.0f,layerMask);
 		if(rayHits.Length > 0){
@@ -40,7 +39,7 @@ public class DetectInShadow : MonoBehaviour {
 			GetComponent<Renderer>().material.color = Color.Lerp(GetComponent<Renderer>().material.color,
 																	DeactiveColor,Time.deltaTime * 10.0f);
 		}
-
+		GET_Direction = _directions;
 		FACE_ACTIVE();
 	}
 
@@ -54,26 +53,6 @@ public class DetectInShadow : MonoBehaviour {
 		}
 		if(Input.GetButtonUp("Fire1")){
 			ifDrag = false;
-		}
-	}
-
-	public void UpdateDirection(){
-		rayHits = Physics.RaycastAll(ray.origin,ray.direction,500.0f);
-
-		CLEAR_DIRECTION();
-		
-		//For each Thing it casted, get the information from its ShadowTrail to find out what direction it allow
-		foreach (RaycastHit _rayhit in rayHits){
-			if(_rayhit.collider.gameObject.GetComponent<AllowDirection>()){
-				AllowDirection _AllowDir = _rayhit.collider.gameObject.GetComponent<AllowDirection>();
-				//Add This Direction into the DirectionList
-				directions.AddRange(_AllowDir.GET_DIRECTION_LIST());
-			}
-		}
-		//If the Length is > 0, that means it hit something, meaning the dot is in ShadowTrail, Thus we need to Update The Direction
-		if(rayHits.Length>0){
-			SetDirection();
-			moveObject.SetStatus(MOVESTATE.MOVEABLE);
 		}
 	}
 	//This Function will only be called once when UpdateDir_Event is fired once somewhere!
@@ -90,7 +69,7 @@ public class DetectInShadow : MonoBehaviour {
 			if(_rayhit.collider.gameObject.GetComponent<AllowDirection>()){
 				AllowDirection _AllowDir = _rayhit.collider.gameObject.GetComponent<AllowDirection>();
 				//Add This Direction into the DirectionList
-				directions.AddRange(_AllowDir.GET_DIRECTION_LIST());
+				_directions.AddRange(_AllowDir.GET_DIRECTION_LIST());
 			}
 		}
 		//If the Length is > 0, that means it hit something, meaning the dot is in ShadowTrail, Thus we need to Update The Direction
@@ -106,8 +85,8 @@ public class DetectInShadow : MonoBehaviour {
 		}
 	}
 
-	//Clear The list Of Directions
-	void CLEAR_DIRECTION(){directions.Clear();}
+	//Clear The list Of _directions
+	void CLEAR_DIRECTION(){_directions.Clear();}
 
 	//Because of the projection, Some direction need to be recalculate
 	//FOR EXAMPLE: Imaging a Vertical Bar casting shadow on the ground, if the Dot facing Y direction,
@@ -169,35 +148,17 @@ public class DetectInShadow : MonoBehaviour {
 
 	//This Function will Set the Box Avaliable Direction
 	void SetDirection(){
-		if(directions.Contains(DIRECTION.UP)){moveObject.AddDirection(CalculateDirection(DIRECTION.UP));} 
+		if(_directions.Contains(DIRECTION.UP)){moveObject.AddDirection(CalculateDirection(DIRECTION.UP));} 
 
-		if(directions.Contains(DIRECTION.DOWN)){moveObject.AddDirection(CalculateDirection(DIRECTION.DOWN));} 
+		if(_directions.Contains(DIRECTION.DOWN)){moveObject.AddDirection(CalculateDirection(DIRECTION.DOWN));} 
 
-		if(directions.Contains(DIRECTION.LEFT)){moveObject.AddDirection(CalculateDirection(DIRECTION.LEFT));} 
+		if(_directions.Contains(DIRECTION.LEFT)){moveObject.AddDirection(CalculateDirection(DIRECTION.LEFT));} 
 
-		if(directions.Contains(DIRECTION.RIGHT)){moveObject.AddDirection(CalculateDirection(DIRECTION.RIGHT));} 
+		if(_directions.Contains(DIRECTION.RIGHT)){moveObject.AddDirection(CalculateDirection(DIRECTION.RIGHT));} 
 
-		if(directions.Contains(DIRECTION.FORWARD)){moveObject.AddDirection(CalculateDirection(DIRECTION.FORWARD));} 
+		if(_directions.Contains(DIRECTION.FORWARD)){moveObject.AddDirection(CalculateDirection(DIRECTION.FORWARD));} 
 
-		if(directions.Contains(DIRECTION.BACK)){moveObject.AddDirection(CalculateDirection(DIRECTION.BACK));} 
+		if(_directions.Contains(DIRECTION.BACK)){moveObject.AddDirection(CalculateDirection(DIRECTION.BACK));} 
 
-	}
-
-	public class DotsState: FSM<DetectInShadow>.State{}
-	public class On_State: DotsState{
-		override public void OnEnter(){
-
-		}
-		override public void Update(){
-
-		}
-	}
-	public class Off_State:DotsState{
-		override public void OnEnter(){
-
-		}
-		override public void Update(){
-
-		}
 	}
 }
