@@ -35,4 +35,12 @@ public class Task_Manager{
 		tasks.Add(task);
 		task.SetStatus(Task.TaskStatus.Pending);
 	} 
+
+	public Task FindTask<T_Task>() where T_Task:Task{
+		foreach(Task task in tasks){
+			if(task.GetType() == typeof(T_Task))
+				return task;
+		}
+		return null;
+	}
 }
