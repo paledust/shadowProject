@@ -69,18 +69,16 @@ public class MoveObject : MonoBehaviour {
 		moveToTask = new MoveToTask(transform, transform.position, (int)DragSpeed);
 		Nextpos = transform.position;
 	}
-	void Update() {
+	void FixedUpdate() {
 		taskManager.Update();
 		_fsm.Update();
 
 		if(IF_PLAY_DRAG_SOUND && !IfAudioPlay){
-			Debug.Log("Play Sound");
 			IfAudioPlay = true;
 			// Service.audioManager.asr.Play();
 			Service.audioManager.PlaySound2D("BoxDrag");
 		}
 		else if(!IF_PLAY_DRAG_SOUND){
-			Debug.Log("End Sound");
 			IfAudioPlay = false;
 			// Service.audioManager.asr.Stop();
 			Service.audioManager.StopPlaying("BoxDrag");
@@ -397,7 +395,6 @@ public class MoveObject : MonoBehaviour {
 	public class ObjectState: FSM<MoveObject>.State {}
 	public class FROZEN: ObjectState{
 		public override void Update(){
-			Debug.Log("Frozen Update");
 			UpdateDir_Event updateDir_Event = new UpdateDir_Event();
 			Context.ClearDirection();
 			Service.eventManager.FireEvent(updateDir_Event);

@@ -10,11 +10,16 @@ public class End_Off_Particle : MonoBehaviour {
 		Service.eventManager.Register<Kevin_Event.EndGame_Event>(End_TurnOff_Particle);
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 	void End_TurnOff_Particle(Kevin_Event.Event e){
 		Kevin_Event.EndGame_Event tempEvent = e as Kevin_Event.EndGame_Event;
+		StartCoroutine(End_Particle());
+	}
+	IEnumerator End_Particle(){
+		Color startColor = GetComponent<ParticleSystemRenderer>().material.GetColor("_TintColor");
+		for(float timer = 0.0f; timer< 1.0f; timer += Time.deltaTime){
+			GetComponent<ParticleSystemRenderer>().material.SetColor("_TintColor",Color.Lerp(startColor, new Color(0,0,0,0), timer));
+			GetComponent<ParticleSystemRenderer>().trailMaterial.SetColor("_TintColor",Color.Lerp(startColor, new Color(0,0,0,0), timer));
+			yield return null;
+		}
 	}
 }

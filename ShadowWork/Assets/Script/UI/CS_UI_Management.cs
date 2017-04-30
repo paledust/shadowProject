@@ -94,7 +94,6 @@ public class CS_UI_Management : MonoBehaviour {
 			}
 		}
 		else{
-			Debug.Log("No");
 			OffArrow(DIRECTION.LEFT);
 		}
 

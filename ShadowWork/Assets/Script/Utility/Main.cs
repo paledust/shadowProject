@@ -32,7 +32,7 @@ public class Main : MonoBehaviour {
 		if(ReadyOff){
 			timer += Time.deltaTime;
 			Service.ActiveDirLight.GetComponent<Light>().intensity = Mathf.Lerp(1.0f, 0.0f, 
-																				Easing.BackEaseIn(timer));
+																				(timer*1.5f));
 		}
 
 	}
@@ -54,14 +54,14 @@ public class Main : MonoBehaviour {
 		EndGame_Event tempEvent = e as EndGame_Event;
 		StartCoroutine(WaitToTurnOffLight(0.0f));
 	}
-	IEnumerator WaitToChangeCamera(float waitTime){
-		yield return new WaitForSeconds(waitTime);
+	IEnumerator WaitToChangeCamera(float _waitTime){
+		yield return new WaitForSeconds(_waitTime);
 		if(Camera.main.GetComponent<CameraManager>())
 			Camera.main.GetComponent<CameraManager>().CameraAnimationTrigger();
 		yield return null;
 	}
-	IEnumerator WaitToTurnOffLight(float waitTime){
-		yield return new WaitForSeconds(waitTime);
+	IEnumerator WaitToTurnOffLight(float _waitTime){
+		yield return new WaitForSeconds(_waitTime);
 		ReadyOff = true;
 
 		yield return null;
