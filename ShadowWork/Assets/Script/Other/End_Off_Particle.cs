@@ -11,7 +11,6 @@ public class End_Off_Particle : MonoBehaviour {
 	}
 	
 	void End_TurnOff_Particle(Kevin_Event.Event e){
-		Kevin_Event.EndGame_Event tempEvent = e as Kevin_Event.EndGame_Event;
 		StartCoroutine(End_Particle());
 	}
 	IEnumerator End_Particle(){

@@ -51,7 +51,6 @@ public class Main : MonoBehaviour {
 		SceneManager.LoadScene(tempEvent.NextLevelIndex);
 	}
 	private void EndOff_All_Light(Kevin_Event.Event e){
-		EndGame_Event tempEvent = e as EndGame_Event;
 		StartCoroutine(WaitToTurnOffLight(0.0f));
 	}
 	IEnumerator WaitToChangeCamera(float _waitTime){

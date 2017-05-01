@@ -28,7 +28,6 @@ public class End_Off_Shadow : MonoBehaviour {
 		}
 	}
 	void End_TurnOff_Shadow(Kevin_Event.Event e){
-		Kevin_Event.EndGame_Event tempEvent = e as Kevin_Event.EndGame_Event;
 		ReadyOff = true;
 	}
 }

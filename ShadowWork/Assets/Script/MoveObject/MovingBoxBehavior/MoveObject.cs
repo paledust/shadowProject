@@ -69,7 +69,7 @@ public class MoveObject : MonoBehaviour {
 		moveToTask = new MoveToTask(transform, transform.position, (int)DragSpeed);
 		Nextpos = transform.position;
 	}
-	void FixedUpdate() {
+	void Update() {
 		taskManager.Update();
 		_fsm.Update();
 
