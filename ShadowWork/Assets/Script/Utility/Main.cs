@@ -7,8 +7,10 @@ public class Main : MonoBehaviour {
 	[SerializeField] float waitTime = 0.5f;
 	private bool ReadyOff = false;
 	private float timer = 0.0f;
+	private GameObject backGround;
 	// Use this for initialization
 	void Awake () {
+		backGround = Instantiate<GameObject>(Service.prefebList.BackGround);
 		ReadyOff = false;
 		Service.eventManager = new EventManager();	
 		Service.SetNewActiveDirLight(GameObject.Find("Directional Light"));
@@ -54,7 +56,11 @@ public class Main : MonoBehaviour {
 		StartCoroutine(WaitToTurnOffLight(0.0f));
 	}
 	IEnumerator WaitToChangeCamera(float _waitTime){
-		yield return new WaitForSeconds(_waitTime);
+		// yield return new WaitForSeconds(_waitTime);
+		for(float i = 0.0f; i < 1.0f; i += 0.1f/_waitTime){
+			backGround.GetComponentInChildren<UnityEngine.UI.Image>().color = Color.Lerp(Color.black, Color.clear,i);
+			yield return null;
+		}
 		if(Camera.main.GetComponent<CameraManager>())
 			Camera.main.GetComponent<CameraManager>().CameraAnimationTrigger();
 		yield return null;

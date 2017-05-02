@@ -24,9 +24,9 @@ public class Title_Main : MonoBehaviour {
 		if(LoadLevel){
 			if(!box_animator.GetBool("Start"))
 				box_animator.SetBool("Start",true);
-			startText.color = Color.Lerp(startText.color, new Color(1,1,1,0), Time.deltaTime/1.5f);
-			BlackScreenImage.color = Color.Lerp(BlackScreenImage.color, Color.black, Time.deltaTime/1.5f);
-			TitleImage.color = Color.Lerp(TitleImage.color,  new Color(1,1,1,0), Time.deltaTime/2.0f);
+			startText.color = Color.Lerp(startText.color, new Color(1,1,1,0), Time.deltaTime*1.5f);
+			BlackScreenImage.color = Color.Lerp(BlackScreenImage.color, Color.black, Time.deltaTime*1.5f);
+			TitleImage.color = Color.Lerp(TitleImage.color,  new Color(1,1,1,0), Time.deltaTime*1.5f);
 
 			if(TitleImage.color.a <= 0.05f)
 				SceneManager.LoadScene(0);

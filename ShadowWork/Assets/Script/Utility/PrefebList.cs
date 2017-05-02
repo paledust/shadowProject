@@ -10,4 +10,6 @@ public class PrefebList : ScriptableObject {
 	public GameObject canvas{get{return _Canvas;}}
 	[SerializeField] GameObject _SceneManager;
 	public GameObject SceneManager{get{return _SceneManager;}}
+	[SerializeField] GameObject _BackGround;
+	public GameObject BackGround{get{return _BackGround;}}
 }

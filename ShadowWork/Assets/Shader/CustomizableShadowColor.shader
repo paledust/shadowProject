@@ -29,8 +29,9 @@
 		inline fixed4 LightingShadowOnly (SurfaceOutput s, fixed3 lightDir, fixed3 viewDir, fixed atten) 
 		{
         	fixed4 color = fixed4(1,1,1,1);
+			fixed face = max(dot(s.Normal, lightDir), 0.0);
 
-			if(atten < 1){
+			if(atten < 1 && face>0){
 				fixed ActiveFlag = abs(dot(s.Normal, _ActiveFace.xyz));
 				fixed3 shadowColor = (_ShadowStr) * _ShadowColor + (1-_ShadowStr) * s.Albedo;
 				color.rgb = ActiveFlag * shadowColor + (1-ActiveFlag) * s.Albedo;
