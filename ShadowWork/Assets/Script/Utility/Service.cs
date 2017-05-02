@@ -7,7 +7,8 @@ public static class Service {
 			ActiveDirLight.GetComponent<DirLightManager>().UnregisterFunction();
 			
 		ActiveDirLight = m_Light;
-		ActiveDirLight.GetComponent<DirLightManager>().registerFunction();
+		if(ActiveDirLight.GetComponent<DirLightManager>())
+			ActiveDirLight.GetComponent<DirLightManager>().registerFunction();
 	}
 	public static EventManager eventManager;
 	public static AudioManagerScript audioManager;

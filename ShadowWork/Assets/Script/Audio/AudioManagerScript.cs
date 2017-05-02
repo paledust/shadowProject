@@ -60,8 +60,7 @@ public class AudioManagerScript : MonoBehaviour {
 		StartCoroutine(AmbientCrossfade(fadeDuration)); //crossfades using provided duration
 	}
 	public void PlayAmbient(string soundName, float fadeDuration = 1){
-		Debug.Log(library);
-		Debug.Log(library.GetClipFromName(soundName));
+		// Debug.Log(library.GetClipFromName(soundName));
 		PlayAmbient(library.GetClipFromName(soundName), fadeDuration);
 	}
 

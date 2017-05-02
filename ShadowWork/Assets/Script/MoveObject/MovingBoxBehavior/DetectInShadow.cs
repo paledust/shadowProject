@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using CS_Kevin;
 using Kevin_Event;
 
 public class DetectInShadow : MonoBehaviour {
 	public FACING_DIRECTIOM facingDir;
-	public List<DIRECTION> directions;
+	public List<DIRECTION> _directions{get; private set;}
+	public List<DIRECTION> GET_Direction;
 	[SerializeField] Color DeactiveColor = Color.black;
 	[SerializeField] Color ActivateColor = Color.blue;
 	MoveObject moveObject;
@@ -14,56 +16,49 @@ public class DetectInShadow : MonoBehaviour {
 	RaycastHit rayhit;
 	[SerializeField] LayerMask layerMask;
 	private bool ifDrag = false;
-	
+	private bool IF_Light_On = false;
+	public bool IfActive{get{return rayHits.Length > 0;}}
+	private bool IFEnd = false;
 	void Start() {
 		//Register UpdateDir_Handler Function to UpdateDir_Event
 		//Whenever UpdateDir_Event Fired, UpdateDir_Handler Function will be Called once
+
+		_directions = new List<DIRECTION>();
 		Service.eventManager.Register<UpdateDir_Event>(UpdateDir_Handler);
 		moveObject = GetComponentInParent<MoveObject>();
+		ray = new Ray(transform.position, Service.ActiveDirLight.transform.rotation * Vector3.back);
+		rayHits = Physics.RaycastAll(ray.origin,ray.direction,500.0f,layerMask);
+		GET_Direction = new List<DIRECTION>();
+
+		Service.eventManager.Register<EndGame_Event>(End_Fade);
 	}
 	void Update(){
 		ray = new Ray(transform.position, Service.ActiveDirLight.transform.rotation * Vector3.back);
 		rayHits = Physics.RaycastAll(ray.origin,ray.direction,500.0f,layerMask);
-		if(rayHits.Length>0){
-			GetComponent<Renderer>().material.color = ActivateColor;
+		if(!IFEnd){
+			if(rayHits.Length > 0){
+				GetComponent<Renderer>().material.color = Color.Lerp(GetComponent<Renderer>().material.color,
+																		ActivateColor,Time.deltaTime * 10.0f);
+			}
+			else{
+				GetComponent<Renderer>().material.color = Color.Lerp(GetComponent<Renderer>().material.color,
+																		DeactiveColor,Time.deltaTime * 10.0f);
+			}
 		}
-		else
-			GetComponent<Renderer>().material.color = DeactiveColor;
+		GET_Direction = _directions;
 		FACE_ACTIVE();
 	}
+
 	void FACE_ACTIVE(){
 		Camera.main.GetComponent<CustomCursor>().Cursor_Raycast(out rayhit);
 		if(rayhit.collider != null && rayhit.collider.gameObject == gameObject && Input.GetButtonDown("Fire1")){
 			ifDrag = true;		
 		} 	
 		if(ifDrag){
-			// Vector3 cursorPos = Camera.main.WorldToScreenPoint(transform.position);
-			// Camera.main.GetComponent<CustomLockCursor>().SetCursor(cursorPos);
-			// Debug.Log("Hello");
 			GetComponentInParent<MoveObject>().Set_DragFace(facingDir);	
 		}
 		if(Input.GetButtonUp("Fire1")){
 			ifDrag = false;
-		}
-	}
-
-	public void UpdateDirection(){
-		rayHits = Physics.RaycastAll(ray.origin,ray.direction,500.0f);
-
-		CLEAR_DIRECTION();
-		
-		//For each Thing it casted, get the information from its ShadowTrail to find out what direction it allow
-		foreach (RaycastHit _rayhit in rayHits){
-			if(_rayhit.collider.gameObject.GetComponent<AllowDirection>()){
-				AllowDirection _AllowDir = _rayhit.collider.gameObject.GetComponent<AllowDirection>();
-				//Add This Direction into the DirectionList
-				directions.AddRange(_AllowDir.GET_DIRECTION_LIST());
-			}
-		}
-		//If the Length is > 0, that means it hit something, meaning the dot is in ShadowTrail, Thus we need to Update The Direction
-		if(rayHits.Length>0){
-			SetDirection();
-			moveObject.SetStatus(MOVESTATE.MOVEABLE);
 		}
 	}
 	//This Function will only be called once when UpdateDir_Event is fired once somewhere!
@@ -80,7 +75,7 @@ public class DetectInShadow : MonoBehaviour {
 			if(_rayhit.collider.gameObject.GetComponent<AllowDirection>()){
 				AllowDirection _AllowDir = _rayhit.collider.gameObject.GetComponent<AllowDirection>();
 				//Add This Direction into the DirectionList
-				directions.AddRange(_AllowDir.GET_DIRECTION_LIST());
+				_directions.AddRange(_AllowDir.GET_DIRECTION_LIST());
 			}
 		}
 		//If the Length is > 0, that means it hit something, meaning the dot is in ShadowTrail, Thus we need to Update The Direction
@@ -95,10 +90,8 @@ public class DetectInShadow : MonoBehaviour {
 			// }
 		}
 	}
-
-	//Clear The list Of Directions
-	void CLEAR_DIRECTION(){directions.Clear();}
-
+	//Clear The list Of _directions
+	void CLEAR_DIRECTION(){_directions.Clear();}
 	//Because of the projection, Some direction need to be recalculate
 	//FOR EXAMPLE: Imaging a Vertical Bar casting shadow on the ground, if the Dot facing Y direction,
 	//And the eular Angle of Light is (45,0,0), then if dots facing UP, it will become Z direction,
@@ -134,13 +127,11 @@ public class DetectInShadow : MonoBehaviour {
 		}
 		return NewDirection;
 	}
-
 	//Detect Whether this dot is in "Shadow Trail" Or the Whole Face is in Shadow
 	//It's actually not quite helpful right now, 
 	bool IF_IN_TRAIL() {
 		return (Vector3.Dot(GET_FACE_VECTOR(),ray.direction) >= 0.05f);
 	}
-
 	//This Function will Transfer The Direction of the dot facing from DIRECTION type into Vector3 Type
 	Vector3 GET_FACE_VECTOR(){
 		Vector3 tempVec = Vector3.zero;
@@ -156,20 +147,31 @@ public class DetectInShadow : MonoBehaviour {
 				return Vector3.zero;
 		}
 	}
-
 	//This Function will Set the Box Avaliable Direction
 	void SetDirection(){
-		if(directions.Contains(DIRECTION.UP)){moveObject.AddDirection(CalculateDirection(DIRECTION.UP));} 
+		if(_directions.Contains(DIRECTION.UP)){moveObject.AddDirection(CalculateDirection(DIRECTION.UP));} 
 
-		if(directions.Contains(DIRECTION.DOWN)){moveObject.AddDirection(CalculateDirection(DIRECTION.DOWN));} 
+		if(_directions.Contains(DIRECTION.DOWN)){moveObject.AddDirection(CalculateDirection(DIRECTION.DOWN));} 
 
-		if(directions.Contains(DIRECTION.LEFT)){moveObject.AddDirection(CalculateDirection(DIRECTION.LEFT));} 
+		if(_directions.Contains(DIRECTION.LEFT)){moveObject.AddDirection(CalculateDirection(DIRECTION.LEFT));} 
 
-		if(directions.Contains(DIRECTION.RIGHT)){moveObject.AddDirection(CalculateDirection(DIRECTION.RIGHT));} 
+		if(_directions.Contains(DIRECTION.RIGHT)){moveObject.AddDirection(CalculateDirection(DIRECTION.RIGHT));} 
 
-		if(directions.Contains(DIRECTION.FORWARD)){moveObject.AddDirection(CalculateDirection(DIRECTION.FORWARD));} 
+		if(_directions.Contains(DIRECTION.FORWARD)){moveObject.AddDirection(CalculateDirection(DIRECTION.FORWARD));} 
 
-		if(directions.Contains(DIRECTION.BACK)){moveObject.AddDirection(CalculateDirection(DIRECTION.BACK));} 
+		if(_directions.Contains(DIRECTION.BACK)){moveObject.AddDirection(CalculateDirection(DIRECTION.BACK));} 
 
+	}
+	void End_Fade(Kevin_Event.Event e){
+		IFEnd = true;
+		StartCoroutine(Fade());
+	}
+	IEnumerator Fade(){
+		yield return new WaitForSeconds(1.0f);
+		Color startColor = GetComponent<Renderer>().material.color;
+		for(float timer = 0.0f; timer < 1.0f; timer += Time.deltaTime){
+			GetComponent<Renderer>().material.color = Color.Lerp(startColor, Color.black,timer);
+			yield return null;
+		}
 	}
 }
