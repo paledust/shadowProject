@@ -1,4 +1,16 @@
 sceneSetups:
+<<<<<<< HEAD
 - path: Assets/Scene/ReadyToPutAssets/puzzle_11.unity
+=======
+<<<<<<< HEAD
+<<<<<<< Updated upstream
+- path: Assets/Scene/ReadyToPutAssets/puzzle_02.unity
+=======
+- path: Assets/Scene/MultipleLevel/Scene_Kevin_Cube_07.unity
+>>>>>>> Stashed changes
+=======
+- path: Assets/Scene/Title_Screen/TitleScreen.unity
+>>>>>>> master
+>>>>>>> master
   isLoaded: 1
   isActive: 1
