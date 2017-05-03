@@ -5,6 +5,7 @@ using Kevin_Event;
 
 public class Main : MonoBehaviour {
 	[SerializeField] float waitTime = 0.5f;
+	[SerializeField] AnimationCurve lights_Off_Curve;
 	private bool ReadyOff = false;
 	private float timer = 0.0f;
 	private GameObject backGround;
@@ -27,14 +28,13 @@ public class Main : MonoBehaviour {
 		Service.audioManager.PlayAmbient("Ambient");
 	}
 	void Update(){
-		if(Input.GetKeyDown(KeyCode.P))
+		if(Input.GetButtonDown("Reset"))
 		{
 			Fire_RestartLevel_Event();
 		}
 		if(ReadyOff){
 			timer += Time.deltaTime;
-			Service.ActiveDirLight.GetComponent<Light>().intensity = Mathf.Lerp(1.0f, 0.0f, 
-																				(timer*1.5f));
+			Service.ActiveDirLight.GetComponent<Light>().intensity = lights_Off_Curve.Evaluate(timer);
 		}
 
 	}

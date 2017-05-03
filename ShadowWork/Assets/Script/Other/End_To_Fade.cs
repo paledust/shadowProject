@@ -15,7 +15,7 @@ public class End_To_Fade : MonoBehaviour {
 		if(IfFade){
 			timer += Time.deltaTime;
 			float _alpha = Mathf.Lerp(1,0,(timer*1.5f));
-			GetComponent<MeshRenderer>().material.SetFloat("_Alpha",_alpha);
+			GetComponent<Renderer>().material.SetFloat("_Alpha",_alpha);
 		}
 	}
 

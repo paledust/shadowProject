@@ -32,7 +32,7 @@
 			fixed face = max(dot(s.Normal, lightDir), 0.0);
 
 			if(atten < 1 && face>0){
-				fixed ActiveFlag = abs(dot(s.Normal, _ActiveFace.xyz));
+				fixed ActiveFlag = ceil(abs(dot(s.Normal, normalize(_ActiveFace.xyz))));
 				fixed3 shadowColor = (_ShadowStr) * _ShadowColor + (1-_ShadowStr) * s.Albedo;
 				color.rgb = ActiveFlag * shadowColor + (1-ActiveFlag) * s.Albedo;
 			}

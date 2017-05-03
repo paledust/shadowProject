@@ -31,7 +31,6 @@ public class PullBox : MonoBehaviour {
 		}
 	}
 	void OnTriggerEnter(Collider m_collider){
-		Debug.Log("Collider");
 		if(m_collider.gameObject.name == "MovingBox" && m_collider.transform.position == transform.position && !ifLoad){
 			Service.audioManager.PlaySound2D("BoxSlide");
 			pullHeroBox = new MoveToTask(m_collider.transform, transform.parent.position, 1);
@@ -41,7 +40,6 @@ public class PullBox : MonoBehaviour {
 		}
 	}
 	void OnTriggerStay(Collider m_collider){
-		Debug.Log("Collider");
 		if(m_collider.gameObject.name == "MovingBox" && m_collider.transform.position == transform.position && !ifLoad){
 			Service.audioManager.PlaySound2D("BoxSlide");
 			pullHeroBox = new MoveToTask(m_collider.transform, transform.parent.position, 1);
