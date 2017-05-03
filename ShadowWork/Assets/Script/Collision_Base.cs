@@ -29,8 +29,8 @@ public class Collision_Base : MonoBehaviour {
 	}
 	protected virtual void OnTriggerEnter(Collider collider){
 		if(collider.name == "MovingBox"){
-			collider.GetComponent<MoveObject>().MoveBack();
 			collider.GetComponent<MoveObject>().SetStatus(MOVESTATE.PULLING);
+			collider.GetComponent<MoveObject>().MoveBack();
 		}
 	}
 	public void SetStatus(PushState m_pushState){

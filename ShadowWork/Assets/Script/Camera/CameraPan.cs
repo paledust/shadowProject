@@ -6,7 +6,7 @@ using CS_Kevin;
 public class CameraPan : MonoBehaviour {
 	[SerializeField] float Subtle_Move;
 	[SerializeField] float Subtle_Pan;
-	[SerializeField] Transform HeroBox;
+	private Transform HeroBox;
 	private Quaternion OriginRotation;
 	private Quaternion tempRotation;
 
