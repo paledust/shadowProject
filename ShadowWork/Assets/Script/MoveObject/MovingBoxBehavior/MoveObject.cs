@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using Kevin_Event;
 using CS_Kevin;
@@ -25,7 +26,6 @@ public class MoveObject : MonoBehaviour {
 
 	private float minAngleDown = 240f; //250
 	private float maxAngleDown = 300f; //290
-	private bool IF_PLAY_DRAG_SOUND{get{return dir != DIRECTION.EMPTY;}}
 	private bool IfAudioPlay = false;
 	[SerializeField] int MoveUnit = 6;
 	[SerializeField] MOVESTATE moveState;
@@ -48,13 +48,22 @@ public class MoveObject : MonoBehaviour {
 		else
 			return MOVESTATE.FROZEN;
 	}}
+	public bool IF_PLAY_DRAG_SOUND{get{return dir != DIRECTION.EMPTY;}}
 	public bool IF_FROZEN{get{return _fsm.IF_IN_THE_STATE<FROZEN>();}}
 	public bool IF_MOVEABLE{get{return _fsm.IF_IN_THE_STATE<MOVEABLE>();}}
 	public bool IF_MOVING{get{return _fsm.IF_IN_THE_STATE<MOVING>();}}
 	public bool IF_PULLING{get{return _fsm.IF_IN_THE_STATE<PULLING>();}}
 	public bool IF_PENDING{get{return _fsm.IF_IN_THE_STATE<PENDING>();}}
-	private Vector3 Nextpos;
-	private Vector3 originPos;
+	private Vector3 _NextPos;
+	private Vector3 _OriginPos;
+	private Vector3 Nextpos{
+		get{return _NextPos;}
+		set{
+			_NextPos = new Vector3(Mathf.RoundToInt(value.x),Mathf.RoundToInt(value.y),Mathf.RoundToInt(value.z));}}
+	private Vector3 originPos{
+		get{return _OriginPos;}
+		set{
+			_OriginPos = new Vector3(Mathf.RoundToInt(value.x),Mathf.RoundToInt(value.y),Mathf.RoundToInt(value.z));}}
 	private MoveToTask moveToTask;
 	private Task_Manager taskManager = new Task_Manager();
 	public FSM<MoveObject> _fsm{get; private set;}
@@ -73,16 +82,6 @@ public class MoveObject : MonoBehaviour {
 		taskManager.Update();
 		_fsm.Update();
 
-		if(IF_PLAY_DRAG_SOUND && !IfAudioPlay){
-			IfAudioPlay = true;
-			// Service.audioManager.asr.Play();
-			Service.audioManager.PlaySound2D("BoxDrag");
-		}
-		else if(!IF_PLAY_DRAG_SOUND){
-			IfAudioPlay = false;
-			// Service.audioManager.asr.Stop();
-			Service.audioManager.StopPlaying("BoxDrag");
-		}
 		moveState = _moveState;
 	}
 
@@ -123,7 +122,7 @@ public class MoveObject : MonoBehaviour {
 		if(transform.position != Nextpos){
 			moveTo(Nextpos);
 		}
-		Service.audioManager.asr.Stop();
+		Service.audioManager.StopPlaying("");
 		DragFace = FACING_DIRECTIOM.EMPTY;
 	}
 	private void moveCheck(){
@@ -262,6 +261,7 @@ public class MoveObject : MonoBehaviour {
 	}
 	public void MoveBack(){
 		if(Nextpos != originPos){
+			Debug.Log(originPos);
 			Nextpos = originPos;
 			moveTo(Nextpos, 3.0f);
 		}
@@ -391,6 +391,14 @@ public class MoveObject : MonoBehaviour {
 		if(DragFace != (m_DragFace) && DragFace == FACING_DIRECTIOM.EMPTY)
 			DragFace = m_DragFace;
 	}
+	protected void Delay_TransToState<T>(float _Seconds) where T: ObjectState{
+		StartCoroutine(TransintoState<T>(_Seconds));
+	}
+	IEnumerator TransintoState<T>(float _Seconds) where T: ObjectState{
+		yield return new WaitForSeconds(_Seconds);
+		_fsm.TransitionTo<T>();
+	}
+
 
 	public class ObjectState: FSM<MoveObject>.State {}
 	public class FROZEN: ObjectState{
@@ -439,9 +447,14 @@ public class MoveObject : MonoBehaviour {
 		}
 	}
 	public class PULLING: ObjectState{
+		private bool IF_Pull;
+		public override void OnEnter(){
+			IF_Pull = false;
+		}
 		public override void Update(){
-			if(Context.transform.position == Context.Nextpos){
-				TransitionTo<FROZEN>();
+			if(Context.transform.position == Context.Nextpos && !IF_Pull){
+				IF_Pull = true;
+				Context.Delay_TransToState<FROZEN>(0.3f);
 			}
 		}
 	}
