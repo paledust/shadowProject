@@ -1,8 +1,4 @@
 sceneSetups:
-<<<<<<< HEAD
-- path: Assets/Scene/MultipleLevel/Drafts/Scene_Daniel_1.unity
-=======
-- path: Assets/Scene/ReadyToPutAssets/puzzle_13.unity
->>>>>>> master
+- path: Assets/Scene/ReadyToPutAssets/puzzle_01.unity
   isLoaded: 1
   isActive: 1
