@@ -169,8 +169,8 @@ public class DetectInShadow : MonoBehaviour {
 	IEnumerator Fade(){
 		yield return new WaitForSeconds(1.0f);
 		Color startColor = GetComponent<Renderer>().material.color;
-		for(float timer = 0.0f; timer < 1.0f; timer += Time.deltaTime){
-			GetComponent<Renderer>().material.color = Color.Lerp(startColor, Color.black,timer);
+		for(float timer = 0.0f; timer < 2.0f; timer += Time.deltaTime){
+			GetComponent<Renderer>().material.color = Color.Lerp(startColor, Color.black,Easing.BackEaseInOut(timer/2));
 			yield return null;
 		}
 	}

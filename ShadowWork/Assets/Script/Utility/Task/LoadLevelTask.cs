@@ -10,7 +10,6 @@ public class LoadLevelTask : Task {
 	// Use this for initialization
 	override protected void Init()
 	{
-		Debug.Log("Load");
 		LoadLevelEvent tempEvent = new LoadLevelEvent();
 		tempEvent.NextLevelIndex = LevelIndex;
 		Service.eventManager.FireEvent(tempEvent);

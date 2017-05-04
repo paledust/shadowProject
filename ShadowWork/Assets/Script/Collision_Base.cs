@@ -29,10 +29,16 @@ public class Collision_Base : MonoBehaviour {
 	}
 	protected virtual void OnTriggerEnter(Collider collider){
 		if(collider.name == "MovingBox"){
-			collider.GetComponent<MoveObject>().MoveBack();
 			collider.GetComponent<MoveObject>().SetStatus(MOVESTATE.PULLING);
+			collider.GetComponent<MoveObject>().MoveBack();
+			Service.audioManager.PlaySound2D("ClickOff");
 		}
 	}
+	// protected virtual void OnTriggerExit(Collider collider){
+	// 	if(collider.name == "MovingBox"){
+	// 		collider.GetComponent<MoveObject>().SetStatus(MOVESTATE.FROZEN);
+	// 	}
+	// }
 	public void SetStatus(PushState m_pushState){
 		pushState = m_pushState;
 	}

@@ -30,8 +30,8 @@
 		{
         	fixed4 color = fixed4(1,1,1,1);
 
-			if(atten < 1){
-				fixed ActiveFlag = abs(dot(s.Normal, _ActiveFace.xyz));
+			if(atten < 1 && face>0){
+				fixed ActiveFlag = ceil(abs(dot(s.Normal, normalize(_ActiveFace.xyz))));
 				fixed3 shadowColor = (_ShadowStr) * _ShadowColor + (1-_ShadowStr) * s.Albedo;
 				color.rgb = ActiveFlag * shadowColor + (1-ActiveFlag) * s.Albedo;
 			}

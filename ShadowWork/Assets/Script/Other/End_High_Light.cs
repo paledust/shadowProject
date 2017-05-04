@@ -9,6 +9,6 @@ public class End_High_Light : MonoBehaviour {
 		Service.eventManager.Register<Kevin_Event.EndGame_Event>(TurnOffHighLit);
 	}
 	void TurnOffHighLit(Kevin_Event.Event e){
-		enabled = false;
+		gameObject.SetActive(false);
 	}
 }

@@ -1,7 +1,4 @@
-﻿// Upgrade NOTE: replaced '_Projector' with 'unity_Projector'
-
-// Upgrade NOTE: replaced '_Projector' with 'unity_Projector'
-Shader "Unlit/ProjectShadow"
+﻿Shader "Unlit/ProjectShadow"
 {
    Properties {
       _ShadowTex ("Projected Image", 2D) = "white" {}
@@ -21,7 +18,8 @@ Shader "Unlit/ProjectShadow"
  
          // User-specified properties
          uniform sampler2D _ShadowTex; 
-		 uniform float4 _Color;
+         uniform float4 _LightColor0;
+            uniform float4 _Color;
  
          // Projector-specific uniforms
          uniform float4x4 unity_Projector; // transformation matrix 
@@ -52,7 +50,7 @@ Shader "Unlit/ProjectShadow"
             if (input.posProj.w > 0.0) // in front of projector?
             {
             	return tex2D(_ShadowTex , 
-                  input.posProj.xy / input.posProj.w) * _Color; 
+                  input.posProj.xy / input.posProj.w) * _Color * _LightColor0; 
             }
             else // behind projector
             {
