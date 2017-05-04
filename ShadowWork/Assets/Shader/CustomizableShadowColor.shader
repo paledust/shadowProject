@@ -29,6 +29,7 @@
 		inline fixed4 LightingShadowOnly (SurfaceOutput s, fixed3 lightDir, fixed3 viewDir, fixed atten) 
 		{
         	fixed4 color = fixed4(1,1,1,1);
+        	fixed face = max(dot(s.Normal, lightDir), 0.0);
 
 			if(atten < 1 && face>0){
 				fixed ActiveFlag = ceil(abs(dot(s.Normal, normalize(_ActiveFace.xyz))));
