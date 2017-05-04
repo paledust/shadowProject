@@ -31,7 +31,7 @@ public class Collision_Base : MonoBehaviour {
 		if(collider.name == "MovingBox"){
 			collider.GetComponent<MoveObject>().SetStatus(MOVESTATE.PULLING);
 			collider.GetComponent<MoveObject>().MoveBack();
-			Service.audioManager.PlaySound2D("ClickOff");
+			Service.audioManager.PlaySound2D("BoxCollide");
 		}
 	}
 	// protected virtual void OnTriggerExit(Collider collider){
