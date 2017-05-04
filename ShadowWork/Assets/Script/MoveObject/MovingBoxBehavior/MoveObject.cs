@@ -479,7 +479,7 @@ public class MoveToTask:Task {
 	}
 	internal override void TUpdate(){
 		timer += Time.deltaTime;
-		moveTrans.position = Vector3.Lerp(startPos, endPos,timer * speed);
+		moveTrans.position = Vector3.Lerp(startPos, endPos, timer * speed);
 		if(moveTrans.position == endPos){
 			SetStatus(TaskStatus.Success);
 		}
