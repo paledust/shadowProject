@@ -6,6 +6,7 @@ using Kevin_Event;
 public class Main : MonoBehaviour {
 	[SerializeField] float waitTime = 0.5f;
 	[SerializeField] AnimationCurve lights_Off_Curve;
+	[SerializeField] float Camera_WaitTime = 0.0f;
 	private bool ReadyOff = false;
 	private float timer = 0.0f;
 	private GameObject backGround;
@@ -61,6 +62,9 @@ public class Main : MonoBehaviour {
 			backGround.GetComponentInChildren<UnityEngine.UI.Image>().color = Color.Lerp(Color.black, Color.clear,i);
 			yield return null;
 		}
+
+		yield return new WaitForSeconds(Camera_WaitTime);
+
 		if(Camera.main.GetComponent<CameraManager>())
 			Camera.main.GetComponent<CameraManager>().CameraAnimationTrigger();
 		yield return null;
