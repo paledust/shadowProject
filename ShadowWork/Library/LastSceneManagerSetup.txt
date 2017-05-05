@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scene/ReadyToPutAssets/puzzle_03.unity
+- path: Assets/Scene/ReadyToPutAssets/puzzle_12.unity
   isLoaded: 1
   isActive: 1
