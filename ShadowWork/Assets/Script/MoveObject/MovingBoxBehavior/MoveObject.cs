@@ -131,6 +131,7 @@ public class MoveObject : MonoBehaviour {
 			if(dir != DIRECTION.FORWARD)
 			{
 				dir = DIRECTION.FORWARD;
+				
 			}
 			else
 			{
@@ -147,6 +148,7 @@ public class MoveObject : MonoBehaviour {
 			if(dir != DIRECTION.BACK)
 			{
 				dir = DIRECTION.BACK;
+				
 			}
 			else
 			{
@@ -164,6 +166,7 @@ public class MoveObject : MonoBehaviour {
 			if(dir != DIRECTION.LEFT)
 			{
 				dir = DIRECTION.LEFT;
+				
 			}
 			else
 			{
@@ -181,6 +184,7 @@ public class MoveObject : MonoBehaviour {
 			if(dir != DIRECTION.RIGHT)
 			{
 				dir = DIRECTION.RIGHT;
+				
 			}
 			else
 			{
@@ -198,6 +202,7 @@ public class MoveObject : MonoBehaviour {
 			if(dir != DIRECTION.UP)
 			{
 				dir = DIRECTION.UP;
+				
 			}
 			else
 			{
@@ -215,6 +220,7 @@ public class MoveObject : MonoBehaviour {
 			if(dir != DIRECTION.DOWN)
 			{
 				dir = DIRECTION.DOWN;
+				
 			}
 			else
 			{
@@ -244,24 +250,29 @@ public class MoveObject : MonoBehaviour {
 		switch (checkDirection)
 		{
 			case DIRECTION.UP:
-				return  (Input.GetButton("Fire1") && Mouse_Check() == checkDirection) || Input.GetAxis("Height")>0.2f;
+				return Input.GetAxis("Height")>0.0f;
+				// return  (Input.GetButton("Fire1") && Mouse_Check() == checkDirection) || Input.GetAxis("Height")>0.0f;
 			case DIRECTION.DOWN:
-				return  (Input.GetButton("Fire1") && Mouse_Check() == checkDirection) || Input.GetAxis("Height")<-0.2f;
+				return Input.GetAxis("Height")<-0.0f;
+				// return  (Input.GetButton("Fire1") && Mouse_Check() == checkDirection) || Input.GetAxis("Height")<-0.0f;
 			case DIRECTION.LEFT:
-				return  (Input.GetButton("Fire1") && Mouse_Check() == checkDirection) || Input.GetAxis("Horizontal")<-0.2f;
+				return Input.GetAxis("Horizontal")<-0.0f;
+				// return  (Input.GetButton("Fire1") && Mouse_Check() == checkDirection) || Input.GetAxis("Horizontal")<-0.0f;
 			case DIRECTION.RIGHT:
-				return  (Input.GetButton("Fire1") && Mouse_Check() == checkDirection) || Input.GetAxis("Horizontal")>0.2f;
+				return Input.GetAxis("Horizontal")>0.0f;
+				// return  (Input.GetButton("Fire1") && Mouse_Check() == checkDirection) || Input.GetAxis("Horizontal")>0.0f;
 			case DIRECTION.FORWARD:
-				return  (Input.GetButton("Fire1") && Mouse_Check() == checkDirection) || Input.GetAxis("Vertical")>0.2f;
+				return Input.GetAxis("Vertical")>0.0f;
+				// return  (Input.GetButton("Fire1") && Mouse_Check() == checkDirection) || Input.GetAxis("Vertical")>0.0f;
 			case DIRECTION.BACK:
-				return  (Input.GetButton("Fire1") && Mouse_Check() == checkDirection) || Input.GetAxis("Vertical")<-0.2f;
+				return Input.GetAxis("Vertical")<-0.0f;
+				// return  (Input.GetButton("Fire1") && Mouse_Check() == checkDirection) || Input.GetAxis("Vertical")<-0.0f;
 			default:
 				return false;
 		}
 	}
 	public void MoveBack(){
 		if(Nextpos != originPos){
-			Debug.Log(originPos);
 			Nextpos = originPos;
 			moveTo(Nextpos, 3.0f);
 		}
@@ -276,8 +287,6 @@ public class MoveObject : MonoBehaviour {
 			moveToTask.SetSpeed(DragSpeed);
 			moveToTask.SetEndPos(endPos);
 		}
-		// Service.audioManager.asr.Play();
-		// Service.audioManager.PlaySound("Drag", transform.position);
 	}
 	public void moveTo(Vector3 endPos, float move_Speed){
 		if(moveToTask.ifDetached){
@@ -289,8 +298,6 @@ public class MoveObject : MonoBehaviour {
 			moveToTask.SetSpeed(move_Speed);
 			moveToTask.SetEndPos(endPos);
 		}
-		//Service.audioManager.PlaySound2D("BoxDrag");
-		// Service.audioManager.asr.Play();
 	}
 	public bool AtNextPoint(){
 		return transform.position == Nextpos;
@@ -406,17 +413,17 @@ public class MoveObject : MonoBehaviour {
 			UpdateDir_Event updateDir_Event = new UpdateDir_Event();
 			Context.ClearDirection();
 			Service.eventManager.FireEvent(updateDir_Event);
-			if(Input.GetButtonUp("Fire1")){
-				Context.OnMouse_Up();
-			}
+			// if(Input.GetButtonUp("Fire1")){
+			// 	Context.OnMouse_Up();
+			// }
 		}
 	}
 	public class MOVEABLE: ObjectState{
 		public override void Update(){
 			Context.moveCheck();
-			if(Input.GetButtonUp("Fire1")){
-				Context.OnMouse_Up();
-			}
+			// if(Input.GetButtonUp("Fire1")){
+			// 	Context.OnMouse_Up();
+			// }
 		}
 	}
 	public class MOVING: ObjectState{
@@ -429,20 +436,21 @@ public class MoveObject : MonoBehaviour {
 				Service.eventManager.FireEvent(updateDir_Event);
 				Context.moveCheck();
 			}
-			else{
-				// if(Input.GetButton("Fire1"))
-				// 	Mouse_Move();
-				// moveTo(Nextpos);
-			}
+			// else{
+			// 	if(Input.GetButton("Fire1"))
+			// 		Mouse_Move();
+			// 	moveTo(Nextpos);
+			// }
+			// if(Input.GetButtonUp("Fire1")){
+			// 	Context.OnMouse_Up();
+			// }
 			if(Context.OverNextPoint()){
+				Debug.Log("Over Point");
 				Context.RoundNextPoint();
 				Context.ClearDirection();	
 
 				TransitionTo<FROZEN>();
 				Service.eventManager.FireEvent(updateDir_Event);
-			}
-			if(Input.GetButtonUp("Fire1")){
-				Context.OnMouse_Up();
 			}
 		}
 	}
@@ -479,32 +487,23 @@ public class MoveToTask:Task {
 	}
 	internal override void TUpdate(){
 		timer += Time.deltaTime;
+		// Debug.Log("Origin: " + startPos.ToString() + " NextPos: " + endPos.ToString());
 		moveTrans.position = Vector3.Lerp(startPos, endPos, timer * speed);
 		if(moveTrans.position == endPos){
 			SetStatus(TaskStatus.Success);
 		}
 	}
 	public void SetEndPos(Vector3 m_endPos){
+		// Debug.Log(timer.ToString());
+		timer = 0.0f;
 		startPos = moveTrans.position;
 		endPos = m_endPos;
+		// Debug.Log("Origin: " + startPos.ToString() + " NextPos: " + endPos.ToString());
 	}
 	public void SetSpeed(float m_Speed){
 		speed = Mathf.Min(5.0f, m_Speed);
 	}
 	public Vector3 GET_ENDPOS(){
 		return endPos;
-	}
-}
-public class SetBoxStatus: Task{
-	MOVESTATE targetState;
-	MoveObject Context;
-	
-	public SetBoxStatus(MOVESTATE _tarState, MoveObject _Context){
-		targetState = _tarState;
-		Context = _Context;
-	}
-	protected override void Init(){
-		Context.SetStatus(targetState);
-		SetStatus(TaskStatus.Success);
 	}
 }

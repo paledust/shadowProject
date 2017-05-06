@@ -1,8 +1,4 @@
 sceneSetups:
-<<<<<<< HEAD
-- path: Assets/Scene/PuzzlePrototype/puzzle_06.unity
-=======
-- path: Assets/Scene/ReadyToPutAssets/puzzle_02.unity
->>>>>>> master
+- path: Assets/Scene/ReadyToPutAssets/Puzzle_Boss_2.unity
   isLoaded: 1
   isActive: 1
