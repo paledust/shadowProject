@@ -29,7 +29,7 @@ public class Title_Main : MonoBehaviour {
 			TitleImage.color = Color.Lerp(TitleImage.color,  new Color(1,1,1,0), Time.deltaTime*1.5f);
 
 			if(TitleImage.color.a <= 0.05f)
-				SceneManager.LoadScene(0);
+				SceneManager.LoadScene(1);
 		}
 	}
 }
