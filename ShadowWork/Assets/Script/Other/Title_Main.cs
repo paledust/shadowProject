@@ -11,25 +11,33 @@ public class Title_Main : MonoBehaviour {
 	[SerializeField] Image BlackScreenImage;
 	private bool LoadLevel = false;
 	// Use this for initialization
-	void Start () {
+	void Awake () {
+		Service.eventManager = new EventManager();
 		LoadLevel = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetButtonDown("Start")){
+		if(Input.GetButtonDown("Start") && !LoadLevel){
 			LoadLevel = true;
+			StartCoroutine(LoadLevelTask());
 		}
+	}
 
-		if(LoadLevel){
-			if(!box_animator.GetBool("Start"))
-				box_animator.SetBool("Start",true);
-			startText.color = Color.Lerp(startText.color, new Color(1,1,1,0), Time.deltaTime*1.5f);
-			BlackScreenImage.color = Color.Lerp(BlackScreenImage.color, Color.black, Time.deltaTime*1.5f);
-			TitleImage.color = Color.Lerp(TitleImage.color,  new Color(1,1,1,0), Time.deltaTime*1.5f);
+	IEnumerator LoadLevelTask(){
+		if(!box_animator.GetBool("Start"))
+			box_animator.SetBool("Start",true);
+		
+		yield return new WaitForSeconds(1.0f);
 
-			if(TitleImage.color.a <= 0.05f)
-				SceneManager.LoadScene(1);
+		for(float i = 0.0f; i <= 3.0f; i += Time.deltaTime){
+			startText.color = Color.Lerp(startText.color, new Color(1,1,1,0), i/2.0f);
+			BlackScreenImage.color = Color.Lerp(BlackScreenImage.color, Color.black, i/2.0f);
+			TitleImage.color = Color.Lerp(TitleImage.color,  new Color(1,1,1,0), i/2.0f);
+			yield return null;
 		}
+		
+		Service.eventManager.ClearList();
+		SceneManager.LoadScene(1);
 	}
 }
