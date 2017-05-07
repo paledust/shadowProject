@@ -96,17 +96,19 @@ public class MoveObject : MonoBehaviour {
 		taskManager.Update();
 		_fsm.Update();
 
-		timer += Time.deltaTime;
-		if(pushButton){
-			testPos = Vector3.Lerp(StartPos, StartPos + Vector3.right * 42.0f, timer * 5.0f * 6.0f/42.0f);
-		}
+//Start Test
+		// timer += Time.deltaTime;
+		// if(pushButton){
+		// 	testPos = Vector3.Lerp(StartPos, StartPos + Vector3.right * 42.0f, timer * 5.0f * 6.0f/42.0f);
+		// }
 
-		Test(testPos);
+		// Test(testPos);
 
-		if(Input.GetAxis("Horizontal")>0.0f && !pushButton){
-			timer = 0.0f;
-			pushButton = true;	
-		}
+		// if(Input.GetAxis("Horizontal")>0.0f && !pushButton){
+		// 	timer = 0.0f;
+		// 	pushButton = true;	
+		// }
+//End Test
 
 		moveState = _moveState;
 	}
@@ -451,22 +453,23 @@ public class MoveObject : MonoBehaviour {
 	}
 	public class MOVING: ObjectState{
 		public override void Update(){
-			// Context.timer += Time.deltaTime;
-			// if(Context.pushButton){
-			// 	Context.testPos = Vector3.Lerp(Context.StartPos, Context.StartPos + Vector3.right * 42.0f, Context.timer * 5.0f * 6.0f/42.0f);
-			// }
+			//Start Test
+					// if(Input.GetAxis("Horizontal")>0.0f && !Context.pushButton){
+					// 	Context.timer = 0.0f;
+					// 	Context.pushButton = true;	
+					// }
 
-			// Context.Test(Context.testPos);
+					// Context.timer += Time.deltaTime;
+					// if(Context.pushButton){
+					// 	Context.testPos = Vector3.Lerp(Context.StartPos, Context.StartPos + Vector3.right * 42.0f, Context.timer * 5.0f * 6.0f/42.0f);
+					// }
 
-			// if(Input.GetAxis("Horizontal")>0.0f && !Context.pushButton){
-			// 	Context.timer = 0.0f;
-			// 	Context.pushButton = true;	
-			// }
-
-
+					// Context.Test(Context.testPos);
+			//End Test
 
 			UpdateDir_Event updateDir_Event = new UpdateDir_Event(); 
-			if(Context.AtNextPoint()) {
+			if(Context.AtNextPoint()){
+
 				Context.originPos = Context.transform.position;
 				Context.ClearDirection();
 
@@ -513,13 +516,16 @@ public class MoveToTask:Task {
 		speed = m_speed;
 	}
 	protected override void Init(){
-		timer = 0.0f;
 		startPos = moveTrans.position;
+		timer = 0.0f;
 	}
 	internal override void TUpdate(){
 		timer += Time.deltaTime;
-		Debug.Log("Position: " + moveTrans.position.ToString());
+		Vector3 pos = Vector3.Lerp(startPos, endPos, timer * speed);
+		Debug.Log("Pos: " + moveTrans.position.ToString() + "Off: " + (pos - moveTrans.position).ToString());
 		moveTrans.position = Vector3.Lerp(startPos, endPos, timer * speed);
+
+		// moveTrans.position += (endPos - startPos).normalized * 1.0f;
 		if(moveTrans.position == endPos){
 			SetStatus(TaskStatus.Success);
 		}
