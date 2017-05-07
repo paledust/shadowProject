@@ -1,8 +1,4 @@
 sceneSetups:
-<<<<<<< Updated upstream
-- path: Assets/Scene/ReadyToPutAssets/Puzzle_Boss_2.unity
-=======
-- path: Assets/Scene/ReadyToPutAssets/Puzzle_Boss_1.unity
->>>>>>> Stashed changes
+- path: Assets/Scene/ReadyToPutAssets/puzzle_01.unity
   isLoaded: 1
   isActive: 1

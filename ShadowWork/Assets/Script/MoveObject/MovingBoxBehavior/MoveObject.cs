@@ -103,10 +103,9 @@ public class MoveObject : MonoBehaviour {
 
 		Test(testPos);
 
-		if(Input.GetKeyDown(KeyCode.R)){
+		if(Input.GetAxis("Horizontal")>0.0f && !pushButton){
 			timer = 0.0f;
 			pushButton = true;	
-			// moveTo(originPos + Vector3.right * 42.0f, 5.0f * 6.0f/42.0f);	
 		}
 
 		moveState = _moveState;
@@ -452,6 +451,20 @@ public class MoveObject : MonoBehaviour {
 	}
 	public class MOVING: ObjectState{
 		public override void Update(){
+			// Context.timer += Time.deltaTime;
+			// if(Context.pushButton){
+			// 	Context.testPos = Vector3.Lerp(Context.StartPos, Context.StartPos + Vector3.right * 42.0f, Context.timer * 5.0f * 6.0f/42.0f);
+			// }
+
+			// Context.Test(Context.testPos);
+
+			// if(Input.GetAxis("Horizontal")>0.0f && !Context.pushButton){
+			// 	Context.timer = 0.0f;
+			// 	Context.pushButton = true;	
+			// }
+
+
+
 			UpdateDir_Event updateDir_Event = new UpdateDir_Event(); 
 			if(Context.AtNextPoint()) {
 				Context.originPos = Context.transform.position;
@@ -460,14 +473,6 @@ public class MoveObject : MonoBehaviour {
 				Service.eventManager.FireEvent(updateDir_Event);
 				Context.moveCheck();
 			}
-			// else{
-			// 	if(Input.GetButton("Fire1"))
-			// 		Mouse_Move();
-			// 	moveTo(Nextpos);
-			// }
-			// if(Input.GetButtonUp("Fire1")){
-			// 	Context.OnMouse_Up();
-			// }
 			if(Context.OverNextPoint()){
 				Debug.Log("Over Point");
 				Context.RoundNextPoint();
@@ -513,7 +518,7 @@ public class MoveToTask:Task {
 	}
 	internal override void TUpdate(){
 		timer += Time.deltaTime;
-		// Debug.Log("Origin: " + startPos.ToString() + " NextPos: " + endPos.ToString());
+		Debug.Log("Position: " + moveTrans.position.ToString());
 		moveTrans.position = Vector3.Lerp(startPos, endPos, timer * speed);
 		if(moveTrans.position == endPos){
 			SetStatus(TaskStatus.Success);
