@@ -5,6 +5,7 @@ using Kevin_Event;
 using CS_Kevin;
 
 public class MoveObject : MonoBehaviour {
+	//Variable Area------------------------------------
 	[SerializeField] float DragSpeed;
 	public float DRAG_SPEED{get{return DragSpeed;}}
 	// 0 degrees is right, 90 degrees is up, 180 is left, 270 is down
@@ -68,7 +69,18 @@ public class MoveObject : MonoBehaviour {
 	private Task_Manager taskManager = new Task_Manager();
 	public FSM<MoveObject> _fsm{get; private set;}
 
+
+
+	private float timer;
+	private bool pushButton = false;
+	private Vector3 testPos;
+	private Vector3 StartPos;
+
+	//Function Area ---------------------------------------
 	void Start() {
+		timer = 0.0f;
+		testPos = transform.position;
+
 		_fsm = new FSM<MoveObject>(this);
 		_fsm.TransitionTo<PENDING>();
 		dir = DIRECTION.EMPTY;
@@ -77,25 +89,42 @@ public class MoveObject : MonoBehaviour {
 
 		moveToTask = new MoveToTask(transform, transform.position, (int)DragSpeed);
 		Nextpos = transform.position;
+		originPos = transform.position;
+		StartPos = transform.position;
 	}
-	void Update() {
+	void Update() {	
 		taskManager.Update();
 		_fsm.Update();
 
+		timer += Time.deltaTime;
+		if(pushButton){
+			testPos = Vector3.Lerp(StartPos, StartPos + Vector3.right * 42.0f, timer * 5.0f * 6.0f/42.0f);
+		}
+
+		Test(testPos);
+
+		if(Input.GetKeyDown(KeyCode.R)){
+			timer = 0.0f;
+			pushButton = true;	
+			// moveTo(originPos + Vector3.right * 42.0f, 5.0f * 6.0f/42.0f);	
+		}
+
 		moveState = _moveState;
 	}
+	private void Test(Vector3 testPos){
+		if(transform.position.x != testPos.x){
+			Debug.Log("BoxPos: " + transform.position.x + "TestPos: " + testPos.x);
+		}
+	}
 
-	//This Function will add one direction into the availableDir list
 	public void AddDirection(DIRECTION direction){
 		if(!availableDir.Contains(direction)){
 			availableDir.Add(direction);
 		}
 	}
-	//This Function will Clear The Whole availableDir List
 	public void ClearDirection(){
 		availableDir.Clear();
 	}
-	//This Function will Set the State of the Box
 	public void SetStatus(MOVESTATE m_moveState){
 		switch (m_moveState)
 		{
@@ -117,13 +146,6 @@ public class MoveObject : MonoBehaviour {
 			default:
 				break;
 		}
-	}
-	void OnMouse_Up(){
-		if(transform.position != Nextpos){
-			moveTo(Nextpos);
-		}
-		Service.audioManager.StopPlaying("");
-		DragFace = FACING_DIRECTIOM.EMPTY;
 	}
 	private void moveCheck(){
 		if(CanMoveThisDirection(DIRECTION.FORWARD) && availableDir.Contains(DIRECTION.FORWARD))
@@ -243,9 +265,6 @@ public class MoveObject : MonoBehaviour {
 			}
 		}
 	}
-	//This way is actually a little bit clunky, I could have used one function in moveTo, but I use a task System instead.
-	//What it did is to add a move task to taskmanager to let the box move.(Why not directly let the box move!!!!, because 
-	//I'm over concerned about some other task might be implemented into this system)
 	private bool CanMoveThisDirection(DIRECTION checkDirection) {
 		switch (checkDirection)
 		{
@@ -279,9 +298,9 @@ public class MoveObject : MonoBehaviour {
 	}
 	public void moveTo(Vector3 endPos){
 		if(moveToTask.ifDetached){
-			taskManager.AddTask(moveToTask);
 			moveToTask.SetSpeed(DragSpeed);
 			moveToTask.SetEndPos(endPos);
+			taskManager.AddTask(moveToTask);
 		}
 		else{
 			moveToTask.SetSpeed(DragSpeed);
@@ -308,12 +327,14 @@ public class MoveObject : MonoBehaviour {
 	public void RoundNextPoint(){
 		Nextpos += (transform.position - Nextpos).normalized * MoveUnit;
 	}
-	//Move Check will Check whether the Box on the ground.
-	void MovementCheck(){
-		if(transform.position.y < 7.5f)
-		{
-			transform.position = new Vector3(transform.position.x,7.5f, transform.position.z);
+
+	/*
+	void OnMouse_Up(){
+		if(transform.position != Nextpos){
+			moveTo(Nextpos);
 		}
+		Service.audioManager.StopPlaying("");
+		DragFace = FACING_DIRECTIOM.EMPTY;
 	}
 	void Mouse_Move(){
 		Vector3 tempVec = Vector3.zero;
@@ -394,10 +415,13 @@ public class MoveObject : MonoBehaviour {
 
 		}
 	}
+	 */
+
 	public void Set_DragFace(FACING_DIRECTIOM m_DragFace){
 		if(DragFace != (m_DragFace) && DragFace == FACING_DIRECTIOM.EMPTY)
 			DragFace = m_DragFace;
 	}
+	
 	protected void Delay_TransToState<T>(float _Seconds) where T: ObjectState{
 		StartCoroutine(TransintoState<T>(_Seconds));
 	}
@@ -405,8 +429,8 @@ public class MoveObject : MonoBehaviour {
 		yield return new WaitForSeconds(_Seconds);
 		_fsm.TransitionTo<T>();
 	}
-
-
+	
+	//FSM_STATE----------------------------------------
 	public class ObjectState: FSM<MoveObject>.State {}
 	public class FROZEN: ObjectState{
 		public override void Update(){
@@ -469,6 +493,8 @@ public class MoveObject : MonoBehaviour {
 	public class PENDING: ObjectState{
 	}
 }
+
+//MoveTask----------------------------------------
 public class MoveToTask:Task {
 	private Transform moveTrans;
 	private Vector3 startPos;
