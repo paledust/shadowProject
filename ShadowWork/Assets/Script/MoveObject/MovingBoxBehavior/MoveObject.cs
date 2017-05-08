@@ -92,8 +92,11 @@ public class MoveObject : MonoBehaviour {
 		originPos = transform.position;
 		StartPos = transform.position;
 	}
-	void Update() {	
+	void FixedUpdate(){
 		taskManager.Update();
+	}
+	void Update() {	
+		// taskManager.Update();
 		_fsm.Update();
 
 //Start Test
@@ -525,7 +528,7 @@ public class MoveToTask:Task {
 		Debug.Log("Pos: " + moveTrans.position.ToString() + "Off: " + (pos - moveTrans.position).ToString());
 		moveTrans.position = Vector3.Lerp(startPos, endPos, timer * speed);
 
-		// moveTrans.position += (endPos - startPos).normalized * 1.0f;
+		// moveTrans.Translate((endPos - startPos).normalized * speed);
 		if(moveTrans.position == endPos){
 			SetStatus(TaskStatus.Success);
 		}
