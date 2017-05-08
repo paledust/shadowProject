@@ -12,6 +12,8 @@ public class Title_Main : MonoBehaviour {
 	private bool LoadLevel = false;
 	// Use this for initialization
 	void Awake () {
+		if(!AudioManagerScript.Instance)
+			Instantiate(Service.prefebList.AudioManager);
 		Service.eventManager = new EventManager();
 		LoadLevel = false;
 	}
@@ -20,7 +22,10 @@ public class Title_Main : MonoBehaviour {
 	void Update () {
 		if(Input.GetButtonDown("Start") && !LoadLevel){
 			LoadLevel = true;
+			Service.audioManager.PlaySound2D("IntroWiggle", 0.75f);
+			//Service.audioManager.PlaySound2D("IntroWhoosh");
 			StartCoroutine(LoadLevelTask());
+
 		}
 	}
 

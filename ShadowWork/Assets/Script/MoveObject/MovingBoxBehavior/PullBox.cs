@@ -56,7 +56,7 @@ public class PullBox : MonoBehaviour {
 		yield return new WaitForSeconds(1f);
 
 		taskManager.AddTask(pullHeroBox);
-		Service.audioManager.PlaySound2D("BoxSlide");
+		Service.audioManager.PlaySound2D("BoxSlide", 1.0f);
 
 		yield return new WaitForSeconds(3.0f);
 
