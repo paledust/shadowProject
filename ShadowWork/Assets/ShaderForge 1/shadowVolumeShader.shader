@@ -22,6 +22,8 @@ Shader "Shader Forge/shadowVolumeShader" {
             "RenderType"="Transparent"
         }
         Pass {
+            ZWrite Off
+            Lighting Off
             Name "FORWARD"
             Tags {
                 "LightMode"="ForwardBase"
