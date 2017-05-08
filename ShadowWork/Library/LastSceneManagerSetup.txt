@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scene/PuzzlePrototype/puzzle_06.unity
+- path: Assets/Scene/ReadyToPutAssets/Puzzle_Boss_2.unity
   isLoaded: 1
   isActive: 1
