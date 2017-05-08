@@ -1,37 +1,45 @@
-﻿using System.Collections.Generic;
+﻿// #define Debug
+using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using Kevin_Event;
 using CS_Kevin;
 
 public class MoveObject : MonoBehaviour {
-	//Variable Area------------------------------------
-	[SerializeField] float DragSpeed;
+#region Parameter_Zone
+	[SerializeField] protected float DragSpeed;
 	public float DRAG_SPEED{get{return DragSpeed;}}
 	// 0 degrees is right, 90 degrees is up, 180 is left, 270 is down
 	//floats for setting angle degrees for each arc
-	private float minAngleForward = 120f; //110
-	private float maxAngleForward = 180f; //160
+	protected float minAngleForward = 120f; //110
+	protected float maxAngleForward = 180f; //160
 
-	private float minAngleBack = 300f; //290
-	private float maxAngleBack = 360f; //340
+	protected float minAngleBack = 300f; //290
+	protected float maxAngleBack = 360f; //340
 
-	private float minAngleRight = 0f; //340-360
-	private float maxAngleRight = 60f; //0-40
+	protected float minAngleRight = 0f; //340-360
+	protected float maxAngleRight = 60f; //0-40
 
-	private float minAngleLeft = 180f; //160
-	private float maxAngleLeft = 240f; //220
+	protected float minAngleLeft = 180f; //160
+	protected float maxAngleLeft = 240f; //220
 
-	private float minAngleUp = 60f; //70
-	private float maxAngleUp = 120f; //110
+	protected float minAngleUp = 60f; //70
+	protected float maxAngleUp = 120f; //110
 
-	private float minAngleDown = 240f; //250
-	private float maxAngleDown = 300f; //290
-	private bool IfAudioPlay = false;
-	[SerializeField] int MoveUnit = 6;
-	[SerializeField] MOVESTATE moveState;
-	public FACING_DIRECTIOM DragFace{get; private set;}
-	//Snap
+	protected float minAngleDown = 240f; //250
+	protected float maxAngleDown = 300f; //290
+	protected bool IfAudioPlay = false;
+	[SerializeField] protected int MoveUnit = 6;
+	[SerializeField] protected MOVESTATE moveState;
+
+	#region TWO_DOTS_INFORM
+		[SerializeField] protected DetectInShadow Dots_High;
+		[SerializeField] protected DetectInShadow Dots_Hor;
+		private bool Dots_High_ACTIVE{get{return Dots_High.gameObject.activeSelf && Dots_High.IfActive;}}
+		private bool Dots_Hor_ACTIVE{get{return Dots_Hor.gameObject.activeSelf && Dots_Hor.IfActive;}}
+	#endregion TWO_DOTS_INFORM
+		public FACING_DIRECTIOM DragFace{get; private set;}
+
 	public List<DIRECTION> availableDir{get; private set;}
 	public DIRECTION dir{get; private set;}
 	public int MOVE_UNITE{get; private set;}
@@ -55,31 +63,31 @@ public class MoveObject : MonoBehaviour {
 	public bool IF_MOVING{get{return _fsm.IF_IN_THE_STATE<MOVING>();}}
 	public bool IF_PULLING{get{return _fsm.IF_IN_THE_STATE<PULLING>();}}
 	public bool IF_PENDING{get{return _fsm.IF_IN_THE_STATE<PENDING>();}}
-	private Vector3 _NextPos;
-	private Vector3 _OriginPos;
-	private Vector3 Nextpos{
+	protected Vector3 _NextPos;
+	protected Vector3 _OriginPos;
+	public Vector3 Nextpos{
 		get{return _NextPos;}
 		set{
 			_NextPos = new Vector3(Mathf.RoundToInt(value.x),Mathf.RoundToInt(value.y),Mathf.RoundToInt(value.z));}}
-	private Vector3 originPos{
+	public Vector3 originPos{
 		get{return _OriginPos;}
 		set{
 			_OriginPos = new Vector3(Mathf.RoundToInt(value.x),Mathf.RoundToInt(value.y),Mathf.RoundToInt(value.z));}}
-	private MoveToTask moveToTask;
-	private Task_Manager taskManager = new Task_Manager();
-	public FSM<MoveObject> _fsm{get; private set;}
+	protected MoveToTask moveToTask;
+	protected Task_Manager taskManager = new Task_Manager();
+	public FSM<MoveObject> _fsm{get; protected set;}
 
+	#if Debug
+		protected float timer;
+		protected bool pushButton = false;
+		protected Vector3 testPos;
+		protected Vector3 StartPos;
+	#endif
+#endregion Parameter_Zone
 
+#region Function_zone
+	protected virtual void Start() {
 
-	private float timer;
-	private bool pushButton = false;
-	private Vector3 testPos;
-	private Vector3 StartPos;
-
-	//Function Area ---------------------------------------
-	void Start() {
-		timer = 0.0f;
-		testPos = transform.position;
 
 		_fsm = new FSM<MoveObject>(this);
 		_fsm.TransitionTo<PENDING>();
@@ -90,34 +98,34 @@ public class MoveObject : MonoBehaviour {
 		moveToTask = new MoveToTask(transform, transform.position, (int)DragSpeed);
 		Nextpos = transform.position;
 		originPos = transform.position;
-		StartPos = transform.position;
+
+		#if Debug
+			StartPos = transform.position;
+			timer = 0.0f;
+			testPos = transform.position;
+		#endif
 	}
-	void FixedUpdate(){
+	protected void Update() {	
 		taskManager.Update();
-	}
-	void Update() {	
-		// taskManager.Update();
 		_fsm.Update();
-
-//Start Test
-		// timer += Time.deltaTime;
-		// if(pushButton){
-		// 	testPos = Vector3.Lerp(StartPos, StartPos + Vector3.right * 42.0f, timer * 5.0f * 6.0f/42.0f);
-		// }
-
-		// Test(testPos);
-
-		// if(Input.GetAxis("Horizontal")>0.0f && !pushButton){
-		// 	timer = 0.0f;
-		// 	pushButton = true;	
-		// }
-//End Test
-
 		moveState = _moveState;
+	#if Debug
+		timer += Time.deltaTime;
+		if(pushButton){
+			testPos = Vector3.Lerp(StartPos, StartPos + Vector3.right * 42.0f, timer * 5.0f * 6.0f/42.0f);
+		}
+
+		Test(testPos);
+
+		if(Input.GetAxis("Horizontal")>0.0f && !pushButton){
+			timer = 0.0f;
+			pushButton = true;	
+		}
+	#endif
 	}
 	private void Test(Vector3 testPos){
 		if(transform.position.x != testPos.x){
-			Debug.Log("BoxPos: " + transform.position.x + "TestPos: " + testPos.x);
+			Debug.Log("BoxPos: " + transform.position.x + "Off: " + (testPos.x - transform.position.x).ToString());
 		}
 	}
 
@@ -151,7 +159,7 @@ public class MoveObject : MonoBehaviour {
 				break;
 		}
 	}
-	private void moveCheck(){
+	protected void moveCheck(){
 		if(CanMoveThisDirection(DIRECTION.FORWARD) && availableDir.Contains(DIRECTION.FORWARD))
 		{
 			if(dir != DIRECTION.FORWARD)
@@ -269,7 +277,7 @@ public class MoveObject : MonoBehaviour {
 			}
 		}
 	}
-	private bool CanMoveThisDirection(DIRECTION checkDirection) {
+	protected bool CanMoveThisDirection(DIRECTION checkDirection) {
 		switch (checkDirection)
 		{
 			case DIRECTION.UP:
@@ -332,6 +340,7 @@ public class MoveObject : MonoBehaviour {
 		Nextpos += (transform.position - Nextpos).normalized * MoveUnit;
 	}
 
+#region MouseControl
 	/*
 	void OnMouse_Up(){
 		if(transform.position != Nextpos){
@@ -420,6 +429,7 @@ public class MoveObject : MonoBehaviour {
 		}
 	}
 	 */
+#endregion MouseControl
 
 	public void Set_DragFace(FACING_DIRECTIOM m_DragFace){
 		if(DragFace != (m_DragFace) && DragFace == FACING_DIRECTIOM.EMPTY)
@@ -433,7 +443,9 @@ public class MoveObject : MonoBehaviour {
 		yield return new WaitForSeconds(_Seconds);
 		_fsm.TransitionTo<T>();
 	}
-	
+#endregion Function_zone
+
+#region FSM_STATE
 	//FSM_STATE----------------------------------------
 	public class ObjectState: FSM<MoveObject>.State {}
 	public class FROZEN: ObjectState{
@@ -493,6 +505,7 @@ public class MoveObject : MonoBehaviour {
 		private bool IF_Pull;
 		public override void OnEnter(){
 			IF_Pull = false;
+			Context.dir = DIRECTION.EMPTY;
 		}
 		public override void Update(){
 			if(Context.transform.position == Context.Nextpos && !IF_Pull){
@@ -502,11 +515,15 @@ public class MoveObject : MonoBehaviour {
 		}
 	}
 	public class PENDING: ObjectState{
+		public override void OnEnter(){
+			Context.dir = DIRECTION.EMPTY;
+		}
 	}
+#endregion FSM_STATE
 }
 
-//MoveTask----------------------------------------
 public class MoveToTask:Task {
+	private MoveObject Context{get{return moveTrans.GetComponent<MoveObject>();}}
 	private Transform moveTrans;
 	private Vector3 startPos;
 	private Vector3 endPos;
@@ -514,7 +531,7 @@ public class MoveToTask:Task {
 	private float speed;
 	public MoveToTask(Transform m_Trans, Vector3 m_endPos, int m_speed){
 		moveTrans = m_Trans;
-		startPos = moveTrans.position;
+		startPos = m_Trans.position	;
 		endPos = m_endPos;
 		speed = m_speed;
 	}
@@ -524,11 +541,13 @@ public class MoveToTask:Task {
 	}
 	internal override void TUpdate(){
 		timer += Time.deltaTime;
-		Vector3 pos = Vector3.Lerp(startPos, endPos, timer * speed);
-		Debug.Log("Pos: " + moveTrans.position.ToString() + "Off: " + (pos - moveTrans.position).ToString());
-		moveTrans.position = Vector3.Lerp(startPos, endPos, timer * speed);
 
-		// moveTrans.Translate((endPos - startPos).normalized * speed);
+		moveTrans.position = Vector3.Lerp(startPos, endPos, (timer * speed));
+		// moveTrans.position += (endPos - startPos).normalized * 0.5f;
+		if((moveTrans.position - endPos).magnitude <= 0.01f){
+			moveTrans.position = endPos;
+		}
+
 		if(moveTrans.position == endPos){
 			SetStatus(TaskStatus.Success);
 		}
