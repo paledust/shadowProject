@@ -49,15 +49,19 @@ public class AudioManagerScript : MonoBehaviour {
 		soundEffectSource = newSoundEffectSource.AddComponent<AudioSource>();
 		newSoundEffectSource.transform.parent = transform; 
 	}
-	public void PlayAmbient(AudioClip clip, float fadeDuration = 1){ //for playing ambient sounds
+	public void PlayAmbient(AudioClip clip, float vol, float fadeDuration = 1){ //for playing ambient sounds
 		activeAmbientSourceIndex = 1 - activeAmbientSourceIndex; //cycles audio source index
 		ambientSources[activeAmbientSourceIndex].clip = clip;//sets new active audio source as the clip to be played
+		ambientSources[activeAmbientSourceIndex].volume = vol;
+		//Debug.Log (ambientSources[activeAmbientSourceIndex].volume);
 		ambientSources[activeAmbientSourceIndex].Play(); //plays ambient audio source
-		StartCoroutine(AmbientCrossfade(fadeDuration)); //crossfades using provided duration
+		//Debug.Log (ambientSources[activeAmbientSourceIndex].volume);
+		StartCoroutine(AmbientCrossfade(fadeDuration, vol)); //crossfades using provided duration
+		//Debug.Log (ambientSources[activeAmbientSourceIndex].volume);
 	}
-	public void PlayAmbient(string soundName, float fadeDuration = 1){
+	public void PlayAmbient(string soundName, float vol, float fadeDuration = 1){
 		// Debug.Log(library.GetClipFromName(soundName));
-		PlayAmbient(library.GetClipFromName(soundName), fadeDuration);
+		PlayAmbient(library.GetClipFromName(soundName), vol, fadeDuration);
 	}
 
 	public void PlaySound(string soundName, Vector3 pos){ //for playing sound effects through audio library
@@ -83,12 +87,14 @@ public class AudioManagerScript : MonoBehaviour {
 			soundEffectSource.Stop();
 	}
 
-	IEnumerator AmbientCrossfade(float duration){ //crossfade coroutine
+	IEnumerator AmbientCrossfade(float duration, float vol){ //crossfade coroutine
 		float perc = 0; //percent into fade
 		while (perc < 1){ //while not 100 percent
 			perc += Time.deltaTime * 1 / duration; //increase percent over time
-			ambientSources[activeAmbientSourceIndex].volume = Mathf.Lerp(0, ambientVolPerc * masterVolPerc, perc); //lerp new active source, increasing volume
-			ambientSources[1-activeAmbientSourceIndex].volume = Mathf.Lerp(ambientVolPerc * masterVolPerc, 0, perc);//lerp old active source, decreasing volume
+			ambientSources[activeAmbientSourceIndex].volume = Mathf.Lerp(0, vol * ambientVolPerc * masterVolPerc, perc); //lerp new active source, increasing volume
+			ambientSources[1-activeAmbientSourceIndex].volume = Mathf.Lerp(vol * ambientVolPerc * masterVolPerc, 0, perc);//lerp old active source, decreasing volume
+			Debug.Log(ambientSources[activeAmbientSourceIndex].volume);
+			Debug.Log(ambientSources[1-activeAmbientSourceIndex].volume);
 			yield return null;
 		}
 	}

@@ -26,7 +26,7 @@ public class Main : MonoBehaviour {
 		Service.eventManager.Register<LoadLevelEvent>(LoadNextLevelHandler);
 		StartCoroutine(WaitToChangeCamera(waitTime));
 
-		Service.audioManager.PlayAmbient("Ambient");
+		Service.audioManager.PlayAmbient("Ambient", 1f, 1f);
 	}
 	void Update(){
 		if(Input.GetButtonDown("Reset"))
