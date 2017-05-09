@@ -36,6 +36,9 @@ public class CameraManager : MonoBehaviour {
 		GameObject.Find("MovingBox").GetComponent<MoveObject>().SetStatus(CS_Kevin.MOVESTATE.FROZEN);
 		ActivateCameraPan();
 	}
+	public void ActivateControllerAnimation(){
+		GetComponentInChildren<Controller_Anime_Manager>().DoFadeIn();
+	}
 	public void ActivateCameraPan(){
 		GetComponent<CameraPan>().enabled = true;
 		GetComponent<CameraPan>().SET_OriRotation(transform.rotation);

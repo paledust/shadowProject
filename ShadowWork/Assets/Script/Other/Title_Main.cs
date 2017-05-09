@@ -26,6 +26,7 @@ public class Title_Main : MonoBehaviour {
 	void Update () {
 		if(Input.GetButtonDown("Start") && !LoadLevel){
 			LoadLevel = true;
+			Service.audioManager.PlaySound2D("StartBox", 0.80f);
 			Service.audioManager.PlaySound2D("IntroWiggle", 0.85f);
 			//Service.audioManager.PlaySound2D("IntroWhoosh");
 			StartCoroutine(LoadLevelTask());

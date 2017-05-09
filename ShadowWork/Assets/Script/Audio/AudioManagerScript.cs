@@ -79,7 +79,8 @@ public class AudioManagerScript : MonoBehaviour {
 	//use the following format in other scripts to use this function
 	//AudioManagerScript.instance.PlaySound(audioSourceGoesHere, positionGoesHere);
 
-	public void PlaySound2D(string soundName, float vol){
+	public void PlaySound2D(string soundName, float vol, float Pitch = 1.0f){
+		soundEffectSource.pitch = Pitch;
 		soundEffectSource.PlayOneShot(library.GetClipFromName(soundName), sfxVolPerc * masterVolPerc * vol);
 	}
 	public void StopPlaying(string soundName){
