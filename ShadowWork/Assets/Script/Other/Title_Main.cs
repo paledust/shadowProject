@@ -17,12 +17,16 @@ public class Title_Main : MonoBehaviour {
 		Service.eventManager = new EventManager();
 		LoadLevel = false;
 	}
+
+	void Start(){
+		Service.audioManager.PlayAmbient("StartAmbient", 0.10f, 1f);
+	}
 	
 	// Update is called once per frame
 	void Update () {
 		if(Input.GetButtonDown("Start") && !LoadLevel){
 			LoadLevel = true;
-			Service.audioManager.PlaySound2D("IntroWiggle", 0.75f);
+			Service.audioManager.PlaySound2D("IntroWiggle", 0.85f);
 			//Service.audioManager.PlaySound2D("IntroWhoosh");
 			StartCoroutine(LoadLevelTask());
 
@@ -35,7 +39,7 @@ public class Title_Main : MonoBehaviour {
 		
 		yield return new WaitForSeconds(1.0f);
 
-		for(float i = 0.0f; i <= 3.0f; i += Time.deltaTime){
+		for(float i = 0.0f; i <= 2.0f; i += Time.deltaTime){
 			startText.color = Color.Lerp(startText.color, new Color(1,1,1,0), i/2.0f);
 			BlackScreenImage.color = Color.Lerp(BlackScreenImage.color, Color.black, i/2.0f);
 			TitleImage.color = Color.Lerp(TitleImage.color,  new Color(1,1,1,0), i/2.0f);

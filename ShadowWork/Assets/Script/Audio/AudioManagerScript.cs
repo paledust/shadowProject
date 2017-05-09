@@ -49,15 +49,16 @@ public class AudioManagerScript : MonoBehaviour {
 		soundEffectSource = newSoundEffectSource.AddComponent<AudioSource>();
 		newSoundEffectSource.transform.parent = transform; 
 	}
-	public void PlayAmbient(AudioClip clip, float fadeDuration = 1){ //for playing ambient sounds
+	public void PlayAmbient(AudioClip clip, float vol, float fadeDuration = 1){ //for playing ambient sounds
 		activeAmbientSourceIndex = 1 - activeAmbientSourceIndex; //cycles audio source index
 		ambientSources[activeAmbientSourceIndex].clip = clip;//sets new active audio source as the clip to be played
+		ambientSources[activeAmbientSourceIndex].volume = vol;
 		ambientSources[activeAmbientSourceIndex].Play(); //plays ambient audio source
 		StartCoroutine(AmbientCrossfade(fadeDuration)); //crossfades using provided duration
 	}
-	public void PlayAmbient(string soundName, float fadeDuration = 1){
+	public void PlayAmbient(string soundName, float vol, float fadeDuration = 1){
 		// Debug.Log(library.GetClipFromName(soundName));
-		PlayAmbient(library.GetClipFromName(soundName), fadeDuration);
+		PlayAmbient(library.GetClipFromName(soundName), vol, fadeDuration);
 	}
 
 	public void PlaySound(string soundName, Vector3 pos){ //for playing sound effects through audio library
