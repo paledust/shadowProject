@@ -37,7 +37,10 @@ public class CameraManager : MonoBehaviour {
 		ActivateCameraPan();
 	}
 	public void ActivateControllerAnimation(){
-		GetComponentInChildren<Controller_Anime_Manager>().DoFadeIn();
+		foreach(Controller_Anime_Manager anime_manager in GetComponentsInChildren<Controller_Anime_Manager>()){
+			anime_manager.DoFadeIn();
+		}
+		// GetComponentInChildren<Controller_Anime_Manager>().DoFadeIn();
 	}
 	public void ActivateCameraPan(){
 		GetComponent<CameraPan>().enabled = true;
