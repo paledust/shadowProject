@@ -19,7 +19,7 @@ public class Title_Main : MonoBehaviour {
 	}
 
 	void Start(){
-		Service.audioManager.PlayAmbient("StartAmbient", 0.10f, 1f);
+		Service.audioManager.PlayAmbient("StartAmbient", 0.75f, 4f);
 	}
 	
 	// Update is called once per frame
