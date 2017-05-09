@@ -152,5 +152,8 @@ public class DetectInShadow : MonoBehaviour {
 			yield return null;
 		}
 	}
+	public bool IF_CONTAIN(DIRECTION direction){
+		return _directions.Contains(direction);
+	}
 #endregion 
 }

@@ -287,6 +287,7 @@ public class MoveObject : MonoBehaviour {
 				return Input.GetAxis("Height")<-0.0f;
 				// return  (Input.GetButton("Fire1") && Mouse_Check() == checkDirection) || Input.GetAxis("Height")<-0.0f;
 			case DIRECTION.LEFT:
+				// float tempLeft_left = (Dots_High_ACTIVE ? 1:0) * Dots_High
 				return Input.GetAxis("Horizontal")<-0.0f;
 				// return  (Input.GetButton("Fire1") && Mouse_Check() == checkDirection) || Input.GetAxis("Horizontal")<-0.0f;
 			case DIRECTION.RIGHT:
