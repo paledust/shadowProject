@@ -37,6 +37,7 @@ public class MoveObject : MonoBehaviour {
 		[SerializeField] protected DetectInShadow Dots_Hor;
 		private bool Dots_High_ACTIVE{get{return Dots_High.gameObject.activeSelf && Dots_High.IfActive;}}
 		private bool Dots_Hor_ACTIVE{get{return Dots_Hor.gameObject.activeSelf && Dots_Hor.IfActive;}}
+		[SerializeField] protected bool If_Two_Joystick;
 	#endregion TWO_DOTS_INFORM
 		public FACING_DIRECTIOM DragFace{get; private set;}
 
@@ -87,8 +88,6 @@ public class MoveObject : MonoBehaviour {
 
 #region Function_zone
 	protected virtual void Start() {
-
-
 		_fsm = new FSM<MoveObject>(this);
 		_fsm.TransitionTo<PENDING>();
 		dir = DIRECTION.EMPTY;
@@ -98,6 +97,15 @@ public class MoveObject : MonoBehaviour {
 		moveToTask = new MoveToTask(transform, transform.position, (int)DragSpeed);
 		Nextpos = transform.position;
 		originPos = transform.position;
+
+		foreach(DetectInShadow dot in GetComponentsInChildren<DetectInShadow>()){
+			if(dot.facingDir == FACING_DIRECTIOM.Y){
+				Dots_Hor = dot;
+			}
+			if(dot.facingDir == FACING_DIRECTIOM.Z){
+				Dots_High = dot;
+			}
+		}
 
 		#if Debug
 			StartPos = transform.position;
@@ -281,24 +289,26 @@ public class MoveObject : MonoBehaviour {
 		switch (checkDirection)
 		{
 			case DIRECTION.UP:
-				return Input.GetAxis("Height")>0.0f;
-				// return  (Input.GetButton("Fire1") && Mouse_Check() == checkDirection) || Input.GetAxis("Height")>0.0f;
+				return Input.GetAxis("Height")>0.1f;
 			case DIRECTION.DOWN:
-				return Input.GetAxis("Height")<-0.0f;
-				// return  (Input.GetButton("Fire1") && Mouse_Check() == checkDirection) || Input.GetAxis("Height")<-0.0f;
+				return Input.GetAxis("Height")<-0.1f;
 			case DIRECTION.LEFT:
-				// float tempLeft_left = (Dots_High_ACTIVE ? 1:0) * Dots_High
-				return Input.GetAxis("Horizontal")<-0.0f;
-				// return  (Input.GetButton("Fire1") && Mouse_Check() == checkDirection) || Input.GetAxis("Horizontal")<-0.0f;
+				if(!If_Two_Joystick)
+					return Input.GetAxis("Horizontal")<-0.0f;
+				else
+					return (Input.GetAxis("Horizontal_Left") < -0.0f && Dots_Hor_ACTIVE && Dots_Hor.IF_CONTAIN(DIRECTION.LEFT)) ||
+							(Input.GetAxis("Horizontal_Right") < -0.0f && Dots_High_ACTIVE && Dots_High.IF_CONTAIN(DIRECTION.LEFT));
 			case DIRECTION.RIGHT:
-				return Input.GetAxis("Horizontal")>0.0f;
-				// return  (Input.GetButton("Fire1") && Mouse_Check() == checkDirection) || Input.GetAxis("Horizontal")>0.0f;
+				if(!If_Two_Joystick)
+					return Input.GetAxis("Horizontal")>0.0f;
+				else
+					return (Input.GetAxis("Horizontal_Left") > 0.0f && Dots_Hor_ACTIVE && Dots_Hor.IF_CONTAIN(DIRECTION.RIGHT)) ||
+							(Input.GetAxis("Horizontal_Right") > 0.0f && Dots_High_ACTIVE && Dots_High.IF_CONTAIN(DIRECTION.RIGHT)); 
+				
 			case DIRECTION.FORWARD:
-				return Input.GetAxis("Vertical")>0.0f;
-				// return  (Input.GetButton("Fire1") && Mouse_Check() == checkDirection) || Input.GetAxis("Vertical")>0.0f;
+				return Input.GetAxis("Vertical")>0.1f;
 			case DIRECTION.BACK:
-				return Input.GetAxis("Vertical")<-0.0f;
-				// return  (Input.GetButton("Fire1") && Mouse_Check() == checkDirection) || Input.GetAxis("Vertical")<-0.0f;
+				return Input.GetAxis("Vertical")<-0.1f;
 			default:
 				return false;
 		}
