@@ -37,6 +37,10 @@ public class Main : MonoBehaviour {
 			timer += Time.deltaTime;
 			Service.ActiveDirLight.GetComponent<Light>().intensity = lights_Off_Curve.Evaluate(timer);
 		}
+		if(Input.GetButtonDown("Next_Level")){
+			Service.eventManager.ClearList();
+			SceneManager.LoadScene((SceneManager.GetActiveScene().buildIndex + (int)Input.GetAxis("Next_Level")));
+		}
 
 	}
 	private void Fire_RestartLevel_Event(){

@@ -19,14 +19,17 @@ public class Controller_Anime_Manager : MonoBehaviour {
 	}
 	IEnumerator FadeIn(){
 		GetComponent<Animator>().SetBool("StartAnimation", true);
+		yield return new WaitForSeconds(8.0f);
+		StartCoroutine(FadeOut());
 		yield return null;
 	}
 	IEnumerator FadeOut(){
 		Color originColor = sprite.color;
-		GetComponent<Animator>().SetBool("StartAnimation", false);
-		for(float timer = 0.0f; timer <= 1.0f; timer += Time.deltaTime){
+		// GetComponent<Animator>().SetBool("StartAnimation", false);
+		for(float timer = 0.0f; timer <= 2.0f; timer += Time.deltaTime){
 			sprite.color = Color.Lerp(originColor, new Color(1,1,1,0f), timer);
 			yield return null;
 		}
+		GetComponent<Animator>().SetBool("StartAnimation", false);
 	}
 }

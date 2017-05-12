@@ -13,7 +13,7 @@ public class PullBox : MonoBehaviour {
 	private bool ifPulled;
 	private bool ifEnd = false;
 	void Start(){
-		if(SceneManager.GetActiveScene().buildIndex < 13){
+		if(SceneManager.GetActiveScene().buildIndex < SceneManager.sceneCountInBuildSettings){
 			loadLevelTask = new LoadLevelTask(SceneManager.GetActiveScene().buildIndex + 1);
 			level_Index = SceneManager.GetActiveScene().buildIndex + 1;
 		}
