@@ -5,6 +5,8 @@
 		_ShadowColor("Shadow Color", Color) = (0,0,0,1)
 		_ShadowStr("Strength of Shadow", Range(0,1)) = 1.0
 		_ActiveFace("Active Shadow Face", Vector) = (1,1,1,1)
+		[Toggle] _AdobeLightBased("Adobe Based On Light Intensity", Range(0,1)) = 1
+		[Toggle] _ShadowLightBased("Shadow Based On Light Intensity", Range(0,1)) = 1
 	}
 	SubShader {
 		Tags {"RenderType" = "Opaque"}
@@ -19,6 +21,8 @@
 		sampler2D _MainTex;
 		fixed4 _ShadowColor;
 		float _ShadowStr;
+		fixed _AdobeLightBased;
+		fixed _ShadowLightBased;
 		fixed4 _Color;
 		fixed4 _ActiveFace;
 
@@ -35,11 +39,13 @@
 				fixed ActiveFlag = ceil(abs(dot(s.Normal, normalize(_ActiveFace.xyz))));
 				fixed3 shadowColor = (_ShadowStr) * _ShadowColor + (1-_ShadowStr) * s.Albedo;
 				color.rgb = ActiveFlag * shadowColor + (1-ActiveFlag) * s.Albedo;
+				color.rgb *= (_ShadowLightBased == 1) ? _LightColor0 : 1; 
 			}
 			else{
 				color.rgb = s.Albedo;
+				color.rgb *= (_AdobeLightBased == 1) ? _LightColor0 : 1;
 			}
-			color.rgb *= _LightColor0;
+			// color.rgb *= (_AdobeLightBased == 1) ? _LightColor0 : 1;
 			color.a = 1;
             return color;
         }
