@@ -39,6 +39,7 @@ public class PullBox : MonoBehaviour {
 			pullHeroBox = new MoveToTask(m_collider.transform, transform.parent.position, 1);
 			m_collider.gameObject.GetComponent<MoveObject>().SetStatus(MOVESTATE.PENDING);
 			ifLoad = true;
+			Service.audioManager.PlaySound2D("StartBox", 1.0f);
 			StartCoroutine(LoadLevel(level_Index));
 			// LoadLevel();
 		}
@@ -48,6 +49,7 @@ public class PullBox : MonoBehaviour {
 			pullHeroBox = new MoveToTask(m_collider.transform, transform.parent.position, 1);
 			m_collider.gameObject.GetComponent<MoveObject>().SetStatus(MOVESTATE.PENDING);
 			ifLoad = true;
+			Service.audioManager.PlaySound2D("StartBox", 1.0f);
 			StartCoroutine(LoadLevel(level_Index));
 			// LoadLevel();
 		}
