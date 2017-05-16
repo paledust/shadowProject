@@ -27,8 +27,10 @@ public class Collision_Base : MonoBehaviour {
 	}
 	protected virtual void PUSH_UPDATE(){
 	}
+	protected virtual void ON_HIT(){}
 	protected virtual void OnTriggerEnter(Collider collider){
 		if(collider.name == "MovingBox"){
+			ON_HIT();
 			collider.GetComponent<MoveObject>().SetStatus(MOVESTATE.PULLING);
 			collider.GetComponent<MoveObject>().MoveBack();
 			Service.audioManager.PlaySound2D("BoxCollide", 0.8f, Random.Range(0.7f,1.0f));

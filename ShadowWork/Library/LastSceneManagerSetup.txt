@@ -1,8 +1,4 @@
 sceneSetups:
-<<<<<<< HEAD
-- path: Assets/Scene/PuzzlePrototype/End_Level_Test.unity
-=======
-- path: Assets/Scene/ReadyToPutAssets/Puzzle_Boss_1.unity
->>>>>>> master
+- path: Assets/Scene/PuzzlePrototype/TestLevel.unity
   isLoaded: 1
   isActive: 1

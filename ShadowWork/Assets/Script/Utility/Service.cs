@@ -13,4 +13,5 @@ public static class Service {
 	public static EventManager eventManager;
 	public static AudioManagerScript audioManager;
 	public static PrefebList prefebList = Resources.Load<PrefebList>("List/PrebList");
+	public static Color invis_Color = new Color(1,1,1,0);
 }
