@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using Kevin_Event;
 
 public class PullBox : MonoBehaviour {
-	public int level_Index;
+	private int level_Index;
 	private LoadLevelTask loadLevelTask;
 	private MoveToTask pullHeroBox;
 	private Task_Manager taskManager;
@@ -13,14 +13,8 @@ public class PullBox : MonoBehaviour {
 	private bool ifPulled;
 	private bool ifEnd = false;
 	void Start(){
-		if(SceneManager.GetActiveScene().buildIndex < SceneManager.sceneCountInBuildSettings){
-			loadLevelTask = new LoadLevelTask(SceneManager.GetActiveScene().buildIndex + 1);
-			level_Index = SceneManager.GetActiveScene().buildIndex + 1;
-		}
-		else{
-			loadLevelTask = new LoadLevelTask(0);
-			level_Index = 0;
-		}
+		loadLevelTask = new LoadLevelTask((SceneManager.GetActiveScene().buildIndex + 1)%SceneManager.sceneCountInBuildSettings);
+		level_Index = (SceneManager.GetActiveScene().buildIndex + 1)%SceneManager.sceneCountInBuildSettings;
 
 		taskManager = new Task_Manager();
 		ifLoad = false;

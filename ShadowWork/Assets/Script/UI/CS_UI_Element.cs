@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class CS_UI_Element : MonoBehaviour {
 	public bool ifActivated{get; private set;}
-	private SpriteRenderer sprite;
-	private Task_Manager taskManager;
-	private Lit_Task litTask;
-	private Off_Task offTask;
-	void Start () {
+	protected SpriteRenderer sprite;
+	protected Task_Manager taskManager;
+	protected Lit_Task litTask;
+	protected Off_Task offTask;
+	protected virtual void Start () {
 		litTask = new Lit_Task(this);
 		offTask = new Off_Task(this);
 		taskManager = new Task_Manager();
@@ -18,7 +18,7 @@ public class CS_UI_Element : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	protected virtual void Update () {
 		taskManager.Update();
 	}
 

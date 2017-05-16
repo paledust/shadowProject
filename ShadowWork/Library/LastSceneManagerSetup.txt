@@ -1,4 +1,8 @@
 sceneSetups:
+<<<<<<< HEAD
 - path: Assets/Scene/ReadyToPutAssets/Title_Screen/TitleScreen.unity
+=======
+- path: Assets/Scene/PuzzlePrototype/TestLevel.unity
+>>>>>>> master
   isLoaded: 1
   isActive: 1

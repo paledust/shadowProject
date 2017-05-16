@@ -14,9 +14,6 @@ public class CS_UI_Management : MonoBehaviour {
 	}
 	[SerializeField] private Orient_UI UI_Sprite;
 	public Orient_UI Element{get{return UI_Sprite;}}
-	[SerializeField] private bool If_Enter_Shadow_Anime = true;
-	[SerializeField] private bool If_Sustain_Anime = false;
-	[SerializeField] private bool If_Direction_Anime = true;
 	private DetectInShadow detectInShadow;
 
 	// Use this for initialization

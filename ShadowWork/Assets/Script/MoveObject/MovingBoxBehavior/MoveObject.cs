@@ -296,14 +296,14 @@ public class MoveObject : MonoBehaviour {
 				if(!If_Two_Joystick)
 					return Input.GetAxis("Horizontal")<-0.0f;
 				else
-					return (Input.GetAxis("Horizontal_Left") < -0.0f && Dots_Hor_ACTIVE && Dots_Hor.IF_CONTAIN(DIRECTION.LEFT)) ||
-							(Input.GetAxis("Horizontal_Right") < -0.0f && Dots_High_ACTIVE && Dots_High.IF_CONTAIN(DIRECTION.LEFT));
+					return (Input.GetAxis("Horizontal_Left") < -0.1f && Dots_Hor_ACTIVE && Dots_Hor.IF_CONTAIN(DIRECTION.LEFT)) ||
+							(Input.GetAxis("Horizontal_Right") < -0.1f && Dots_High_ACTIVE && Dots_High.IF_CONTAIN(DIRECTION.LEFT));
 			case DIRECTION.RIGHT:
 				if(!If_Two_Joystick)
 					return Input.GetAxis("Horizontal")>0.0f;
 				else
-					return (Input.GetAxis("Horizontal_Left") > 0.0f && Dots_Hor_ACTIVE && Dots_Hor.IF_CONTAIN(DIRECTION.RIGHT)) ||
-							(Input.GetAxis("Horizontal_Right") > 0.0f && Dots_High_ACTIVE && Dots_High.IF_CONTAIN(DIRECTION.RIGHT)); 
+					return (Input.GetAxis("Horizontal_Left") > 0.1f && Dots_Hor_ACTIVE && Dots_Hor.IF_CONTAIN(DIRECTION.RIGHT)) ||
+							(Input.GetAxis("Horizontal_Right") > 0.1f && Dots_High_ACTIVE && Dots_High.IF_CONTAIN(DIRECTION.RIGHT)); 
 				
 			case DIRECTION.FORWARD:
 				return Input.GetAxis("Vertical")>0.1f;
