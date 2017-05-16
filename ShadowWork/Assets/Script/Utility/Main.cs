@@ -6,12 +6,12 @@ using Kevin_Event;
 public class Main : MonoBehaviour {
 	[SerializeField] float waitTime = 0.5f;
 	[SerializeField] AnimationCurve lights_Off_Curve;
-	[SerializeField] float Camera_WaitTime = 0.0f;
-	private bool ReadyOff = false;
-	private float timer = 0.0f;
-	private GameObject backGround;
+	[SerializeField] protected float Camera_WaitTime = 0.0f;
+	protected bool ReadyOff = false;
+	protected float timer = 0.0f;
+	protected GameObject backGround;
 	// Use this for initialization
-	void Awake () {
+	protected void Awake () {
 		Service.eventManager = new EventManager();
 		backGround = Instantiate<GameObject>(Service.prefebList.BackGround);
 		ReadyOff = false;
@@ -23,7 +23,7 @@ public class Main : MonoBehaviour {
 		GameObject wallManager = Instantiate<GameObject>(Service.prefebList.WallManager);
 		wallManager.name = "WallManager";
 	}
-	void Start(){
+	protected void Start(){
 		Service.eventManager.Register<RestartEvent>(RestartLevelHandler);
 		Service.eventManager.Register<LoadLevelEvent>(LoadNextLevelHandler);
 		StartCoroutine(WaitToChangeCamera(waitTime));
@@ -45,21 +45,21 @@ public class Main : MonoBehaviour {
 		}
 
 	}
-	private void Fire_RestartLevel_Event(){
+	protected void Fire_RestartLevel_Event(){
 		RestartEvent e = new RestartEvent();
 		Service.eventManager.FireEvent(e);
 	}
-	private void RestartLevelHandler(Kevin_Event.Event e){
+	protected void RestartLevelHandler(Kevin_Event.Event e){
 		// RestartEvent tempEvent = e as RestartEvent;
 		Service.eventManager.ClearList();
 		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	}
-	private void LoadNextLevelHandler(Kevin_Event.Event e){
+	protected void LoadNextLevelHandler(Kevin_Event.Event e){
 		Service.eventManager.ClearList();
 		LoadLevelEvent tempEvent = e as LoadLevelEvent;
 		SceneManager.LoadScene(tempEvent.NextLevelIndex);
 	}
-	private void EndOff_All_Light(Kevin_Event.Event e){
+	protected void EndOff_All_Light(Kevin_Event.Event e){
 		StartCoroutine(WaitToTurnOffLight(0.0f));
 	}
 	IEnumerator WaitToChangeCamera(float _waitTime){
