@@ -9,7 +9,6 @@ public class CollisionBox : Collision_Base {
 	[SerializeField] int speed;
 	[SerializeField] int Offset;
 	protected override void Start(){
-		pushState = PushState.WAIT;
 		OriginPos = transform.position;
 
 		taskManager = new Task_Manager();
@@ -18,15 +17,7 @@ public class CollisionBox : Collision_Base {
 		moveToTask.Then(moveBack);
 	}
 	protected override void Update(){
-		base.Update();
-		
 		taskManager.Update();
-	}
-	protected override void WAIT_UPDATE(){
-
-	}
-	protected override void PUSH_UPDATE(){
-
 	}
 	protected override void OnTriggerEnter(Collider collider){
 		if(collider.name == "MovingBox"){
