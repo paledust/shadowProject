@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 public class InviWall_Particle : MonoBehaviour {
 	public bool IF_ON{get; private set;}
+	[SerializeField] float MaxAlph = 1.0f;
 	[SerializeField] float FadeInSpeed = 3.0f;
 	[SerializeField] float FadeOutSpeed = 0.5f;
 	private SpriteRenderer sprite;
@@ -27,11 +28,11 @@ public class InviWall_Particle : MonoBehaviour {
 
 	IEnumerator FadeIn(){
 		ON_FADE();
-		for(float alpha = sprite.color.a; alpha < 1.0f; alpha += Easing.BackEaseOutIn(Time.deltaTime * FadeInSpeed)){
+		for(float alpha = sprite.color.a; alpha < MaxAlph; alpha += Easing.BackEaseOutIn(Time.deltaTime * FadeInSpeed)){
 			sprite.color = new Color(1,1,1,alpha);
 			yield return null;
 		}
-
+		yield return new WaitForSeconds(0.3f);
 		for(float alpha = sprite.color.a; alpha > 0.0f; alpha -= Time.deltaTime * FadeOutSpeed){
 			sprite.color = new Color(1,1,1,alpha);
 			yield return null;

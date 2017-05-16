@@ -20,6 +20,8 @@ public class Main : MonoBehaviour {
 
 		if(!AudioManagerScript.Instance)
 			Instantiate(Service.prefebList.AudioManager);
+		GameObject wallManager = Instantiate<GameObject>(Service.prefebList.WallManager);
+		wallManager.name = "WallManager";
 	}
 	void Start(){
 		Service.eventManager.Register<RestartEvent>(RestartLevelHandler);

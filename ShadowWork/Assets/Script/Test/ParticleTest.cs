@@ -6,7 +6,6 @@ public class ParticleTest : MonoBehaviour {
 	[SerializeField] Wall_Manager WallManager;
 	// Use this for initialization
 	void Start () {
-
 	}
 	
 	// Update is called once per frame
