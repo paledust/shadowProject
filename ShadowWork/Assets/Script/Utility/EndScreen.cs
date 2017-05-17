@@ -22,7 +22,7 @@ public class EndScreen : Main {
 		Service.eventManager.Register<LoadLevelEvent>(LoadNextLevelHandler);
 		StartCoroutine(FadeInDots(waitTimeDots));
 		resetTimer = 0.0f;
-
+		Service.audioManager.PlayAmbient("StartAmbient", 1f, 1f);
 		//StartCoroutine(AnimateCredits(waitTimeCreditsAnim));
 	}
 	
