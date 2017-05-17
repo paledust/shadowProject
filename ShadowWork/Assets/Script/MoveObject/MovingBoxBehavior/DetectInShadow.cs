@@ -31,6 +31,7 @@ public class DetectInShadow : MonoBehaviour {
 		rayHits = Physics.RaycastAll(ray.origin,ray.direction,500.0f,layerMask);
 
 		Service.eventManager.Register<EndGame_Event>(End_Fade);
+		Service.eventManager.Register<PullBox_Event>(StartChangeDot);
 	}
 	protected virtual void Update(){
 		ray = new Ray(transform.position, Service.ActiveDirLight.transform.rotation * Vector3.back);
@@ -46,6 +47,19 @@ public class DetectInShadow : MonoBehaviour {
 			}
 		}
 		// FACE_ACTIVE();
+	}
+	void StartChangeDot(Kevin_Event.Event e){
+		IFEnd = true;
+		StartCoroutine(ChangeDot());
+	}
+	IEnumerator ChangeDot(){
+		Material tempRender = GetComponent<Renderer>().material;
+		Color tempColor = tempRender.color;
+		for(float timer = 0.0f; timer < 1.0f; timer += Time.deltaTime){
+			tempRender.color = Color.Lerp(tempColor, Color.white, timer);
+			yield return null;
+		}
+		yield return null;
 	}
 
 	protected virtual void FACE_ACTIVE(){

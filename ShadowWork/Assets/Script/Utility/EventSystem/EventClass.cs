@@ -44,6 +44,7 @@ namespace Kevin_Event
 	}
 	public class UpdateDir_Event: Event{}	
 	public class EndGame_Event: Event{}
+	public class PullBox_Event: Event{}
 }
 
 
