@@ -113,7 +113,10 @@ public class MoveObject : MonoBehaviour {
 			testPos = transform.position;
 		#endif
 	}
-	protected void Update() {	
+	protected void Update() {
+		if(Input.GetKeyDown(KeyCode.Tab)){
+			If_Two_Joystick = !If_Two_Joystick;
+		}	
 		taskManager.Update();
 		_fsm.Update();
 		moveState = _moveState;
