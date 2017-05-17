@@ -31,7 +31,6 @@ public class PullBox : MonoBehaviour {
 	void OnTriggerEnter(Collider m_collider){
 		if(m_collider.gameObject.name == "MovingBox" && m_collider.transform.position == transform.position && !ifLoad){
 
-
 			pullHeroBox = new MoveToTask(m_collider.transform, transform.parent.position, 1);
 			m_collider.gameObject.GetComponent<MoveObject>().SetStatus(MOVESTATE.PENDING);
 			ifLoad = true;

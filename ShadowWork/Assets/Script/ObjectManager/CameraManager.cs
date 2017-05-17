@@ -9,6 +9,7 @@ public class CameraManager : MonoBehaviour {
 	void Start () {
 		Service.eventManager.Register<Kevin_Event.CameraMoveEvent>(CameraMoveHandler);
 		anime = GetComponent<Animation>();
+		Cursor.visible = false;
 	}
 	void Update()
 	{
