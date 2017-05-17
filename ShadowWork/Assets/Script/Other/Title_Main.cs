@@ -9,8 +9,11 @@ public class Title_Main : MonoBehaviour {
 	[SerializeField] Text startText;
 	[SerializeField] Image BlackScreenImage;
 	private bool LoadLevel = false;
+	protected GameObject backGround;
 	// Use this for initialization
 	void Awake () {
+		backGround = Instantiate<GameObject>(Service.prefebList.BackGround);
+
 		if(!AudioManagerScript.Instance)
 			Instantiate(Service.prefebList.AudioManager);
 		Service.eventManager = new EventManager();
@@ -18,7 +21,16 @@ public class Title_Main : MonoBehaviour {
 	}
 
 	void Start(){
+		StartCoroutine(FadeIn(2.0f));
 		Service.audioManager.PlayAmbient("StartAmbient", 0.75f, 4f);
+	}
+	IEnumerator FadeIn(float _waitTime){
+		// yield return new WaitForSeconds(_waitTime);
+		for(float i = 0.0f; i < 1.0f; i += 0.1f/_waitTime){
+			backGround.GetComponentInChildren<UnityEngine.UI.Image>().color = Color.Lerp(Color.black, Color.clear,i);
+			yield return null;
+		}
+		yield return null;
 	}
 	
 	// Update is called once per frame

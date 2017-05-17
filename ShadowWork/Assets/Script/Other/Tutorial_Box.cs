@@ -10,9 +10,9 @@ public class Tutorial_Box : MonoBehaviour {
 	void Update(){
 
 	} 
-	void OnTriggerEnter(Collider collider){
+	void OnTriggerStay(Collider collider){
 		if(collider.name == "MovingBox"){
-			if(UI_Directions.Count > 0){
+			if(UI_Directions.Count > 0 && Joystick.gameObject.GetComponent<UI_Activated>().Activated){
 				foreach(DIRECTION dir in UI_Directions){
 					Joystick.LitArrow(dir);
 				}

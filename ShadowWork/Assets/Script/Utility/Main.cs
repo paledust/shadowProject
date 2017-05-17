@@ -11,7 +11,7 @@ public class Main : MonoBehaviour {
 	protected float timer = 0.0f;
 	protected GameObject backGround;
 	// Use this for initialization
-	protected void Awake () {
+	protected virtual void Awake () {
 		Service.eventManager = new EventManager();
 		backGround = Instantiate<GameObject>(Service.prefebList.BackGround);
 		ReadyOff = false;
@@ -23,7 +23,7 @@ public class Main : MonoBehaviour {
 		GameObject wallManager = Instantiate<GameObject>(Service.prefebList.WallManager);
 		wallManager.name = "WallManager";
 	}
-	protected void Start(){
+	protected virtual void Start(){
 		Service.eventManager.Register<RestartEvent>(RestartLevelHandler);
 		Service.eventManager.Register<LoadLevelEvent>(LoadNextLevelHandler);
 		StartCoroutine(WaitToChangeCamera(waitTime));

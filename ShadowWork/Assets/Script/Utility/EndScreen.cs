@@ -3,7 +3,6 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using Kevin_Event;
 
-
 public class EndScreen : Main {
 
 	[SerializeField] AnimationCurve increaseIntensity;
@@ -12,21 +11,35 @@ public class EndScreen : Main {
 	[SerializeField] float waitTimeCreditsAnim = 0.5f;
 	bool fadeInStarted = false;
 	float animTimer = 0.0f;
+	float resetTimer = 0.0f;
 	// Use this for initialization
-	void Awake(){
+	protected override void Awake(){
 		base.Awake();
-
 	}
 
-	void Start () {
+	protected override void Start () {
 		Service.eventManager.Register<RestartEvent>(RestartLevelHandler);
 		Service.eventManager.Register<LoadLevelEvent>(LoadNextLevelHandler);
 		StartCoroutine(FadeInDots(waitTimeDots));
+		resetTimer = 0.0f;
 
 		//StartCoroutine(AnimateCredits(waitTimeCreditsAnim));
 	}
 	
 	// Update is called once per frame
+	protected void Update(){
+		if(Input.GetButton("Start")){
+			timer += Time.deltaTime;
+		}
+		else
+		{
+			timer = 0.0f;
+		}
+
+		if(timer >= 2.0f){
+			SceneManager.LoadScene(0);
+		}
+	}
 
 	IEnumerator FadeInDots(float _waitTime){
 		yield return new WaitForSeconds(_waitTime);

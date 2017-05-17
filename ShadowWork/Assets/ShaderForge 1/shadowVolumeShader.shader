@@ -24,6 +24,7 @@ Shader "Shader Forge/shadowVolumeShader" {
         Pass {
             ZWrite Off
             Lighting Off
+            Cull Off
             Name "FORWARD"
             Tags {
                 "LightMode"="ForwardBase"
