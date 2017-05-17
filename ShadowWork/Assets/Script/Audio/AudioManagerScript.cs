@@ -94,8 +94,6 @@ public class AudioManagerScript : MonoBehaviour {
 			perc += Time.deltaTime * 1 / duration; //increase percent over time
 			ambientSources[activeAmbientSourceIndex].volume = Mathf.Lerp(0, vol * ambientVolPerc * masterVolPerc, perc); //lerp new active source, increasing volume
 			ambientSources[1-activeAmbientSourceIndex].volume = Mathf.Lerp(vol * ambientVolPerc * masterVolPerc, 0, perc);//lerp old active source, decreasing volume
-			Debug.Log(ambientSources[activeAmbientSourceIndex].volume);
-			Debug.Log(ambientSources[1-activeAmbientSourceIndex].volume);
 			yield return null;
 		}
 	}
