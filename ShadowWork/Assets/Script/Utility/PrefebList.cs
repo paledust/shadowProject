@@ -16,4 +16,6 @@ public class PrefebList : ScriptableObject {
 	public GameObject Wall{get{return _Wall;}}
 	[SerializeField] GameObject _Wall_Manager;
 	public GameObject WallManager{get{return _Wall_Manager;}}
+	[SerializeField] GameObject _Restart_UI;
+	public GameObject Restart_UI{get{return _Restart_UI;}}
 }

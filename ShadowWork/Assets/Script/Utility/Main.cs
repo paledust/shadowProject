@@ -9,6 +9,7 @@ public class Main : MonoBehaviour {
 	[SerializeField] protected float Camera_WaitTime = 0.0f;
 	protected bool ReadyOff = false;
 	protected float timer = 0.0f;
+	protected float FreezeTimer = 0.0f;
 	protected GameObject backGround;
 	// Use this for initialization
 	protected virtual void Awake () {
@@ -43,7 +44,6 @@ public class Main : MonoBehaviour {
 			Service.eventManager.ClearList();
 			SceneManager.LoadScene((SceneManager.GetActiveScene().buildIndex + (int)Input.GetAxis("Next_Level")));
 		}
-
 	}
 	protected void Fire_RestartLevel_Event(){
 		RestartEvent e = new RestartEvent();
