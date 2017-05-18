@@ -17,7 +17,6 @@ public class Aspect_Ratio : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		Debug.Log(Screen.width.ToString() + " " + Screen.height.ToString());
 		// if (Screen.width != myLastScreenSize.x || Screen.height != myLastScreenSize.y) {
 		// 	UpdateOrthographicSize ();
 		// }
@@ -25,7 +24,6 @@ public class Aspect_Ratio : MonoBehaviour {
 
 	private void UpdateOrthographicSize () {
 		float para = (myDefaultRatio.x/myDefaultRatio.y)/Screen.width * Screen.height;
-		Debug.Log(para);
 		GetComponent<Camera>().rect = new Rect(new Vector2(0, 0.5f - 0.5f/para), new Vector2(1,1f/para));
 	}
 }

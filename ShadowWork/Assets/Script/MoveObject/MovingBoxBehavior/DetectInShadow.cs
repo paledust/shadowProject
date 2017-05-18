@@ -46,7 +46,6 @@ public class DetectInShadow : MonoBehaviour {
 																		DeactiveColor,Time.deltaTime * 10.0f);
 			}
 		}
-		// FACE_ACTIVE();
 	}
 	void StartChangeDot(Kevin_Event.Event e){
 		IFEnd = true;
@@ -62,18 +61,18 @@ public class DetectInShadow : MonoBehaviour {
 		yield return null;
 	}
 
-	protected virtual void FACE_ACTIVE(){
-		Camera.main.GetComponent<CustomCursor>().Cursor_Raycast(out rayhit);
-		if(rayhit.collider != null && rayhit.collider.gameObject == gameObject && Input.GetButtonDown("Fire1")){
-			ifDrag = true;		
-		} 	
-		if(ifDrag){
-			GetComponentInParent<MoveObject>().Set_DragFace(facingDir);	
-		}
-		if(Input.GetButtonUp("Fire1")){
-			ifDrag = false;
-		}
-	}
+	// protected virtual void FACE_ACTIVE(){
+	// 	Camera.main.GetComponent<CustomCursor>().Cursor_Raycast(out rayhit);
+	// 	if(rayhit.collider != null && rayhit.collider.gameObject == gameObject && Input.GetButtonDown("Fire1")){
+	// 		ifDrag = true;		
+	// 	} 	
+	// 	if(ifDrag){
+	// 		GetComponentInParent<MoveObject>().Set_DragFace(facingDir);	
+	// 	}
+	// 	if(Input.GetButtonUp("Fire1")){
+	// 		ifDrag = false;
+	// 	}
+	// }
 	protected virtual void UpdateDir_Handler(Kevin_Event.Event e) {
 		rayHits = Physics.RaycastAll(ray.origin,ray.direction,500.0f);
 		

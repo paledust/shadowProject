@@ -36,7 +36,7 @@ public class EndScreen : Main {
 			timer = 0.0f;
 		}
 
-		if(timer >= 2.0f){
+		if(timer >= 1.0f){
 			SceneManager.LoadScene(0);
 		}
 	}
