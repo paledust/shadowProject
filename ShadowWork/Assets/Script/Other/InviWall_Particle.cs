@@ -33,7 +33,7 @@ public class InviWall_Particle : MonoBehaviour {
 			yield return null;
 		}
 		yield return new WaitForSeconds(0.3f);
-		for(float alpha = sprite.color.a; alpha > 0.0f; alpha -= Time.deltaTime * FadeOutSpeed){
+		for(float alpha = sprite.color.a; alpha > -0.1f; alpha -= Time.deltaTime * FadeOutSpeed){
 			sprite.color = new Color(1,1,1,alpha);
 			yield return null;
 		}
